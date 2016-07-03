@@ -1,0 +1,11 @@
+<p>
+	<h2>Home</h2>
+
+	<h3 ng-show="vm.isAuthenticated()">Welcome {{vm.user.username}} </h3>
+
+	<a ui-sref="login" ng-show="!vm.isAuthenticated()">Login</a>
+	<button class="btn btn-default" ng-show="vm.isAuthenticated()" ng-click="vm.logout()">Logout</button>
+
+<br>
+	<a ui-sref="register" ng-show="!vm.isAuthenticated()">Register</a>
+</p>

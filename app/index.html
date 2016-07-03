@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="paintr" ng-strict-di>
+<head>
+	<meta charset="UTF-8">
+	<title>Drawbook</title>
+	<base href="/">
+
+	<!--Stylesheets-->
+	<link rel="stylesheet" href="css/angular-motion.min.css">
+	<link rel="stylesheet" href="css/main.css">
+
+	<!-- AngularJS modules -->
+	<script src="libs/angular.min.js"></script>
+	<script src="libs/angular-ui-router.min.js"></script>
+	<script src="libs/angular-animate.min.js"></script>
+	<script src="libs/angular-strap.min.js"></script>
+	<script src="libs/angular-strap.tpl.min.js"></script>
+	<script src="libs/satellizer.min.js"></script>
+
+
+	<!-- jQuery -->
+	<script src="libs/jquery.min.js"></script>
+
+	<!-- Bundled app source -->
+	<script src="main.min.js"></script>
+</head>
+<body>
+	<div class="container">
+
+		<h1><a ui-sref="home">Drawbook</a></h1>
+		<hr/>
+
+		<div ui-view>
+		</div>
+	</div>
+</body>
+</html>
