@@ -10,6 +10,7 @@
 		<input type="password" name="password" class="form-control" ng-model="vm.user.password" placeholder="Password" required id="password">
 	</div>
 
+	<span ng-show="vm.incorrectLogin">Password or username are incorrect!<br></span>
 	<button class="btn btn-primary" ng-click="vm.login()">Login</button>
 
 

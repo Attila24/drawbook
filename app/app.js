@@ -2,14 +2,14 @@
     'use strict';
 
     angular
-        .module('paintr', [
+        .module('drawbook', [
             'ngAnimate',
             'ui.router',
             'mgcrea.ngStrap',
             'satellizer'
         ])
         .constant('server', require('./app.constants'))
-        .factory('AuthService', require('./commons/services/AuthService'))
+        .factory('UserService', require('./app/services/UserService'))
         .config(require('./app.routes'))
         .config(require('./app.auth'));
 })();

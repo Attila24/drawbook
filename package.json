@@ -1,7 +1,7 @@
 {
-  "name": "paintr",
+  "name": "drawbook",
   "version": "1.0.0",
-  "description": "Paintr",
+  "description": "Drawbook",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -16,7 +16,7 @@
     "bootstrap-sass": "^3.3.6",
     "cookie-parser": "^1.4.1",
     "express": "^4.13.4",
-    "jquery": "^2.2.0",
+    "jquery": "^3.0.0",
     "jwt-simple": "^0.4.1",
     "kerberos": "0.0.18",
     "method-override": "^2.3.5",
@@ -47,5 +47,13 @@
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.7.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Attila24/drawbook.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Attila24/drawbook/issues"
+  },
+  "homepage": "https://github.com/Attila24/drawbook#readme"
 }

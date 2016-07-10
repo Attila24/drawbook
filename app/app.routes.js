@@ -1,27 +1,33 @@
 (function () {
     'use strict';
 
-    PaintrStates.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider'];
+    DrawboookStates.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider'];
 
 
     /* @ngInject */
-    function PaintrStates ($stateProvider, $urlRouterProvider, $locationProvider) {
+    function DrawboookStates ($stateProvider, $urlRouterProvider, $locationProvider) {
         $stateProvider.state('home', {
                 url: '/',
-                templateUrl: 'commons/home/home.tpl.html',
-                controller: require('./commons/home/HomeController'),
+                templateUrl: 'app/common/home.tpl.html',
+                controller: require('./app/common/HomeController'),
                 controllerAs: 'vm'
             }).
             state('register', {
                 url: '/register',
-                templateUrl: 'commons/register/register.tpl.html',
-                controller: require('./commons/register/RegisterController'),
+                templateUrl: 'app/common/register.tpl.html',
+                controller: require('./app/common/RegisterController'),
                 controllerAs: 'vm'
             }).
             state('login', {
                 url: '/login',
-                templateUrl: 'commons/login/login.tpl.html',
-                controller: require('./commons/login/LoginController'),
+                templateUrl: 'app/common/login.tpl.html',
+                controller: require('./app/common/LoginController'),
+                controllerAs: 'vm'
+            })
+            .state('draw', {
+                url: '/draw',
+                templateUrl: 'app/draw/draw.tpl.html',
+                controller: require('./app/draw/DrawController'),
                 controllerAs: 'vm'
             });
 
@@ -31,6 +37,6 @@
 
     }
 
-    module.exports = PaintrStates;
+    module.exports = DrawboookStates;
 
 })();

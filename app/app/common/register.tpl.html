@@ -13,7 +13,8 @@
 
 	<div class="form-group">
 		<label for="username">Username</label>
-		<input type="text" class="form-control" ng-model="vm.user.name" placeholder="Username" required id="username">
+		<span ng-show="vm.takenUsername">Username is already taken!</span>
+		<input type="text" class="form-control" ng-model="vm.user.name" ng-change="vm.checkUsername()" placeholder="Username" required id="username">
 	</div>
 
 	<div class="form-group">
@@ -31,6 +32,9 @@
 		<select name="gender" class="form-control"  ng-options="g as g for g in vm.genders" ng-model="vm.user.gender" id="gender"></select>
 	</div>
 
-	<button class="btn btn-primary" ng-click="vm.register()">Register</button>
+	<button class="btn btn-primary"
+			ng-click="vm.register()"
+			ng-disabled="vm.takenUsername"
+	>Register</button>
 
 </form>

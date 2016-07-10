@@ -91,6 +91,8 @@ gulp.task('copy-libs', function() {
         ];
 
     gulp.src(entries)
+        .pipe(sourcemaps.init())
+        .pipe(sourcemaps.write())
         .pipe(gulp.dest('app/libs'));
 
 });

@@ -77,16 +77,34 @@ router.get('/logout', function(req, res) {
 router.route('/')
     .get(function(req, res) {
 
-        User.find(function(err, users) {
+            User.find(function(err, users) {
+                if (err) res.send(err);
+                res.json(users);
+            });
+    });
 
-            if (err) res.send(err);
-            res.json(users);
-        });
+router.route('/:username')
+    .get(function (req, res) {
+        User.findOne({'username': req.params.username},
+            function(err, user) {
+                if (err) {
+                    console.log('error: ' + err);
+                    return res.status(500).json({err: err});
+                }
+                return res.status(200).json({'user': user})
+            }
+        )
     });
 
 router.post('/register', function(req, res) {
     console.log(req.body);
-    User.register(new User({ username: req.body.username }), req.body.password, function(err, account) {
+    User.register(new User({
+            username: req.body.username,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            age: req.body.age,
+            gender: req.body.gender
+        }), req.body.password, function(err, account) {
         if (err) {
             console.log('err: '  + err);
             return res.status(500).json({err: err});
