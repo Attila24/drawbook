@@ -85,6 +85,7 @@ gulp.task('copy-libs', function() {
         'node_modules/angular/angular.min.js',
         'node_modules/angular-ui-router/build/angular-ui-router.min.js',
         'node_modules/angular-animate/angular-animate.min.js',
+        'node_modules/angular-local-storage/dist/angular-local-storage.min.js',
         'node_modules/bootstrap-sass/assets/javascripts/bootstrap.min.js',
         'node_modules/jquery/dist/jquery.min.js',
         'node_modules/satellizer/satellizer.min.js'
@@ -126,18 +127,21 @@ gulp.task('nodemon', function(cb) {
     var called = false;
     return nodemon({
        script: 'server.js',
-       watch: ['server.js', './db/**/*.js', './routes/**/*.js']
+        ext: 'js',
+        ignore: 'app/*',
+        env: {'NODE_ENV': 'development'}
     })
         .on('start', function () {
         if (!called) {cb();}
         called = true;
+
     })
         .on('restart', function () {
-        setTimeout(function reload() {
-            browserSync.reload({
-                stream: false
-            });
-        }, BROWSER_SYNC_RELOAD_DELAY);
+         setTimeout(function reload() {
+         browserSync.reload({
+         stream: false
+         });
+         }, BROWSER_SYNC_RELOAD_DELAY);
     });
 });
 

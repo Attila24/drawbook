@@ -5,14 +5,14 @@
         .module('drawbook')
         .controller('RegisterController', RegisterController);
 
-    RegisterController.$inject = ['$state', '$auth', '$window', 'UserService', '$alert'];
+    RegisterController.$inject = ['$state', '$auth', 'UserService', 'localStorageService'];
 
     /* @ngInject */
-    function RegisterController($state, $auth, $window, UserService, $alert) {
+    function RegisterController($state, $auth, UserService, localStorageService) {
         var vm = this;
+
         vm.title = 'RegisterController';
         vm.genders = ['Male', 'Female'];
-
         vm.takenUsername = false;
 
         vm.checkUsername = checkUsername;
@@ -43,7 +43,8 @@
             $auth.signup(user)
                 .then(function(res) {
                     console.log(res);
-                    $window.localStorage.currentUser = JSON.stringify(res.data.user);
+                    localStorageService.set("currentUser", res.data.user);
+                    //$window.localStorage.currentUser = JSON.stringify(res.data.user);
                     $auth.login(user)
                         .then(function (res) {
                             $state.go('home');

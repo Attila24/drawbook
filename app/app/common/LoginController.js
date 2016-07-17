@@ -5,10 +5,10 @@
         .module('drawbook')
         .controller('LoginController', LoginController);
 
-    LoginController.$inject = ['$state', '$auth', '$window'];
+    LoginController.$inject = ['$state', '$auth', 'localStorageService'];
 
     /* @ngInject */
-    function LoginController($state, $auth, $window) {
+    function LoginController($state, $auth, localStorageService) {
         var vm = this;
         vm.title = 'LoginController';
 
@@ -25,7 +25,8 @@
 
             $auth.login(user)
                 .then(function(res) {
-                    $window.localStorage.currentUser = JSON.stringify(res.data.user);
+                    localStorageService.set("currentUser", res.data.user);
+                    //$window.localStorage.currentUser = JSON.stringify(res.data.user);
                     //$rootScope.currentUser = JSON.parse(localStorage.getItem('currentUser'));
                     $state.go('home');
                 })

@@ -5,16 +5,16 @@
         .module('drawbook')
         .controller('HomeController', HomeController);
 
-    HomeController.$inject = ['$auth', '$window', '$state'];
+    HomeController.$inject = ['$auth', 'localStorageService', '$state'];
 
     /* @ngInject */
-    function HomeController($auth, $window, $state) {
+    function HomeController($auth, localStorageService, $state) {
         var vm = this;
         vm.title = 'HomeController';
 
         //console.log('rootscope: ' + $rootScope.currentUser);
-        console.log('localstorage: ' + JSON.parse(localStorage.getItem('currentUser')));
-        vm.user = JSON.parse(localStorage.getItem('currentUser'));
+
+        vm.user = localStorageService.get("currentUser");
 
         vm.isAuthenticated = isAuthenticated;
         vm.logout = logout;
@@ -26,7 +26,8 @@
 
         function logout() {
             $auth.logout();
-            delete $window.localStorage.currentUser;
+            localStorageService.remove("currentUser");
+            //delete $window.localStorage.currentUser;
         }
         
         function draw() {

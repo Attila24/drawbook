@@ -8,26 +8,32 @@
     function DrawboookStates ($stateProvider, $urlRouterProvider, $locationProvider) {
         $stateProvider.state('home', {
                 url: '/',
-                templateUrl: 'app/common/home.tpl.html',
+                templateUrl: '/app/common/home.tpl.html',
                 controller: require('./app/common/HomeController'),
                 controllerAs: 'vm'
             }).
             state('register', {
                 url: '/register',
-                templateUrl: 'app/common/register.tpl.html',
+                templateUrl: '/app/common/register.tpl.html',
                 controller: require('./app/common/RegisterController'),
                 controllerAs: 'vm'
             }).
             state('login', {
                 url: '/login',
-                templateUrl: 'app/common/login.tpl.html',
+                templateUrl: '/app/common/login.tpl.html',
                 controller: require('./app/common/LoginController'),
                 controllerAs: 'vm'
             })
             .state('draw', {
                 url: '/draw',
-                templateUrl: 'app/draw/draw.tpl.html',
+                templateUrl: '/app/draw/draw.tpl.html',
                 controller: require('./app/draw/DrawController'),
+                controllerAs: 'vm'
+            })
+            .state('user', {
+                url: '/:username',
+                templateUrl: '/app/common/user.tpl.html',
+                controller: require('./app/common/UserController'),
                 controllerAs: 'vm'
             });
 

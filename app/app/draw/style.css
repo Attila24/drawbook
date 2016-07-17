@@ -1,0 +1,296 @@
+.row{
+	height: 100%;
+	margin-top:2px;
+}
+
+h1.title{
+
+	font-size: 50px;
+	color: #444;
+}
+.container-fluid{
+
+	margin: auto !important;
+	max-width: 900px;
+}
+.right-col{
+	text-align: right;
+	padding-right: 1px !important;
+}
+.left-col{
+	text-align: left;
+	padding-left: 1px !important;
+}
+
+.dropdown{
+	z-index: 10000;
+}
+
+.dropdown, .open{
+	text-align: center;
+}
+.dropdown button{
+	width: 90px !important;
+}
+canvas{
+	border: 1px #aaa solid;
+	background-color: transparent;
+	display: block;
+	padding: 0;
+	margin: auto;
+}
+
+canvas:hover{
+	cursor: crosshair;
+}
+
+#canvas_container{
+	background: transparent;
+	z-index: 9;
+	width: 100%;
+}
+
+.center-block{
+	float: none;
+}
+
+.canvas{
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-color: transparent;
+}
+
+.tmp{
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-color: transparent;
+}
+
+#container{
+	width: 100%;
+}
+
+
+#undo_redo button {
+	width: 40px;
+	background-color: #F7F7F1;	
+}
+
+
+#undo_redo button img {
+	width: 70%;
+}
+
+#colorbuttons{
+	margin: 0 5px 0 5px;
+}
+
+
+#colorbuttons button{
+	width: 25px;
+	min-height: 25px;
+	margin-left: 2px;
+	margin-right: 2px;
+	border: 1px #666 solid;
+}
+
+#undo_redo, #tools button {
+	padding: 4px;
+}
+
+#undo_redo button:focus,
+#colorbuttons button:focus
+#tools button:focus{
+	outline: 0;
+}
+
+#tools button.selected{
+	background: #D6D6D6;
+}
+
+#tools button img{
+	width: 70%;
+	vertical-align: middle;
+}
+
+#tools .toolcontainer{
+	display: inline-block;
+}
+
+#tools .toolcontainer .toolchildren{
+	z-index: 10001;
+	visibility: hidden;
+	display: none;
+	position: absolute;
+}
+
+#tools .toolcontainer:hover .toolchildren{
+	display: block;
+	visibility: visible;
+}
+
+#colorpicker{
+	position: absolute;
+	z-index: 999;
+}
+
+.dlcol{
+	margin-left: 4px;
+	max-width: 75px !important;
+}
+
+#download:focus{
+	outline: 0;
+}
+
+#download img{
+	width: 70%;
+	vertical-align: middle;
+}
+
+
+div.removebutton{
+	margin: 5px; 
+	margin-left: 50px;
+	margin-top: -34px;
+	display: block;
+}
+
+/* TODO */
+@media (max-width: 918px){
+	#colorpicker, #reversecolors, div.removebutton, div.addbutton{
+		display: none;
+	}
+}
+
+#colorpicker, #colorpicker2{
+	-webkit-appearance: none;
+	padding: 0;
+	border: none;
+	height: 35px;
+	width: 35px;
+}
+#colorpicker:focus, #colorpicker2:focus, #reversecolors{
+	outline: 0;
+}
+
+#colorpicker2{
+	position: relative;
+	left: 20px;
+	top: 20px;
+}
+
+#reversecolors{
+	padding: 0;
+	position: relative;
+	bottom: 25px;
+	width: 25px;
+}
+#reversecolors img{
+	width: 80%;
+}
+
+
+
+/* Hogy Chrome-ban ne legyen idegesítő border stb..*/
+#colorpicker::-webkit-color-swatch-wrapper, #colorpicker2::-webkit-color-swatch-wrapper{
+	padding: 0;
+}
+#colorpicker::-webkit-color-swatch, #colorpicker::-webkit-color-swatch{
+	border: 1px gray solid;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+    margin-left: 5px;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-height: 100%;
+    text-align: center;
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: inline-block;
+}
+.btn-file img{
+	width: 70%;
+
+}
+
+button#new_layer{
+	margin-top: 20px;
+	margin-left: 5px;
+}
+
+li.hiddenselectOption{
+	display: none;
+}	
+
+/*
+	Ne lehessen kiválasztani bizonyos div elemeket, így nem lesz highlightolva olyan dolog, aminek nem kéne. 
+*/
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/*Draggable.js*/
+
+body.dragging, body.dragging * {
+  cursor: move !important;
+}
+
+.dragged {
+  position: absolute;
+  opacity: 0.5;
+  z-index: 2000;
+}
+
+ol.layers{
+	overflow: scroll;
+	min-height: 150px;
+	max-height: 150px;
+	background: white;
+	border: 1px solid #777;
+	width: 100%;
+	list-style: none;
+	text-align: left;
+	margin: 10px 0px 0px 5px;
+	padding: 0;
+	display: flex;
+	flex-direction: column-reverse; 
+}
+ol.layers li{
+	flex: 0 0 auto;
+	background: #eee;
+	padding: 5px;
+	border: 1px #aaa solid;
+}
+
+ol.layers li.selected{
+	background: #bbb;
+}
+
+ol.layers li.placeholder {
+  position: relative;
+  display: block;
+  margin: 5px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  background: #eee;
+}
+ol.layers li.placeholder:before {
+  position: absolute;
+  /** Define arrowhead **/
+}

@@ -5,15 +5,26 @@
         .module('drawbook')
         .controller('DrawController', DrawController);
 
-    DrawController.$inject = [];
+    DrawController.$inject = ['$state', 'localStorageService', 'ImageService'];
 
     /* @ngInject */
-    function DrawController() {
+    function DrawController($state, localStorageService, ImageService) {
         var vm = this;
         vm.title = 'DrawController';
         
-        
-        
+        vm.saveImage = saveImage;
+
+        ///////////////////////////////
+
+        function saveImage() {
+            var username = localStorageService.get("currentUser").username;
+
+            ImageService.post(username)
+                .then(function (res) {
+                    $state.go('home');
+                })
+                .catch(function (res) {})
+        }
         
     }
 

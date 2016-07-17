@@ -3,42 +3,13 @@ var express             = require('express'),
     passport            = require('passport'),
     jwt                 = require('jwt-simple'),
     moment              = require('moment'),
-    LocalStrategy       = require('passport-local').Strategy,
-    User                = require('../db/models/user');
+    //LocalStrategy       = require('passport-local').Strategy,
+    User                = require('../db/models/user'),
+    Image               = require('../db/models/image');
 
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 passport.use(User.createStrategy());
-
-function ensureAuthenticated(req, res, next) {
-    if (!(req.headers && req.headers.authorization)) {
-        return res.status(400).send({
-            message: 'You did not provide a JSON Web Token in the authorization header'
-        });
-    }
-
-    // decode the token
-    var header = req.headers.authorization.split(' ');
-    var token = header[1];
-    var payload = jwt.decode(token, 'secret');
-    var now = moment().unix();
-
-    if (now > payload.exp) {
-        return res.status(401).send({
-            message: 'Token has expired.'
-        });
-    }
-
-    User.findById(payload.sub, function(err, user) {
-        if (!user) {
-            return res.status(400).send({
-                message: 'User no longer exists.'
-            });
-        }
-        req.user = user;
-        next();
-    });
-}
 
 function createToken(user) {
     var payload = {
@@ -76,7 +47,7 @@ router.get('/logout', function(req, res) {
 
 router.route('/')
     .get(function(req, res) {
-
+            console.log('ez fut le');
             User.find(function(err, users) {
                 if (err) res.send(err);
                 res.json(users);
@@ -85,15 +56,15 @@ router.route('/')
 
 router.route('/:username')
     .get(function (req, res) {
-        User.findOne({'username': req.params.username},
-            function(err, user) {
+        User.findOne({'username': req.params.username})
+            .populate('images')
+            .exec(function(err, user) {
                 if (err) {
                     console.log('error: ' + err);
                     return res.status(500).json({err: err});
                 }
                 return res.status(200).json({'user': user})
-            }
-        )
+            });
     });
 
 router.post('/register', function(req, res) {
@@ -106,7 +77,7 @@ router.post('/register', function(req, res) {
             gender: req.body.gender
         }), req.body.password, function(err, account) {
         if (err) {
-            console.log('err: '  + err);
+            console.log('error: '  + err);
             return res.status(500).json({err: err});
         }
         passport.authenticate('local')(req, res, function () {
@@ -118,6 +89,5 @@ router.post('/register', function(req, res) {
         });
     });
 });
-
 
 module.exports = router;

@@ -1,0 +1,14 @@
+
+<h1>User: {{vm.user.username}}</h1>
+<ul>
+    <li><b>Full name:</b> {{vm.user.firstName}} {{vm.user.lastName}}</li>
+    <li><b>Username:</b> {{vm.user.username}}</li>
+    <li><b>Age:</b> {{vm.user.age}}</li>
+    <li><b>Gender:</b> {{vm.user.gender}}</li>
+    <li>
+        <b>Images</b>:
+        <ul>
+            <li ng-repeat="image in vm.user.images"><b>Title</b>: {{image.title}}  -   <a href="#" ng-click="vm.deleteImage(image._id)">Remove</a></li>
+        </ul>
+    </li>
+</ul>
