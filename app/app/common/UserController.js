@@ -27,9 +27,11 @@
                 .catch(function (res) {});
         }
 
-        function deleteImage(_id) {
+        function deleteImage(_id, index) {
             ImageService.delete(_id, vm.user.username)
-                .then(function (res){})
+                .then(function (res){
+                    delete vm.user.images[index];
+                })
                 .catch(function (res){});
         }
 

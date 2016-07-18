@@ -8,7 +8,9 @@
     <li>
         <b>Images</b>:
         <ul>
-            <li ng-repeat="image in vm.user.images"><b>Title</b>: {{image.title}}  -   <a href="#" ng-click="vm.deleteImage(image._id)">Remove</a></li>
+            <li ng-repeat="image in vm.user.images" ng-if="image">
+                <b>Title</b>: {{image.title}}  -   <a href="#" ng-click="vm.deleteImage(image._id, $index)">Remove</a>
+            </li>
         </ul>
     </li>
 </ul>

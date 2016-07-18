@@ -17,6 +17,8 @@ router.post('/', function(req, res) {
             if (err) console.log('Error: ' + err);
         });
 
+        console.log(image);
+
         user.images.push(image);
         user.save(function (err) {
             if (err) console.log('Error: ' + err);
@@ -33,8 +35,11 @@ router.delete('/:id', function (req, res) {
     User.findOne({username: req.params.username}, function (err, user) {
         if (err) console.log('Error: ' + err);
 
-        //user.images.pull({_id: req.params.id});
         user.images.pull(req.params.id);
+        user.save(function (err) {
+            if (err) console.log('error: ' + err);
+            console.log('ObjectId Deleted!');
+        });
 
         Image.findOneAndRemove({_id: req.params.id}, function (err, image) {
             console.log('Image deleted: ' + image._id);
