@@ -20,6 +20,7 @@
     "jwt-simple": "^0.4.1",
     "kerberos": "0.0.18",
     "method-override": "^2.3.5",
+    "mkdirp": "^0.5.1",
     "moment": "^2.11.2",
     "mongodb": "^2.1.4",
     "mongoose": "^4.3.7",

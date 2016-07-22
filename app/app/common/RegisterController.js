@@ -21,7 +21,7 @@
         ////////////////
 
         function checkUsername() {
-            UserService.get(vm.user.name)
+            UserService.get(vm.user.username)
                 .then(function (res) {
                     vm.takenUsername = res.user != null;
                 })
@@ -32,7 +32,7 @@
 
         function register() {
             var user = {
-                username: vm.user.name,
+                username: vm.user.username,
                 password: vm.user.password,
                 firstName: vm.user.firstName,
                 lastName: vm.user.lastName,
@@ -44,7 +44,6 @@
                 .then(function(res) {
                     console.log(res);
                     localStorageService.set("currentUser", res.data.user);
-                    //$window.localStorage.currentUser = JSON.stringify(res.data.user);
                     $auth.login(user)
                         .then(function (res) {
                             $state.go('home');

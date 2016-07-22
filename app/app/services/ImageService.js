@@ -7,10 +7,27 @@
     function ImageService($q, $http, server) {
 
         return {
-            post: function (username) {
+            get: function (username, id) {
+
                 var deferred = $q.defer();
-                $http.post(server.url + '/users/' + username + '/images/', {
-                        "title": "teszt kep"
+                $http({
+                        method: 'GET',
+                        url: server.url + 'users/' + username + '/images/' + id,
+                        headers: {'Content-Type': 'images/png'}
+                    })
+                    .then(function (data) {
+                        deferred.resolve(data);
+                    }, function (data) {
+                        deferred.reject(data);
+                    });
+
+                return deferred.promise;
+            },
+            post: function (username, img) {
+                var deferred = $q.defer();
+                $http.post(server.url + 'users/' + username + '/images/', {
+                        "title": "teszt kep",
+                        "image": img
                     })
                     .success(function (data) {
                         deferred.resolve(data);
@@ -22,7 +39,7 @@
             },
             delete: function (id, username) {
                 var deferred = $q.defer();
-                $http.delete(server.url + '/users/' + username + '/images/' + id)
+                $http.delete(server.url + 'users/' + username + '/images/' + id)
                     .success(function (data) {
                         deferred.resolve(data);
                     })

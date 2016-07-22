@@ -16,7 +16,7 @@ var db      = require('./db/db'),
 
 mongoose.connect(db.url);
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb', extended: true}));
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(cookieParser());
 app.use(methodOverride('X-HTTP-Method-Override'));

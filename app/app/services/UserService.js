@@ -18,6 +18,17 @@
                     });
 
                 return deferred.promise;
+            },
+            update: function(user) {
+                var deferred = $q.defer;
+                $http.patch(server.url + 'users/' + user.username, {user: user})
+                    .success(function (data) {
+
+                    })
+                    .error(function (data) {
+                        deferred.reject('rejected: ' + data);
+                    });
+                return deferred.promise;
             }
         };
     }

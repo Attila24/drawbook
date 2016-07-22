@@ -1,5 +1,5 @@
 <p>
-	<h2>Hoaame</h2>
+	<h2>Home</h2>
 
 	<h3 ng-show="vm.isAuthenticated()">Welcome
 		<a ui-sref="user({username: vm.user.username})">{{vm.user.username}}</a>
@@ -14,7 +14,8 @@
 <br>
 
 	<div ng-if="vm.isAuthenticated()">
-		<button class="btn btn-info" ui-sref="draw" ng-click="vm.draw()">New Drawing</button>
+		<button class="btn btn-info" ui-sref="draw">New Drawing</button>
+		<br />
+		<button class="btn btn-default" ui-sref="edit">Edit Profile</button>
 	</div>
-
 </p>

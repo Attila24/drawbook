@@ -11,6 +11,7 @@
     function UserController($stateParams, UserService, ImageService) {
         var vm = this;
         vm.title = 'UserController';
+        vm.images = [];
 
         vm.init = init;
         vm.deleteImage = deleteImage;
@@ -23,8 +24,20 @@
             UserService.get($stateParams.username)
                 .then(function (res) {
                     vm.user = res.user;
+                    console.log(vm.user);
+                    loadImages(vm.user.images);
                 })
                 .catch(function (res) {});
+        }
+
+        function loadImages(images) {
+            for (var i = 0; i < images.length; i++) {
+                ImageService.get(vm.user.username, images[i]._id)
+                    .then(function (res) {
+                        vm.images.push('data:image/png;base64,' + res.data);
+                    })
+                    .catch(function (res) {});
+            }
         }
 
         function deleteImage(_id, index) {

@@ -157,7 +157,7 @@ function initCanvas () {
 	});
 
 	// letöltés képként
-	$("#download a").click(function() {
+	$("#download").find("a").click(function() {
 
 		// létrehozunk egy temp canvast
 		var tmpcanvas = c.clone();
@@ -167,7 +167,7 @@ function initCanvas () {
 		var arr = [];
 
 		// betesszük a tömbbe a canvasokat és a megfelelő z-indexeket
-		$('.canvas').each(function() {
+		$(".canvas").each(function() {
 			arr.push({
 				canvas: $(this),
 				zindex: parseInt($(this).css("z-index"))
@@ -177,12 +177,12 @@ function initCanvas () {
 		// z-index szerint rendezzük sorba
 		arr.sort(function(a, b) {
 			return (a.zindex - b.zindex);
-		})
+		});
 
 		// a megfelelő sorban végigmegyünk az összes canvason, és mindet rárajzoljuk a temp canvasra
 		for (var i = 0; i < arr.length; i++) {
 			tmpcontext.drawImage(arr[i]['canvas'][0], 0, 0);
-		};
+		}
 
 		// mentés
 		$(this)[0].href = tmpcanvas[0].toDataURL();

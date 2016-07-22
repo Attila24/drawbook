@@ -3,7 +3,8 @@ var mongoose = require('mongoose'),
 
 var ImageSchema = new mongoose.Schema({
     _author: {type: Schema.Types.ObjectId, ref: 'User'},
-    title: String
+    title: String,
+    url: String
 });
 
 module.exports = mongoose.model('Image', ImageSchema);

@@ -90,4 +90,13 @@ router.post('/register', function(req, res) {
     });
 });
 
+router.patch('/:username', function (req, res) {
+
+   User.findOneAndUpdate({'username': req.params.username}, req.body.user, function (err, doc, result) {
+       if (err) console.log('Error: ' + err);
+       return res.status(200).json({status: 'Update successful!'});
+   });
+
+});
+
 module.exports = router;

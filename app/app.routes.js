@@ -30,6 +30,12 @@
                 controller: require('./app/draw/DrawController'),
                 controllerAs: 'vm'
             })
+            .state('edit', {
+                url: '/edit',
+                templateUrl: '/app/common/profile-edit.tpl.html',
+                controller: require('./app/common/ProfileEditController'),
+                controllerAs: 'vm'
+            })
             .state('user', {
                 url: '/:username',
                 templateUrl: '/app/common/user.tpl.html',
