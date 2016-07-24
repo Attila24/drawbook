@@ -18,13 +18,13 @@
 
         init();
 
+
         ////////////////
 
         function init() {
             UserService.get($stateParams.username)
                 .then(function (res) {
                     vm.user = res.user;
-                    console.log(vm.user);
                     loadImages(vm.user.images);
                 })
                 .catch(function (res) {});
@@ -34,7 +34,10 @@
             for (var i = 0; i < images.length; i++) {
                 ImageService.get(vm.user.username, images[i]._id)
                     .then(function (res) {
-                        vm.images.push('data:image/png;base64,' + res.data);
+                        vm.images.push({
+                            data: 'data:image/png;base64,' + res.data.data,
+                            id: res.id
+                        });
                     })
                     .catch(function (res) {});
             }
@@ -47,7 +50,6 @@
                 })
                 .catch(function (res){});
         }
-
     }
 
     module.exports = UserController;

@@ -2,7 +2,7 @@
 	<h2>Home</h2>
 
 	<h3 ng-show="vm.isAuthenticated()">Welcome
-		<a ui-sref="user({username: vm.user.username})">{{vm.user.username}}</a>
+		<a ui-sref="user.gallery({username: vm.user.username})">{{vm.user.username}}</a>
 	</h3>
 
 	<a ui-sref="login" ng-show="!vm.isAuthenticated()">Login</a>

@@ -37,11 +37,34 @@
                 controllerAs: 'vm'
             })
             .state('user', {
+                abstract: true,
                 url: '/:username',
-                templateUrl: '/app/common/user.tpl.html',
-                controller: require('./app/common/UserController'),
+                templateUrl: '/app/user/user.tpl.html',
+                controller: require('./app/user/UserController'),
+                controllerAs: 'vm',
+                resolve: {
+                    username: ['$stateParams', function ($stateParams) {
+                        return $stateParams.username;
+                    }]
+                }
+            })
+            .state('user.gallery', {
+                url: '/',
+                templateUrl: '/app/user/user.gallery.tpl.html',
+                controller: require('./app/user/UserGalleryController'),
                 controllerAs: 'vm'
+            })
+            .state('user.image', {
+                url: '/image/:id',
+                templateUrl: '/app/user/user.image.tpl.html',
+                controller: require('./app/user/UserImageController'),
+                controllerAs: 'vm',
+                params: {
+                    prev: null,
+                    next: null
+                }
             });
+
 
         $urlRouterProvider.otherwise("/");
 

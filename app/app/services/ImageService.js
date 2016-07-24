@@ -16,7 +16,7 @@
                         headers: {'Content-Type': 'images/png'}
                     })
                     .then(function (data) {
-                        deferred.resolve(data);
+                        deferred.resolve({data: data, id: id});
                     }, function (data) {
                         deferred.reject(data);
                     });
