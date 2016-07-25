@@ -60,8 +60,7 @@
                 controller: require('./app/user/UserImageController'),
                 controllerAs: 'vm',
                 params: {
-                    prev: null,
-                    next: null
+                    index: null
                 }
             });
 
