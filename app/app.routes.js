@@ -56,12 +56,23 @@
             })
             .state('user.image', {
                 url: '/image/:id',
-                templateUrl: '/app/user/user.image.tpl.html',
+                /*templateUrl: '/app/user/user.image.tpl.html',
                 controller: require('./app/user/UserImageController'),
-                controllerAs: 'vm',
+                controllerAs: 'vm',*/
                 params: {
                     index: null
-                }
+                },
+                onEnter: ['$modal', '$state', 'user', function($modal, $state, user) {
+                    $modal({
+                        templateUrl: '/app/user/user.image.tpl.html',
+                        controller: require('./app/user/UserImageController'),
+                        controllerAs: 'vm',
+                        resolve: {
+                            user: function(){return user;}
+                        },
+                        onHide: function() {console.log('hide');$state.go('user.gallery({username: user.username})');}
+                    });
+                }]
             });
 
 

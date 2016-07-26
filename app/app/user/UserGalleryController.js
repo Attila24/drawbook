@@ -14,7 +14,7 @@
         vm.user = user.user;
         vm.images = [];
 
-        const limit = 5;
+        const limit = 12;
 
         vm.loadMore = loadMore;
 
