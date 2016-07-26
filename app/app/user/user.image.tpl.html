@@ -1,10 +1,12 @@
 <h3>Image</h3>
 
-<a ui-sref="user.gallery({username: vm.username})">Back</a>
+<a ui-sref="user.gallery({username: vm.user.username})">Back</a>
 
 <br>
 <a ui-sref="user.image({id: vm.prev, index: vm.index-1})" ng-hide="vm.prev == undefined" href="#">Prev</a>
 -
 <a ui-sref="user.image({id: vm.next, index: vm.index+1})" ng-hide="vm.next == undefined" href="#">Next</a>
+<br>
+Date: {{vm.image.image.date}}
 <br>
 <img src="{{vm.image.data}}" />

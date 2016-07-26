@@ -43,8 +43,8 @@
                 controller: require('./app/user/UserController'),
                 controllerAs: 'vm',
                 resolve: {
-                    username: ['$stateParams', function ($stateParams) {
-                        return $stateParams.username;
+                    user: ['$stateParams', 'UserService', function($stateParams, UserService) {
+                        return UserService.get($stateParams.username);
                     }]
                 }
             })

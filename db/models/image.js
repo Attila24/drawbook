@@ -4,7 +4,8 @@ var mongoose = require('mongoose'),
 var ImageSchema = new mongoose.Schema({
     _author: {type: Schema.Types.ObjectId, ref: 'User'},
     title: String,
-    url: String
+    url: String,
+    date: {type: Date, default: Date.now}
 });
 
 module.exports = mongoose.model('Image', ImageSchema);

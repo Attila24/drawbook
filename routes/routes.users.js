@@ -57,7 +57,7 @@ router.route('/')
 router.route('/:username')
     .get(function (req, res) {
         User.findOne({'username': req.params.username})
-            .populate('images')
+            .populate({path: 'images', options: {sort: {'date': -1}}})
             .exec(function(err, user) {
                 if (err) {
                     console.log('error: ' + err);

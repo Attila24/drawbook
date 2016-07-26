@@ -54,7 +54,12 @@ router.get('/:id', function (req, res) {
         fs.readFile(image.url, 'base64', function (err, data) {
             if (err) console.log('Error: ' + err);
 
-            res.send(data);
+            //res.send(data);
+
+            return res.status(200).json({
+               'image': image,
+                'data': 'data:image/png;base64,' + data
+            });
         });
 
    });

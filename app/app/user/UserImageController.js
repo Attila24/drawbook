@@ -5,59 +5,43 @@
         .module('drawbook')
         .controller('UserImageController', UserImageController);
 
-    UserImageController.$inject = ['$stateParams', 'ImageService', 'UserService', 'username'];
+    UserImageController.$inject = ['$stateParams', 'ImageService', 'user'];
 
     /* @ngInject */
-    function UserImageController($stateParams, ImageService, UserService, username) {
+    function UserImageController($stateParams, ImageService, user) {
         var vm = this;
         vm.title = 'UserImageController';
+        vm.user = user.user;
+        vm.index = $stateParams.index;
 
         init();
 
         ////////////////////////////////////
 
         function init() {
-            vm.username = username;
 
-            vm.index = $stateParams.index;
+            if (vm.index === undefined || vm.index === null) {
+                vm.index = vm.user.images.map(function (e) {return e._id}).indexOf($stateParams.id);
+            }
 
-            ImageService.get(vm.username, $stateParams.id)
+            if (vm.user.images.length == 1) {
+                vm.prev = vm.next = undefined;
+            } else if (vm.index == 0) {
+                vm.next = vm.user.images[vm.index+1]._id;
+                vm.prev = undefined;
+            } else if (vm.index > 0 && vm.index < vm.user.images.length-1) {
+                vm.prev = vm.user.images[vm.index-1]._id;
+                vm.next = vm.user.images[vm.index+1]._id;
+            } else if (vm.index == vm.user.images.length-1) {
+                vm.prev = vm.user.images[vm.index-1]._id;
+                vm.next = undefined;
+            }
+
+            ImageService.get(vm.user.username, $stateParams.id)
                 .then(function (res) {
-                    vm.image = {
-                        data: 'data:image/png;base64,' + res.data.data,
-                        id: res.id
-                    };
+                    vm.image = res.data.data;
                 })
                 .catch(function (res) {});
-
-            UserService.get(vm.username)
-                .then(function (res) {
-                    vm.user = res.user;
-                    /*console.log('index: ' + vm.index);
-
-                     angular.forEach(vm.user.images, function (iter) {
-                     console.log(iter._id);
-                     });
-
-                     console.log('current: ' + $stateParams.id);*/
-
-                    if (vm.index != undefined && vm.index != null) {
-                        if (vm.index == 0) {
-                            vm.next = vm.user.images[vm.index+1]._id;
-                            vm.prev = undefined;
-                        } else if (vm.index > 0 && vm.index < vm.user.images.length-1) {
-                            vm.prev = vm.user.images[vm.index-1]._id;
-                            vm.next = vm.user.images[vm.index+1]._id;
-                        } else if (vm.index == vm.user.images.length-1) {
-                            vm.prev = vm.user.images[vm.index-1]._id;
-                            vm.next = undefined;
-                        }
-                    }
-
-                    /*console.log('prev:' + vm.prev);
-                     console.log('next:' + vm.next);*/
-                });
-
         }
     }
 
