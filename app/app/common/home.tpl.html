@@ -17,5 +17,14 @@
 		<button class="btn btn-info" ui-sref="draw">New Drawing</button>
 		<br />
 		<button class="btn btn-default" ui-sref="edit">Edit Profile</button>
+		<p>
+			<h3>Users: </h3>
+			<ul class="list-unstyled">
+				<li ng-repeat="user in vm.users">
+					> <a ui-sref="user.gallery({username: user.username})">{{user.username}}</a>
+				</li>
+			</ul>
+		</p>
+
 	</div>
 </p>

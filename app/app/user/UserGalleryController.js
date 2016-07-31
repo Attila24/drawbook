@@ -5,10 +5,10 @@
         .module('drawbook')
         .controller('UserGalleryController', UserGalleryController);
 
-    UserGalleryController.$inject = ['user', 'ImageService'];
+    UserGalleryController.$inject = ['user', 'ImageService', '$state'];
 
     /* @ngInject */
-    function UserGalleryController(user, ImageService) {
+    function UserGalleryController(user, ImageService, $state) {
         var vm = this;
         vm.title = 'UserGalleryController';
         vm.user = user.user;
@@ -34,7 +34,6 @@
         }
 
         function loadMore() {
-            console.log('asd');
             vm.current = vm.loaded;
             vm.loaded = vm.user.images.length < vm.loaded + limit ? vm.user.images.length : vm.loaded + limit;
 
@@ -50,6 +49,8 @@
             }
             console.log(vm.images);
         }
+
+
 
     }
 

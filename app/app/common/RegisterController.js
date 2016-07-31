@@ -39,7 +39,6 @@
                 age: vm.user.age,
                 gender: vm.user.gender
             };
-
             $auth.signup(user)
                 .then(function(res) {
                     console.log(res);
@@ -55,8 +54,8 @@
                 .catch(function(res) {
                     console.log('Error ' + res);
                 });
-
         }
+
     }
 
     module.exports = RegisterController;

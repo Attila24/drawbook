@@ -1,9 +1,9 @@
-var express = require('express'),
-    router  = express.Router({mergeParams: true}),
-    Image   = require('../db/models/image'),
-    User    = require('../db/models/user'),
-    mkdirp  = require('mkdirp'),
-    fs      = require('fs');
+var express     = require('express'),
+    router      = express.Router({mergeParams: true}),
+    Image       = require('../db/models/image'),
+    User        = require('../db/models/user'),
+    mkdirp      = require('mkdirp'),
+    fs          = require('fs');
 
 router.post('/', function(req, res) {
 
@@ -44,6 +44,18 @@ router.post('/', function(req, res) {
     });
 });
 
+
+router.post('/avatar', function (req, res) {
+    var path = req.files.file.path.replace('app\\', '');
+    path = path.replace(/\\/g, '/');
+    console.log('Path: ' + path);
+    console.log('username: ' + req.params.username);
+    User.findOneAndUpdate({username: req.params.username}, {$set: {avatarPath: path}}, function (err) {
+        if (err) console.log('Error: ' + err);
+        return res.status(200).json({status: 'Update successful! New file path: ' + req.files.file.path});
+    });
+});
+
 router.get('/:id', function (req, res) {
    Image.findOne({_id: req.params.id}, function (err, image) {
         if (err) {
@@ -53,8 +65,6 @@ router.get('/:id', function (req, res) {
 
         fs.readFile(image.url, 'base64', function (err, data) {
             if (err) console.log('Error: ' + err);
-
-            //res.send(data);
 
             return res.status(200).json({
                'image': image,

@@ -6,6 +6,9 @@
 
     /* @ngInject */
     function DrawboookStates ($stateProvider, $urlRouterProvider, $locationProvider) {
+
+        var modal;
+
         $stateProvider.state('home', {
                 url: '/',
                 templateUrl: '/app/common/home.tpl.html',
@@ -54,30 +57,30 @@
                 controller: require('./app/user/UserGalleryController'),
                 controllerAs: 'vm'
             })
-            .state('user.image', {
-                url: '/image/:id',
-                /*templateUrl: '/app/user/user.image.tpl.html',
-                controller: require('./app/user/UserImageController'),
-                controllerAs: 'vm',*/
+            .state('user.gallery.image', {
+                url: 'image/:id',
                 params: {
                     index: null
                 },
-                onEnter: ['$modal', '$state', 'user', function($modal, $state, user) {
-                    $modal({
+                onEnter: ['$modal', '$state', 'user', '$stateParams', function($modal, $state, user, $stateParams) {
+                    modal = $modal({
                         templateUrl: '/app/user/user.image.tpl.html',
                         controller: require('./app/user/UserImageController'),
                         controllerAs: 'vm',
                         resolve: {
                             user: function(){return user;}
                         },
-                        onHide: function() {console.log('hide');$state.go('user.gallery({username: user.username})');}
+                        container: 'body',
+                        animation: 'am-fade',
+                        backdropAnimation: 'backdrop-anim',
+                        position: 'center',
+                        keyboard: false,
+                        backdrop: false
                     });
                 }]
             });
 
-
         $urlRouterProvider.otherwise("/");
-
         $locationProvider.html5Mode(true);
 
     }

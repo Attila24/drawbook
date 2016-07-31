@@ -88,7 +88,8 @@ gulp.task('copy-libs', function() {
         'node_modules/angular-local-storage/dist/angular-local-storage.min.js',
         'node_modules/bootstrap-sass/assets/javascripts/bootstrap.min.js',
         'node_modules/jquery/dist/jquery.min.js',
-        'node_modules/satellizer/satellizer.min.js'
+        'node_modules/satellizer/satellizer.min.js',
+        'node_modules/ng-file-upload/dist/ng-file-upload-all.min.js'
         ];
 
     gulp.src(entries)
@@ -115,7 +116,8 @@ gulp.task('styles', function() {
         .pipe(sourcemaps.init())
         .pipe(sass(sassOptions).on('error', sass.logError))
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest('app/css'));
+        .pipe(gulp.dest('app/css'))
+        .pipe(browserSync.stream());
 
 });
 
@@ -165,7 +167,7 @@ gulp.task('bs-reload', function() {
 //--------------------------------------------------------
 
 gulp.task('watch', function() {
-    gulp.watch('app/**/*.js', ['js', browserSync.reload]);
+    gulp.watch('app/**/*.js', ['js']);
     gulp.watch('app/**/*.html', ['bs-reload']);
     gulp.watch('app/**/*.scss', ['styles', 'bs-reload']);
 });

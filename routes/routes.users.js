@@ -3,9 +3,7 @@ var express             = require('express'),
     passport            = require('passport'),
     jwt                 = require('jwt-simple'),
     moment              = require('moment'),
-    //LocalStrategy       = require('passport-local').Strategy,
-    User                = require('../db/models/user'),
-    Image               = require('../db/models/image');
+    User                = require('../db/models/user');
 
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
@@ -47,7 +45,6 @@ router.get('/logout', function(req, res) {
 
 router.route('/')
     .get(function(req, res) {
-            console.log('ez fut le');
             User.find(function(err, users) {
                 if (err) res.send(err);
                 res.json(users);

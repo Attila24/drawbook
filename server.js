@@ -7,6 +7,7 @@ var express         = require('express'),
     cors            = require('cors'),
     mongoose        = require('mongoose'),
     passport        = require('passport'),
+    multipart       = require('connect-multiparty'),
     app             = express();
 
 // configuration =======================
@@ -14,6 +15,7 @@ var express         = require('express'),
 var db      = require('./db/db'),
     port    = process.env.PORT || 5000;
 
+mongoose.Promise = global.Promise;
 mongoose.connect(db.url);
 
 app.use(bodyParser.json({limit: '50mb', extended: true}));
@@ -21,9 +23,13 @@ app.use(bodyParser.urlencoded({ extended: true}));
 app.use(cookieParser());
 app.use(methodOverride('X-HTTP-Method-Override'));
 app.use(cors());
+app.use(multipart({
+    uploadDir: 'app/uploads/avatars'
+}));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.static(__dirname + '/app'));
+
+app.use('', express.static(__dirname + '/app'));
 
 // routes ==============================
 

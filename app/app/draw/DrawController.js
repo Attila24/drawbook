@@ -43,7 +43,7 @@
             var img = tmpcanvas[0].toDataURL();
             var username = localStorageService.get("currentUser").username;
 
-            ImageService.post(username, img)
+            ImageService.post(username, img, vm.imagetitle)
                 .then(function (res) {
                     $state.go('home');
                 })

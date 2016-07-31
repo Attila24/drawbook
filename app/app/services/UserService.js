@@ -9,7 +9,8 @@
         return {
             get: function (username) {
                 var deferred = $q.defer();
-                $http.get(server.url + 'users/' + username)
+                var url = username ? server.url + 'users/' + username : server.url + 'users/';
+                $http.get(url)
                     .success(function (data) {
                         deferred.resolve(data);
                     })

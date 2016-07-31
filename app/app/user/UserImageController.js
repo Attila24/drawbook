@@ -5,20 +5,32 @@
         .module('drawbook')
         .controller('UserImageController', UserImageController);
 
-    UserImageController.$inject = ['$stateParams', 'ImageService', 'user'];
+    UserImageController.$inject = ['$stateParams', 'ImageService', 'user', '$state', '$scope', 'CommentService', 'localStorageService'];
 
     /* @ngInject */
-    function UserImageController($stateParams, ImageService, user) {
+    function UserImageController($stateParams, ImageService, user, $state, $scope, CommentService, localStorageService) {
+
         var vm = this;
         vm.title = 'UserImageController';
         vm.user = user.user;
         vm.index = $stateParams.index;
+        vm.navigate = navigate;
+        vm.addComment = addComment;
 
         init();
 
         ////////////////////////////////////
 
         function init() {
+
+            $(window).on('click', function(event) {
+                if ($(event.target).is('.modal')) {
+                    $state.go('user.gallery', {user: vm.username})
+                        .then(function() {
+                            $scope.$hide();
+                        });
+                }
+            });
 
             if (vm.index === undefined || vm.index === null) {
                 vm.index = vm.user.images.map(function (e) {return e._id}).indexOf($stateParams.id);
@@ -40,6 +52,47 @@
             ImageService.get(vm.user.username, $stateParams.id)
                 .then(function (res) {
                     vm.image = res.data.data;
+                })
+                .catch(function (res) {});
+
+            loadComments();
+
+        }
+
+        function loadComments() {
+            CommentService.get(vm.user.username, $stateParams.id)
+                .then(function (res) {
+                    vm.comments = res.image.comments;
+                    console.log(vm.comments);
+                })
+                .catch(function (res) {});
+        }
+
+        function navigate(keyCode) {
+            if (vm.prev != undefined && keyCode == 37) { // left
+                $state.go('user.gallery.image', {id: vm.prev, index: vm.index-1})
+                    .then(function() {
+                        $scope.$hide();
+                    });
+            } else if (vm.next != undefined && keyCode == 39) { // right
+                $state.go('user.gallery.image', {id: vm.next, index: vm.index+1})
+                    .then(function() {
+                        $scope.$hide();
+                    });
+            } else if (keyCode == 27) { // escape
+                $state.go('user.gallery', {user: vm.username})
+                    .then(function() {
+                        $scope.$hide();
+                    });
+            }
+        }
+
+
+        function addComment() {
+            CommentService.post(vm.user.username, $stateParams.id, vm.comment, localStorageService.get('currentUser'))
+                .then(function (res) {
+                    vm.comment = "";
+                    loadComments();
                 })
                 .catch(function (res) {});
         }

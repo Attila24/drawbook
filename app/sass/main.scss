@@ -1,2 +1,81 @@
 @import "bootstrap";
 
+/* Modal window settings */
+.modal {
+  text-align: center;
+}
+
+@media screen and (min-width: 768px) {
+  .modal:before {
+    display: inline-block;
+    vertical-align: middle;
+    content: " ";
+    height: 100%;
+  }
+}
+
+.modal-dialog {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+
+  @media screen
+  and (min-width: 1200px)
+  and (max-width: 1920px) {
+    width: 1200px;
+  }
+  @media screen
+  and (min-width: 800px)
+  and (max-width: 1199px) {
+    width: 800px;
+  }
+  @media screen
+  and (min-width: 600px)
+  and (max-width: 799px) {
+    width: 600px;
+  }
+}
+
+
+.modal-backdrop.backdrop-anim {
+  opacity: 0;
+}
+
+.modal-backdrop.am-fade {
+  opacity: 0;
+}
+
+/* Progress bar for upload*/
+
+.thumb {
+  width: 24px;
+  height: 24px;
+  float: none;
+  position: relative;
+  top: 7px;
+}
+
+form .progress {
+  line-height: 15px;
+}
+
+.progress {
+  display: inline-block;
+  width: 100px;
+  border: 3px groove #CCC;
+}
+
+.progress div {
+  font-size: smaller;
+  background: orange;
+  width: 0;
+}
+
+//
+
+img.avatar {
+  width: 150px;
+}
+img.comment-avatar {
+  width: 50px;
+}

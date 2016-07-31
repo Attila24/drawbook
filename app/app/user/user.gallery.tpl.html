@@ -1,9 +1,9 @@
 
 <h3>Gallery</h3>
 <div class="row">
-    <div ng-repeat="image in vm.images | orderBy: '-image.date'" ng-if="image" class="col-md-3">
+    <div ng-repeat="image in vm.images | orderBy: '-image.date'" ng-if="image" class="col-md-2 col-xs-4">
         <span><b>{{$index}}</b> - {{image.image.date | date: 'medium'}}</span>
-        <a ui-sref="user.image({id: image.image._id, index: $index})">
+        <a ui-sref="user.gallery.image({id: image.image._id, index: $index})">
             <img ng-src="{{image.data}}" class="img-responsive img-thumbnail" />
         </a>
     </div>

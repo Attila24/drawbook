@@ -23,10 +23,10 @@
 
                 return deferred.promise;
             },
-            post: function (username, img) {
+            post: function (username, img, title) {
                 var deferred = $q.defer();
                 $http.post(server.url + 'users/' + username + '/images/', {
-                        "title": "teszt kep",
+                        "title": title,
                         "image": img
                     })
                     .success(function (data) {

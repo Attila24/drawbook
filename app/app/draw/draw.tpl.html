@@ -1,82 +1,89 @@
-<b>New Drawing</b>
+<div class="container-fluid">
 <div class="row">
-    <button class="btn btn-info" ng-click="vm.saveImage()">Save</button>
+    <form>
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" ng-model="vm.imagetitle" required id="title" class="form-control">
+        </div>
+    </form>
+    <button class="btn btn-info" ng-click="vm.saveImage()" ng-disabled="!vm.imagetitle">Save</button>
 </div>
+
+
+
 <! Taken from onlab---->
 <script type="text/javascript" src="app/draw/drawapp.js"></script>
 <script type="text/javascript" src="app/draw/drawapp_tools.js"></script>
 <script type="text/javascript" src="app/draw/drawapp_images.js"></script>
 <script type="text/javascript" src="app/draw/colors.js"></script>
 <link rel="stylesheet" href="app/draw/style.css">
-
-<div class="container-fluid">
     <div class="row clearfix">
         <div class="col-xs-2 column noselect">
             <div class="row clearfix" id="undo_redo">
                 <div class="col-xs-6 column right-col">
-                    <button id="undo" title="Undo"><img src="img/undo.png" alt="Undo"></button>
+                    <button id="undo" title="Undo"><img src="img/draw/undo.png" alt="Undo"></button>
                 </div>
                 <div class="col-xs-6 column left-col">
-                    <button id="redo" title="Redo"><img src="img/redo.png" alt="Redo"></button>
+                    <button id="redo" title="Redo"><img src="img/draw/redo.png" alt="Redo"></button>
                 </div>
             </div>
             <section id="tools">
                 <div class="row clearfix">
                     <div class="col-xs-6 column right-col">
-                        <button id="clear" title="Clear layer"><img src="img/delete.png"></button>
+                        <button id="clear" title="Clear layer"><img src="img/draw/delete.png"></button>
                     </div>
                     <div class="col-xs-6 column left-col">
-                        <button name="paint-bucket" title="Paint Bucket"><img src="img/paint-bucket.png" alt="Paint Bucket"></button>
+                        <button name="paint-bucket" title="Paint Bucket"><img src="img/draw/paint-bucket.png" alt="Paint Bucket"></button>
                     </div>
                 </div>
                 <div class="row clearfix">
                     <div class="col-xs-6 column right-col">
-                        <button name="brush" title="Brush" class="selected"><img src="img/brush.png" alt="Brush"></button>
+                        <button name="brush" title="Brush" class="selected"><img src="img/draw/brush.png" alt="Brush"></button>
                     </div>
                     <div class="col-xs-6 column left-col">
-                        <button name="pencil" title="Pencil"><img src="img/pencil.png" alt="Pencil"></button>
+                        <button name="pencil" title="Pencil"><img src="img/draw/pencil.png" alt="Pencil"></button>
                     </div>
                 </div>
                 <div class="row clearfix">
                     <div class="col-xs-6 column right-col">
-                        <button name="spray" title="Spray"><img src="img/spray.png" alt="Spray"></button>
+                        <button name="spray" title="Spray"><img src="img/draw/spray.png" alt="Spray"></button>
                     </div>
                     <div class="col-xs-6 column left-col">
-                        <button name="line" title="Line"><img src="img/line.png" alt="Line"></button>
+                        <button name="line" title="Line"><img src="img/draw/line.png" alt="Line"></button>
                     </div>
                 </div>
                 <div class="row clearfix">
                     <div class="col-xs-6 column right-col">
                         <div class="toolcontainer">
-                            <button name="rectangle" title="Rectangle"><img src="img/rectangle.png" alt="Rectangle"></button>
+                            <button name="rectangle" title="Rectangle"><img src="img/draw/rectangle.png" alt="Rectangle"></button>
                             <div class="toolchildren">
-                                <button name="filledrectangle" title="Filled Rectangle"><img src="img/filledrectangle.png" alt="FilledRectangle"></button>
+                                <button name="filledrectangle" title="Filled Rectangle"><img src="img/draw/filledrectangle.png" alt="FilledRectangle"></button>
                             </div>
                         </div>
                     </div>
                     <div class="col-xs-6 column left-col">
                         <div class="toolcontainer">
-                            <button name="circle" title="Circle"><img src="img/circle.png" alt="Circle"></button>
+                            <button name="circle" title="Circle"><img src="img/draw/circle.png" alt="Circle"></button>
                             <div class="toolchildren">
-                                <button name="filledcircle" title="Filled Circle"><img src="img/filledcircle.png" alt="FilledCircle"></button>
-                                <button name="ellipse" title="Ellipse"><img src="img/ellipse.png" alt="Ellipse"></button>
-                                <button name="filledellipse" title="Filled Ellipse"><img src="img/filledellipse.png" alt="FilledEllipse"></button>
+                                <button name="filledcircle" title="Filled Circle"><img src="img/draw/filledcircle.png" alt="FilledCircle"></button>
+                                <button name="ellipse" title="Ellipse"><img src="img/draw/ellipse.png" alt="Ellipse"></button>
+                                <button name="filledellipse" title="Filled Ellipse"><img src="img/draw/filledellipse.png" alt="FilledEllipse"></button>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="row clearfix">
                     <div class="col-xs-6 column right-col">
-                        <button name="img_select" title="Select image" id="img_select"><img src="img/img_select.png" alt="SelectImage"></button>
+                        <button name="img_select" title="Select image" id="img_select"><img src="img/draw/img_select.png" alt="SelectImage"></button>
                     </div>
                     <div class="col-xs-6 column left-col">
-                        <button name="red_eye" title="Remove red eye"><img src="img/red_eye.png" alt="RemoveRedEye"></button>
+                        <button name="red_eye" title="Remove red eye"><img src="img/draw/red_eye.png" alt="RemoveRedEye"></button>
                     </div>
                 </div>
             </section>
             <div class="row clearfix">
                 <div class="col-xs-6 column right-col dlcol">
-                    <button name="download" title="Download image" id="download"><a><img src="img/download.png" alt="DownloadImage"></a></button>
+                    <button name="download" title="Download image" id="download"><a><img src="img/draw/download.png" alt="DownloadImage"></a></button>
                 </div>
             </div>
             <div class="row clearfix">
@@ -111,7 +118,7 @@
                     <div class="noselect" style="height: 65px; width: 100%">
                         <input type="color" id="colorpicker" title="Primary Color"/>
                         <input type="color" id="colorpicker2" title="Secondary Color"/>
-                        <button id="reversecolors"><img src="img/reverse_arrows.png" alt="Switch" title="Switch Colors"/></button>
+                        <button id="reversecolors"><img src="img/draw/reverse_arrows.png" alt="Switch" title="Switch Colors"/></button>
                     </div>
                 </div>
             </div>
@@ -164,7 +171,7 @@
             <div class="row clearfix">
                 <div class="col-xs-12 column">
 					<span class="btn btn-default btn-file">
-						<img src="img/upload.png" alt="UploadImage">
+						<img src="img/draw/upload.png" alt="UploadImage">
 						<input type="file" id="imageLoader" name="image" title="Upload Image"/>
 						</span>
                 </div>

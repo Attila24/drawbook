@@ -9,7 +9,8 @@ var UserSchema = new mongoose.Schema({
     lastName: String,
     age: Number,
     gender: String,
-    images: [{type: Schema.Types.ObjectId, ref: 'Image'}]
+    images: [{type: Schema.Types.ObjectId, ref: 'Image'}],
+    avatarPath: {type: String, default: 'img/default-avatar.jpg'}
 });
 
 UserSchema.plugin(passportLocalMongoose);
