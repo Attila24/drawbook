@@ -1,18 +1,23 @@
-var mongoose                = require('mongoose'),
-    passportLocalMongoose   = require('passport-local-mongoose'),
-    Schema = mongoose.Schema;
+(function () {
+    'use strict';
 
-var UserSchema = new mongoose.Schema({
-    username: String,
-    password: String,
-    firstName: String,
-    lastName: String,
-    age: Number,
-    gender: String,
-    images: [{type: Schema.Types.ObjectId, ref: 'Image'}],
-    avatarPath: {type: String, default: 'img/default-avatar.jpg'}
-});
+    const
+        mongoose = require('mongoose'),
+        passportLocalMongoose = require('passport-local-mongoose'),
+        Schema = mongoose.Schema,
 
-UserSchema.plugin(passportLocalMongoose);
+        UserSchema = new mongoose.Schema({
+            username: String,
+            password: String,
+            firstName: String,
+            lastName: String,
+            age: Number,
+            gender: String,
+            images: [{type: Schema.Types.ObjectId, ref: 'Image'}],
+            avatarPath: {type: String, default: 'img/default-avatar.jpg'}
+    });
 
-module.exports = mongoose.model('Users', UserSchema);
+    UserSchema.plugin(passportLocalMongoose);
+
+    module.exports = mongoose.model('Users', UserSchema);
+})();

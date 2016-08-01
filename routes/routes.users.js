@@ -1,99 +1,94 @@
-var express             = require('express'),
-    router              = express.Router({mergeParams: true}),
-    passport            = require('passport'),
-    jwt                 = require('jwt-simple'),
-    moment              = require('moment'),
-    User                = require('../db/models/user');
+(function () {
+    'use strict';
 
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
-passport.use(User.createStrategy());
+    var express             = require('express'),
+        router              = express.Router({mergeParams: true}),
+        passport            = require('passport'),
+        jwt                 = require('jwt-simple'),
+        moment              = require('moment'),
+        User                = require('../db/models/user');
 
-function createToken(user) {
-    var payload = {
-        exp: moment().add(14, 'days').unix(),
-        iat: moment().unix(),
-        sub: user._id
-    };
-    return jwt.encode(payload, 'secret');
-}
+    passport.serializeUser(User.serializeUser());
+    passport.deserializeUser(User.deserializeUser());
+    passport.use(User.createStrategy());
 
+    function createToken(user) {
+        let payload = {
+            exp: moment().add(14, 'days').unix(),
+            iat: moment().unix(),
+            sub: user._id
+        };
+        return jwt.encode(payload, 'secret');
+    }
 
-router.post('/login', function(req, res, next) {
+    router.post('/login', (req, res, next) => {
+        passport.authenticate('local', (err, user, info) => {
+            if (err) {return res.status(500).json({err: err});}
+            if (!user) {return res.status(401).json({err: info});}
+            req.logIn(user, err => {
+                if (err) {return res.status(500).json({err: 'Could not log in user'});}
 
-    passport.authenticate('local', function(err, user, info) {
-        if (err) {return res.status(500).json({err: err});}
-        if (!user) {return res.status(401).json({err: info});}
-        req.logIn(user, function(err) {
-            if (err) {
-                return res.status(500).json({err: 'Could not log in user'});
-            }
-            user = user.toObject();
-            delete user.hash;
-            delete user.salt;
-            var token = createToken(user);
+                user = user.toObject();
+                delete user.hash;
+                delete user.salt;
+                let token = createToken(user);
 
-            res.status(200).json({status: 'Login successful!', user: user, token: token});
-        });
-    })(req, res, next);
-});
-
-router.get('/logout', function(req, res) {
-    req.logout();
-    res.status(200).json({status: 'Bye!'});
-});
-
-router.route('/')
-    .get(function(req, res) {
-            User.find(function(err, users) {
-                if (err) res.send(err);
-                res.json(users);
+                res.status(200).json({status: 'Login successful!', user: user, token: token});
             });
+        })(req, res, next);
     });
 
-router.route('/:username')
-    .get(function (req, res) {
-        User.findOne({'username': req.params.username})
-            .populate({path: 'images', options: {sort: {'date': -1}}})
-            .exec(function(err, user) {
-                if (err) {
-                    console.log('error: ' + err);
-                    return res.status(500).json({err: err});
-                }
-                return res.status(200).json({'user': user})
-            });
+    router.get('/logout', (req, res) => {
+        req.logout();
+        res.status(200).json({status: 'Bye!'});
     });
 
-router.post('/register', function(req, res) {
-    console.log(req.body);
-    User.register(new User({
-            username: req.body.username,
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            age: req.body.age,
-            gender: req.body.gender
-        }), req.body.password, function(err, account) {
-        if (err) {
-            console.log('error: '  + err);
-            return res.status(500).json({err: err});
-        }
-        passport.authenticate('local')(req, res, function () {
-            var user = account.toObject();
-            delete user.hash;
-            delete user.salt;
-            var token = createToken(user);
-            return res.status(200).json({status: 'Registration successful!', user: user, token: token});
+    router.get('/', (req, res) => {
+        User.find((err, users) => {
+            if (err) res.send(err);
+            res.status(200).json(users);
         });
     });
-});
 
-router.patch('/:username', function (req, res) {
+    router.route('/:username')
+        .get((req, res) => {
+            User.findOne({'username': req.params.username})
+                .populate({path: 'images', options: {sort: {'date': -1}}})
+                .exec((err, user) => {
+                    if (err) return res.status(500).json({error: err});
+                    return res.status(200).json({'user': user})
+                });
+        });
 
-   User.findOneAndUpdate({'username': req.params.username}, req.body.user, function (err, doc, result) {
-       if (err) console.log('Error: ' + err);
-       return res.status(200).json({status: 'Update successful!'});
-   });
+    router.post('/register', (req, res) => {
+        User.register(
+            new User({
+                username: req.body.username,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                age: req.body.age,
+                gender: req.body.gender
+            }),
+            req.body.password,
+            (err, account) => {
+                if (err) return res.status(500).json({error: err});
 
-});
+                passport.authenticate('local')(req, res, () => {
+                    var user = account.toObject();
+                    delete user.hash;
+                    delete user.salt;
+                    let token = createToken(user);
+                    return res.status(200).json({status: 'Registration successful!', user: user, token: token});
+                });
+        });
+    });
 
-module.exports = router;
+    router.patch('/:username', (req, res) => {
+       User.findOneAndUpdate({'username': req.params.username}, req.body.user, err => {
+           if (err) return res.status(500).json({error: err});
+           return res.status(200).json({status: 'Update successful!'});
+       });
+    });
+
+    module.exports = router;
+})();

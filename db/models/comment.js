@@ -1,10 +1,13 @@
-var mongoose = require('mongoose');
+(function () {
+    'use strict';
 
-var CommentSchema = new mongoose.Schema({
-    author: String,
-    authorAvatar: String,
-    text: String,
-    date: {type: Date, default: Date.now}
-});
+    const mongoose = require('mongoose');
 
-module.exports = CommentSchema;
+    module.exports = new mongoose.Schema({
+        author: String,
+        authorAvatar: String,
+        text: String,
+        date: {type: Date, default: Date.now}
+    });
+
+})();

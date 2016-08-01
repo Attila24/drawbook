@@ -1,10 +1,11 @@
 'use strict';
 
 //--------------------------------------------------------
-// Variables
+// Constants
 //--------------------------------------------------------
 
-var gulp = require('gulp'),
+const
+    gulp = require('gulp'),
     BROWSER_SYNC_RELOAD_DELAY = 3000,
     appPath = 'app/app.js';
 
@@ -15,7 +16,8 @@ var gulp = require('gulp'),
 // Plugins
 //--------------------------------------------------------
 
-var uglify      = require('gulp-uglify'),
+const
+    uglify      = require('gulp-uglify'),
     domain      = require('domain'),
     browserify  = require('browserify'),
     source      = require('vinyl-source-stream'),
@@ -38,9 +40,9 @@ var uglify      = require('gulp-uglify'),
 // Scripts
 //--------------------------------------------------------
 
-gulp.task('js', function() {
+gulp.task('js',() => {
 
-    var b = browserify({
+    let b = browserify({
         entries: appPath,
         debug: true
     });
@@ -48,10 +50,10 @@ gulp.task('js', function() {
     b.ignore('angular');
 
     gulp.src(appPath, {read: false})
-        .pipe(tap(function(file) {
-            var d = domain.create();
+        .pipe(tap(file => {
+            let d = domain.create();
 
-            d.on("error", function (err) {
+            d.on("error", err => {
                 gutil.log(
                     gutil.colors.red("Browserify compile error: "),
                     err.message,
@@ -62,7 +64,7 @@ gulp.task('js', function() {
                 gutil.beep();
             });
 
-            d.run(function() {
+            d.run(() => {
                 return b.bundle()
                     .pipe(source('main.js'))
                     .pipe(buffer())
@@ -70,7 +72,7 @@ gulp.task('js', function() {
                     // other transformations here
                         .pipe(concat('main.min.js', {newLine: ';'}))
                         .pipe(ngAnnotate())
-                        .pipe(uglify({compress: {sequences: false, join_vars: false}}))
+                        //.pipe(uglify({compress: {sequences: false, join_vars: false}}))
                     // other transformations end here
                     .on('error', gutil.log)
                     .pipe(sourcemaps.write('./'))
@@ -79,9 +81,9 @@ gulp.task('js', function() {
         }));
 });
 
-gulp.task('copy-libs', function() {
+gulp.task('copy-libs', () => {
 
-    var entries = [
+    const entries = [
         'node_modules/angular/angular.min.js',
         'node_modules/angular-ui-router/build/angular-ui-router.min.js',
         'node_modules/angular-animate/angular-animate.min.js',
@@ -103,9 +105,9 @@ gulp.task('copy-libs', function() {
 // Styles
 //--------------------------------------------------------
 
-gulp.task('styles', function() {
+gulp.task('styles', () => {
 
-    var sassOptions = {
+    const sassOptions = {
         includePaths: ['node_modules/bootstrap-sass/assets/stylesheets'],
         errLogToConsole: true,
         outputStyle: 'compressed'
@@ -125,25 +127,18 @@ gulp.task('styles', function() {
 // Nodemon
 //--------------------------------------------------------
 
-gulp.task('nodemon', function(cb) {
-    var called = false;
+gulp.task('nodemon', cb => {
+    let called = false;
     return nodemon({
        script: 'server.js',
         ext: 'js',
         ignore: 'app/*',
         env: {'NODE_ENV': 'development'}
-    })
-        .on('start', function () {
+    }).on('start', () => {
         if (!called) {cb();}
         called = true;
-
-    })
-        .on('restart', function () {
-         setTimeout(function reload() {
-         browserSync.reload({
-         stream: false
-         });
-         }, BROWSER_SYNC_RELOAD_DELAY);
+    }).on('restart', () => {
+         setTimeout(() => {browserSync.reload({stream: false});}, BROWSER_SYNC_RELOAD_DELAY);
     });
 });
 
@@ -151,22 +146,20 @@ gulp.task('nodemon', function(cb) {
 // Browser-Sync
 //--------------------------------------------------------
 
-gulp.task('browser-sync', ['nodemon'], function() {
+gulp.task('browser-sync', ['nodemon'], () => {
    browserSync({
        proxy: 'http://localhost:5000',
        port: 7000
    });
 });
 
-gulp.task('bs-reload', function() {
-    browserSync.reload();
-});
+gulp.task('bs-reload', () => {browserSync.reload();});
 
 //--------------------------------------------------------
 // Watch
 //--------------------------------------------------------
 
-gulp.task('watch', function() {
+gulp.task('watch', () => {
     gulp.watch('app/**/*.js', ['js']);
     gulp.watch('app/**/*.html', ['bs-reload']);
     gulp.watch('app/**/*.scss', ['styles', 'bs-reload']);

@@ -3,11 +3,8 @@
 
     DrawboookStates.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider'];
 
-
     /* @ngInject */
     function DrawboookStates ($stateProvider, $urlRouterProvider, $locationProvider) {
-
-        var modal;
 
         $stateProvider.state('home', {
                 url: '/',
@@ -46,7 +43,7 @@
                 controller: require('./app/user/UserController'),
                 controllerAs: 'vm',
                 resolve: {
-                    user: ['$stateParams', 'UserService', function($stateParams, UserService) {
+                    user: ['$stateParams', 'UserService', ($stateParams, UserService) => {
                         return UserService.get($stateParams.username);
                     }]
                 }
@@ -59,16 +56,14 @@
             })
             .state('user.gallery.image', {
                 url: 'image/:id',
-                params: {
-                    index: null
-                },
-                onEnter: ['$modal', '$state', 'user', '$stateParams', function($modal, $state, user, $stateParams) {
-                    modal = $modal({
+                params: {index: null},
+                onEnter: ['$modal', '$state', 'user', '$stateParams', ($modal, $state, user) => {
+                    $modal({
                         templateUrl: '/app/user/user.image.tpl.html',
                         controller: require('./app/user/UserImageController'),
                         controllerAs: 'vm',
                         resolve: {
-                            user: function(){return user;}
+                            user: () => {return user;}
                         },
                         container: 'body',
                         animation: 'am-fade',

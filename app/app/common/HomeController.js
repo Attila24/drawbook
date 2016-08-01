@@ -9,7 +9,7 @@
 
     /* @ngInject */
     function HomeController($auth, localStorageService, UserService) {
-        var vm = this;
+        const vm = this;
         vm.title = 'HomeController';
 
         vm.user = localStorageService.get("currentUser");
@@ -17,12 +17,11 @@
         vm.isAuthenticated = isAuthenticated;
         vm.logout = logout;
 
-        if (isAuthenticated())
-            init();
+        if (isAuthenticated()) init();
 
         function init() {
             UserService.get()
-                .then(function (res) {
+                .then(res => {
                     vm.users = res;
                 })
         }

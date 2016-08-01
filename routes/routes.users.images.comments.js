@@ -1,46 +1,41 @@
-var express         = require('express'),
-    router          = express.Router({mergeParams: true}),
-    CommentSchema   = require('../db/models/comment'),
-    Image           = require('../db/models/image'),
-    mongoose        = require('mongoose');
+(function () {
+    'use strict';
 
-router.post('/', function(req, res) {
+    const
+        express = require('express'),
+        router = express.Router({mergeParams: true}),
+        CommentSchema = require('../db/models/comment'),
+        Image = require('../db/models/image'),
+        mongoose = require('mongoose');
 
-    Image.findOne({_id: req.params.imageid}, function (err, image) {
-        if (err) console.log('Error' + err);
+    router.post('/', (req, res) => {
+        Image.findOne({_id: req.params.imageid}, (err, image) => {
+            if (err) return res.status(500).json({error: err});
 
-            var Comment = mongoose.model('Comment', CommentSchema);
-
-            var comment = new Comment({
+            let Comment = mongoose.model('Comment', CommentSchema);
+            let comment = new Comment({
                 author: req.body.author,
                 authorAvatar: req.body.authorAvatar,
                 text: req.body.comment
             });
 
             image.comments.push(comment);
-            image.save(function (err) {
-                if (err) {
-                    console.log('Error: ' + err);
-                }
-            });
+            image.save(err => {if (err) return res.status(200).json({error: err});});
 
-            return res.status(200).json({
-                'message': 'POST Success'
-            });
-    });
-});
-
-router.get('/:id', function (req, res) {
-   Image.findOne({_id: req.params.imageid}, function (err, image) {
-        if (err) console.log(err);
-
-        return res.status(200).json({
-            comments: image.comments
+            return res.status(200).json({status: 'Successfully posted comment'});
         });
-   });
-});
+    });
 
-module.exports = router;
+    router.get('/:id', (req, res) => {
+        Image.findOne({_id: req.params.imageid}, (err, image) => {
+            if (err) return res.status(500).json({error: err});
+            return res.status(200).json({comments: image.comments});
+        });
+    });
+
+    module.exports = router;
+
+})();
 
 
 
