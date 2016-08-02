@@ -1,4 +1,4 @@
-(function () {
+((() => {
     'use strict';
 
     const
@@ -12,8 +12,8 @@
         Image.findOne({_id: req.params.imageid}, (err, image) => {
             if (err) return res.status(500).json({error: err});
 
-            let Comment = mongoose.model('Comment', CommentSchema);
-            let comment = new Comment({
+            const Comment = mongoose.model('Comment', CommentSchema);
+            const comment = new Comment({
                 author: req.body.author,
                 authorAvatar: req.body.authorAvatar,
                 text: req.body.comment
@@ -34,8 +34,7 @@
     });
 
     module.exports = router;
-
-})();
+}))();
 
 
 

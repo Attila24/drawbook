@@ -633,7 +633,7 @@ function initCanvas () {
 
 				// ha kész a kimentés
 				tmpimage2.onload = function(){
-					// elmentjük a helyzetet (reset-elődik az src változatásakor)
+					// elmentjük a helyzetet (reset-elődik az server változatásakor)
 					tmpoffsets[layer_index] = imageoffsets[layer_index];
 					images[layer_index].src = tmpimage2.src; // felülírjuk az eredeti képet az új, kis kivágott képpel
 					//redrawImage(false); // újrarajzoljuk a képet

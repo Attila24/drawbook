@@ -1,7 +1,7 @@
-(function () {
+((() => {
     'use strict';
 
-    var express             = require('express'),
+    const express           = require('express'),
         router              = express.Router({mergeParams: true}),
         passport            = require('passport'),
         jwt                 = require('jwt-simple'),
@@ -13,7 +13,7 @@
     passport.use(User.createStrategy());
 
     function createToken(user) {
-        let payload = {
+        const payload = {
             exp: moment().add(14, 'days').unix(),
             iat: moment().unix(),
             sub: user._id
@@ -23,7 +23,7 @@
 
     router.post('/login', (req, res, next) => {
         passport.authenticate('local', (err, user, info) => {
-            if (err) {return res.status(500).json({err: err});}
+            if (err) {return res.status(500).json({err});}
             if (!user) {return res.status(401).json({err: info});}
             req.logIn(user, err => {
                 if (err) {return res.status(500).json({err: 'Could not log in user'});}
@@ -31,9 +31,9 @@
                 user = user.toObject();
                 delete user.hash;
                 delete user.salt;
-                let token = createToken(user);
+                const token = createToken(user);
 
-                res.status(200).json({status: 'Login successful!', user: user, token: token});
+                res.status(200).json({status: 'Login successful!', user, token});
             });
         })(req, res, next);
     });
@@ -74,21 +74,21 @@
                 if (err) return res.status(500).json({error: err});
 
                 passport.authenticate('local')(req, res, () => {
-                    var user = account.toObject();
+                    const user = account.toObject();
                     delete user.hash;
                     delete user.salt;
-                    let token = createToken(user);
-                    return res.status(200).json({status: 'Registration successful!', user: user, token: token});
+                    const token = createToken(user);
+                    return res.status(200).json({status: 'Registration successful!', user, token});
                 });
-        });
+            });
     });
 
     router.patch('/:username', (req, res) => {
-       User.findOneAndUpdate({'username': req.params.username}, req.body.user, err => {
-           if (err) return res.status(500).json({error: err});
-           return res.status(200).json({status: 'Update successful!'});
-       });
+        User.findOneAndUpdate({'username': req.params.username}, req.body.user, err => {
+            if (err) return res.status(500).json({error: err});
+            return res.status(200).json({status: 'Update successful!'});
+        });
     });
 
     module.exports = router;
-})();
+}))();

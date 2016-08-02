@@ -7,9 +7,9 @@
     function ImageService($q, $http, server) {
 
         return {
-            get: function (username, id) {
+            get: (username, id) => {
 
-                var deferred = $q.defer();
+                let deferred = $q.defer();
                 $http({
                         method: 'GET',
                         url: server.url + 'users/' + username + '/images/' + id,

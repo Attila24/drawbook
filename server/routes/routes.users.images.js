@@ -1,6 +1,5 @@
-(function () {
+((() => {
     'use strict';
-
     const
         express     = require('express'),
         router      = express.Router({mergeParams: true}),
@@ -10,30 +9,30 @@
         fs          = require('fs');
 
 
-    router.post('/', function(req, res) {
-        User.findOne({username: req.params.username}, function(err, user){
+    router.post('/', (req, res) => {
+        User.findOne({username: req.params.username}, (err, user) => {
             if (err) return res.status(500).json({error: err});
 
             // Create directory
-            let date = new Date();
-            let path = 'files/' + date.getFullYear() + '/' + (date.getMonth() + 1);
+            const date = new Date();
+            const path = `files/${date.getFullYear()}/${date.getMonth() + 1}`;
 
-            mkdirp(path, err => {if (err) console.log('Error while creating directory: ' + err);});
+            mkdirp(path, err => {if (err) console.log(`Error while creating directory: ${err}`);});
 
             // Save image file
-            let image = new Image({
+            const image = new Image({
                 _author: user._id,
                 title: req.body.title
             });
 
-            let base64Data = req.body.image.replace(/^data:image\/png;base64,/, "");
+            const base64Data = req.body.image.replace(/^data:image\/png;base64,/, "");
 
-            fs.writeFile(path + '/' + image._id + '.png', base64Data, 'base64', err => {
-                if (err) console.log('Error: ' + err);
+            fs.writeFile(`${path}/${image._id}.png`, base64Data, 'base64', err => {
+                if (err) console.log(`Error: ${err}`);
                 console.log('File saved!');
             });
 
-            image.url = path + '/' + image._id + '.png';
+            image.url = `${path}/${image._id}.png`;
             image.save(err => {if (err) return res.status(500).json({error: err});});
 
             // Save to user
@@ -54,18 +53,18 @@
     });
 
     router.get('/:id', (req, res) => {
-       Image.findOne({_id: req.params.id}, (err, image) => {
+        Image.findOne({_id: req.params.id}, (err, image) => {
             if (err) return res.status(500).json({error: err});
 
             fs.readFile(image.url, 'base64', (err, data) => {
                 if (err) return res.status(500).json({error: err});
 
                 return res.status(200).json({
-                   'image': image,
-                    'data': 'data:image/png;base64,' + data
+                    'image': image,
+                    'data': `data:image/png;base64,${data}`
                 });
             });
-       });
+        });
     });
 
     router.delete('/:id', (req, res) => {
@@ -84,5 +83,4 @@
     });
 
     module.exports = router;
-
-})();
+}))();

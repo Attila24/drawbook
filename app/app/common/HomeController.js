@@ -1,43 +1,39 @@
-(function () {
-    'use strict';
+'use strict';
 
-    angular
-        .module('drawbook')
-        .controller('HomeController', HomeController);
+angular
+    .module('drawbook')
+    .controller('HomeController', HomeController);
 
-    HomeController.$inject = ['$auth', 'localStorageService', 'UserService'];
+HomeController.$inject = ['$auth', 'localStorageService', 'UserService'];
 
-    /* @ngInject */
-    function HomeController($auth, localStorageService, UserService) {
-        const vm = this;
-        vm.title = 'HomeController';
+/* @ngInject */
+export default function HomeController($auth, localStorageService, UserService) {
+    const vm = this;
+    vm.title = 'HomeController';
 
-        vm.user = localStorageService.get("currentUser");
+    vm.user = localStorageService.get("currentUser");
 
-        vm.isAuthenticated = isAuthenticated;
-        vm.logout = logout;
+    vm.isAuthenticated = isAuthenticated;
+    vm.logout = logout;
 
-        if (isAuthenticated()) init();
+    if (isAuthenticated()) init();
 
-        function init() {
-            UserService.get()
-                .then(res => {
-                    vm.users = res;
-                })
-        }
-
-        
-        function isAuthenticated() {
-            return $auth.isAuthenticated();
-        }
-
-        function logout() {
-            $auth.logout();
-            localStorageService.remove("currentUser");
-        }
+    function init() {
+        UserService.get()
+            .then(res => {
+                vm.users = res;
+            })
     }
 
-    module.exports = HomeController;
 
-})();
+    function isAuthenticated() {
+        return $auth.isAuthenticated();
+    }
+
+    function logout() {
+        $auth.logout();
+        localStorageService.remove("currentUser");
+    }
+}
+
 

@@ -1,2 +1,6 @@
 app/main.min.js
 app/main.min.js.map
+app/uploads
+files
+dist
+node_modules

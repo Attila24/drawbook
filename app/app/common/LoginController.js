@@ -9,16 +9,18 @@
 
     /* @ngInject */
     function LoginController($state, $auth, localStorageService) {
-        var vm = this;
+        const vm = this;
+
         vm.title = 'LoginController';
+        vm.incorrectLogin = false;
 
         vm.login = login;
 
-        vm.incorrectLogin = false;
+        //////////////////////////////////////
 
         function login() {
 
-            var user = {
+            let user = {
                 username: vm.user.name,
                 password: vm.user.password
             };
@@ -26,12 +28,10 @@
             $auth.login(user)
                 .then(function(res) {
                     localStorageService.set("currentUser", res.data.user);
-                    //$window.localStorage.currentUser = JSON.stringify(res.data.user);
-                    //$rootScope.currentUser = JSON.parse(localStorage.getItem('currentUser'));
                     $state.go('home');
                 })
                 .catch(function(res) {
-                    console.log('error: ' + res);
+                    console.log('Error: ' + res);
                     vm.incorrectLogin = true;
                 });
         }

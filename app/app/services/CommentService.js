@@ -7,34 +7,26 @@
     function CommentService($q, $http, server) {
 
         return {
-            post: function (username, imageid, comment, currentUser) {
+            post: (username, imageid, comment, currentUser) => {
+                let deferred = $q.defer();
 
-                var deferred = $q.defer();
-
-                $http.post(
-                    server.url + '/users/' + username + '/images/' + imageid + '/comments/', {
+                $http.post(server.url + '/users/' + username + '/images/' + imageid + '/comments/',
+                    {
                         author: currentUser.username,
                         authorAvatar: currentUser.avatarPath,
                         comment: comment
                     })
-                    .success(function (data) {
-                        deferred.resolve(data);
-                    })
-                    .error(function (data) {
-                        deferred.reject(data);
-                    });
+                    .success(data => {deferred.resolve(data);})
+                    .error(data => {deferred.reject(data);});
+
                 return deferred.promise;
             },
-            get: function (user, imageid) {
-                var deferred = $q.defer();
+            get: (user, imageid) => {
+                let deferred = $q.defer();
 
                 $http.get(server.url + '/users/' + user.username + '/images/' + imageid)
-                    .success(function (data) {
-                        deferred.resolve(data);
-                    })
-                    .error(function (data) {
-                        deferred.reject(data);
-                    });
+                    .success(data => {deferred.resolve(data);})
+                    .error(data => {deferred.reject(data);});
                 return deferred.promise;
             }
         };
