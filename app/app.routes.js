@@ -1,12 +1,12 @@
 'use strict';
 
 import HomeController from './app/common/HomeController';
-
+import LoginController from './app/common/LoginController';
 
 DrawboookStates.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider'];
 
 /* @ngInject */
-function DrawboookStates ($stateProvider, $urlRouterProvider, $locationProvider) {
+export default function DrawboookStates ($stateProvider, $urlRouterProvider, $locationProvider) {
 
     $stateProvider.state('home', {
             url: '/',
@@ -23,7 +23,7 @@ function DrawboookStates ($stateProvider, $urlRouterProvider, $locationProvider)
         state('login', {
             url: '/login',
             templateUrl: '/app/common/login.tpl.html',
-            controller: require('./app/common/LoginController'),
+            controller: LoginController,
             controllerAs: 'vm'
         })
         .state('draw', {
@@ -78,7 +78,4 @@ function DrawboookStates ($stateProvider, $urlRouterProvider, $locationProvider)
 
     $urlRouterProvider.otherwise("/");
     $locationProvider.html5Mode(true);
-
 }
-
-module.exports = DrawboookStates;

@@ -1,41 +1,34 @@
-(function () {
-    'use strict';
+'use strict';
 
-    angular
-        .module('drawbook')
-        .controller('LoginController', LoginController);
+LoginController.$inject = ['$state', '$auth', 'localStorageService'];
 
-    LoginController.$inject = ['$state', '$auth', 'localStorageService'];
+/* @ngInject */
+export default function LoginController($state, $auth, localStorageService) {
+    const vm = this;
 
-    /* @ngInject */
-    function LoginController($state, $auth, localStorageService) {
-        const vm = this;
+    vm.title = 'LoginController';
+    vm.incorrectLogin = false;
 
-        vm.title = 'LoginController';
-        vm.incorrectLogin = false;
+    vm.login = login;
 
-        vm.login = login;
+    //////////////////////////////////////
 
-        //////////////////////////////////////
+    function login() {
 
-        function login() {
+        let user = {
+            username: vm.user.name,
+            password: vm.user.password
+        };
 
-            let user = {
-                username: vm.user.name,
-                password: vm.user.password
-            };
-
-            $auth.login(user)
-                .then(function(res) {
-                    localStorageService.set("currentUser", res.data.user);
-                    $state.go('home');
-                })
-                .catch(function(res) {
-                    console.log('Error: ' + res);
-                    vm.incorrectLogin = true;
-                });
-        }
+        $auth.login(user)
+            .then(function(res) {
+                localStorageService.set("currentUser", res.data.user);
+                $state.go('home');
+            })
+            .catch(function(res) {
+                console.log('Error: ' + res);
+                vm.incorrectLogin = true;
+            });
     }
-    module.exports = LoginController;
-})();
+}
 

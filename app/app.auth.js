@@ -1,17 +1,10 @@
-(function () {
-    'use strict';
+'use strict';
 
-    AuthConfig.$inject = ['$authProvider', 'server'];
+AuthConfig.$inject = ['$authProvider', 'server'];
 
-
-    /* @ngInject */
-    function AuthConfig ($authProvider, server) {
-        $authProvider.baseUrl = server.url;
-
-        $authProvider.signupUrl = '/users/register';
-        $authProvider.loginUrl = '/users/login';
-    }
-
-    module.exports = AuthConfig;
-
-})();
+/* @ngInject */
+export default function AuthConfig ($authProvider, server) {
+    $authProvider.baseUrl = server.url;
+    $authProvider.signupUrl = '/users/register';
+    $authProvider.loginUrl = '/users/login';
+}

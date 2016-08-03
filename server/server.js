@@ -55,4 +55,4 @@ app.use((err, req, res, next) => {
 
 app.listen(port);
 console.log('Listening on port 5000.');
-exports = module.exports = app;
+export default app;

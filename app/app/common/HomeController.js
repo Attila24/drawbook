@@ -1,9 +1,5 @@
 'use strict';
 
-angular
-    .module('drawbook')
-    .controller('HomeController', HomeController);
-
 HomeController.$inject = ['$auth', 'localStorageService', 'UserService'];
 
 /* @ngInject */
