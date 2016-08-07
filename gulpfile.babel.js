@@ -1,15 +1,11 @@
 'use strict';
 
-require('babel-register');
-
 import gulp from 'gulp';
-//import domain from 'domain';
 import browserify from 'browserify';
 import source from 'vinyl-source-stream';
 import buffer from 'vinyl-buffer';
 import gutil from 'gulp-util';
 import sourcemaps from 'gulp-sourcemaps';
-//import tap from 'gulp-tap';
 import ngAnnotate from 'gulp-ng-annotate';
 import concat from 'gulp-concat';
 import browserSync from 'browser-sync';
@@ -17,14 +13,13 @@ import nodemon from 'gulp-nodemon';
 import sass from 'gulp-sass';
 import babel from 'gulp-babel'
 import Cache from 'gulp-file-cache';
-
 import babelify from 'babelify';
 import watchify from 'watchify';
 
 //import uglify from 'gulp-uglify';
 
 const BROWSER_SYNC_RELOAD_DELAY = 3000;
-const appPath = 'app/app.js';
+const appPath = 'client/app.js';
 
 //rename      = require('gulp-rename')
 //jshint      = require('gulp-jshint')
@@ -33,84 +28,35 @@ const appPath = 'app/app.js';
 // Scripts
 //--------------------------------------------------------
 
-//gulp.task('js',() => {
+const b = browserify({
+        entries: appPath,
+        debug: true,
+        cache: {},
+        packageCache: {},
+        plugin: [watchify],
+        transform: [babelify]
+});
 
-    const b = browserify({
-            entries: appPath,
-            debug: true,
-            cache: {},
-            packageCache: {},
-            plugin: [watchify],
-            transform: [babelify]
-    });
-   /* b.plugin(watchify);
-    b.transform(babelify);*/
+b.on('update', bundle);
+b.on('log', gutil.log.bind(gutil.colors.blue, 'js: '));
 
-    //b.ignore('angular');
+gulp.task('js', bundle);
 
-    b.on('update', bundle);
-    b.on('log', gutil.log.bind(gutil, 'js: '));
-
-    gulp.task('js', bundle);
-
-    function bundle() {
-        //gutil.log(gutil.colors.blue('Watchify: reloading files..'));
-        return b.bundle()
-            .on('error', err => {gutil.log('Browserify compile error: ', err.message);})
-            .pipe(source('main.js'))
-            .pipe(buffer())
-            .pipe(sourcemaps.init({loadMaps: true}))
-            // other transformations here
+function bundle() {
+    b.bundle()
+        .on('error', err => {gutil.log(gutil.colors.red('Browserify compile error: ', err.message));})
+        .pipe(source('main.js'))
+        .pipe(buffer())
+        .pipe(sourcemaps.init({loadMaps: true}))
+        // other transformations here
             .pipe(concat('main.min.js', {newLine: ';'}))
             .pipe(ngAnnotate())
             //.pipe(uglify({compress: {sequences: false, join_vars: false}}))
-            // other transformations end here
-            .pipe(sourcemaps.write('./'))
-            .pipe(gulp.dest('./app'));
-
-        //gutil.log(gutil.colors.blue('Done.'));
-    }
-
-    function handleErrors() {
-        console.log('problem!!!!!!!!!!!!!!!!');
-        let args = Array.prototype.slice.call(arguments);
-        gutil.log(gutil.colors.red("Browserify compile error: ", args));
-        this.emit("end");
-
-    }
-
-/*
-    gulp.src(appPath, {read: false})
-        .pipe(tap(file => {
-            const d = domain.create();
-
-            d.on("error", err => {
-                gutil.log(
-                    gutil.colors.red("Browserify compile error: "),
-                    err.message,
-                    "\n\t",
-                    gutil.colors.cyan("in file"),
-                    file.path
-                );
-                gutil.beep();
-            });
-
-            d.run(
-                () => b.bundle()
-                    .pipe(source('main.js'))
-                    .pipe(buffer())
-                    .pipe(sourcemaps.init({loadMaps: true}))
-                    // other transformations here
-                        .pipe(concat('main.min.js', {newLine: ';'}))
-                        .pipe(ngAnnotate())
-                    //.pipe(uglify({compress: {sequences: false, join_vars: false}}))
-                    // other transformations end here
-                    .on('error', gutil.log)
-                    .pipe(sourcemaps.write('./'))
-                    .pipe(gulp.dest('./app')));
-
-        }));*/
-//});
+        // other transformations end here
+        .pipe(sourcemaps.write('./'))
+        .pipe(gulp.dest('client'));
+    browserSync.reload();
+}
 
 gulp.task('copy-libs', () => {
 
@@ -128,7 +74,7 @@ gulp.task('copy-libs', () => {
     gulp.src(entries)
         .pipe(sourcemaps.init())
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest('app/libs'));
+        .pipe(gulp.dest('client/libs'));
 
 });
 
@@ -145,11 +91,11 @@ gulp.task('styles', () => {
     };
 
     return gulp
-        .src( 'app/sass/**/*.scss')
+        .src( 'client/sass/**/*.scss')
         .pipe(sourcemaps.init())
         .pipe(sass(sassOptions).on('error', sass.logError))
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest('app/css'))
+        .pipe(gulp.dest('client/css'))
         .pipe(browserSync.stream());
 
 });
@@ -161,21 +107,21 @@ gulp.task('styles', () => {
 let cache = new Cache();
 
 gulp.task('compile',
-    () => gulp.src('./server/**/*.js')
+    () => gulp.src('./server/src/**/*.js')
             .pipe(cache.filter())
             .pipe(babel())
             .pipe(cache.cache())
-            .pipe(gulp.dest('./dist'))
+            .pipe(gulp.dest('./server/dist'))
 );
 
 
 gulp.task('nodemon', ['compile'], cb => {
     let called = false;
     return nodemon({
-        script: 'dist/server.js',
-        watch: 'server',
+        script: 'server/dist/server.js',
+        watch: 'server/src',
         ext: 'js',
-        ignore: 'app/*',
+        /*ignore: 'client/*',*/
         tasks: ['compile'],
         env: {'NODE_ENV': 'development'}
     }).on('start', () => {
@@ -204,9 +150,8 @@ gulp.task('bs-reload', () => {browserSync.reload();});
 //--------------------------------------------------------
 
 gulp.task('watch', () => {
-    //gulp.watch('app/**/*.js', ['js']);
-    gulp.watch('app/**/*.html', ['bs-reload']);
-    gulp.watch('app/**/*.scss', ['styles', 'bs-reload']);
+    gulp.watch('client/**/*.html', ['bs-reload']);
+    gulp.watch('client/**/*.scss', ['styles', 'bs-reload']);
 });
 
 //--------------------------------------------------------

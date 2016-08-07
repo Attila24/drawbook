@@ -1,0 +1,199 @@
+<div class="container-fluid">
+<div class="row">
+    <form>
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" ng-model="vm.imagetitle" required id="title" class="form-control">
+        </div>
+    </form>
+    <button class="btn btn-info" ng-click="vm.saveImage()">Save</button>
+</div>
+
+
+
+<! Taken from onlab---->
+<script type="text/javascript" src="app/draw/drawapp/drawapp.js"></script>
+<script type="text/javascript" src="app/draw/drawapp/drawapp_tools.js"></script>
+<script type="text/javascript" src="app/draw/drawapp/drawapp_images.js"></script>
+<script type="text/javascript" src="app/draw/drawapp/colors.js"></script>
+<link rel="stylesheet" href="app/draw/drawapp/style.css">
+    <div class="row clearfix">
+        <div class="col-xs-2 column noselect">
+            <div class="row clearfix" id="undo_redo">
+                <div class="col-xs-6 column right-col">
+                    <button id="undo" title="Undo"><img src="img/draw/undo.png" alt="Undo"></button>
+                </div>
+                <div class="col-xs-6 column left-col">
+                    <button id="redo" title="Redo"><img src="img/draw/redo.png" alt="Redo"></button>
+                </div>
+            </div>
+            <section id="tools">
+                <div class="row clearfix">
+                    <div class="col-xs-6 column right-col">
+                        <button id="clear" title="Clear layer"><img src="img/draw/delete.png"></button>
+                    </div>
+                    <div class="col-xs-6 column left-col">
+                        <button name="paint-bucket" title="Paint Bucket"><img src="img/draw/paint-bucket.png" alt="Paint Bucket"></button>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <div class="col-xs-6 column right-col">
+                        <button name="brush" title="Brush" class="selected"><img src="img/draw/brush.png" alt="Brush"></button>
+                    </div>
+                    <div class="col-xs-6 column left-col">
+                        <button name="pencil" title="Pencil"><img src="img/draw/pencil.png" alt="Pencil"></button>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <div class="col-xs-6 column right-col">
+                        <button name="spray" title="Spray"><img src="img/draw/spray.png" alt="Spray"></button>
+                    </div>
+                    <div class="col-xs-6 column left-col">
+                        <button name="line" title="Line"><img src="img/draw/line.png" alt="Line"></button>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <div class="col-xs-6 column right-col">
+                        <div class="toolcontainer">
+                            <button name="rectangle" title="Rectangle"><img src="img/draw/rectangle.png" alt="Rectangle"></button>
+                            <div class="toolchildren">
+                                <button name="filledrectangle" title="Filled Rectangle"><img src="img/draw/filledrectangle.png" alt="FilledRectangle"></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 column left-col">
+                        <div class="toolcontainer">
+                            <button name="circle" title="Circle"><img src="img/draw/circle.png" alt="Circle"></button>
+                            <div class="toolchildren">
+                                <button name="filledcircle" title="Filled Circle"><img src="img/draw/filledcircle.png" alt="FilledCircle"></button>
+                                <button name="ellipse" title="Ellipse"><img src="img/draw/ellipse.png" alt="Ellipse"></button>
+                                <button name="filledellipse" title="Filled Ellipse"><img src="img/draw/filledellipse.png" alt="FilledEllipse"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row clearfix">
+                    <div class="col-xs-6 column right-col">
+                        <button name="img_select" title="Select image" id="img_select"><img src="img/draw/img_select.png" alt="SelectImage"></button>
+                    </div>
+                    <div class="col-xs-6 column left-col">
+                        <button name="red_eye" title="Remove red eye"><img src="img/draw/red_eye.png" alt="RemoveRedEye"></button>
+                    </div>
+                </div>
+            </section>
+            <div class="row clearfix">
+                <div class="col-xs-6 column right-col dlcol">
+                    <button name="download" title="Download image" id="download"><a><img src="img/draw/download.png" alt="DownloadImage"></a></button>
+                </div>
+            </div>
+            <div class="row clearfix">
+                <div class="col-xs-12 column">
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="drop_size_select" data-toggle="dropdown">
+                            Size
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="drop_size_select" id="size_select">
+                            <li role="presentation"><a role="menuitem" tabindex="-1" value="1" title="1"></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" value="2" title="2"></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" value="3" title="3"></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" value="4" title="4"></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" value="9" title="9"></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" value="11" title="11"></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" value="13" title="13"></a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" value="15" title="15"></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-7 column" style="width: 600px;">
+            <div id="canvas_container">
+            </div>
+        </div>
+        <div class="col-xs-2 column">
+
+            <div class="row clearfix">
+                <div class="col-sm-12 column ">
+                    <div class="noselect" style="height: 65px; width: 100%">
+                        <input type="color" id="colorpicker" title="Primary Color"/>
+                        <input type="color" id="colorpicker2" title="Secondary Color"/>
+                        <button id="reversecolors"><img src="img/draw/reverse_arrows.png" alt="Switch" title="Switch Colors"/></button>
+                    </div>
+                </div>
+            </div>
+            <div class="row clearfix">
+                <div class="col-xs-12 column">
+                    <table id="colorbuttons">
+                        <tr>
+                            <td><button name="black" title="Black"></button></td>
+                            <td><button name="darkgray" title="Dark gray"></button></td>
+                        </tr>
+                        <tr>
+                            <td><button name="saddlebrown" title="Saddle brown"></button></td>
+                            <td><button name="red" title="Red"></button></td>
+                        </tr>
+                        <tr>
+                            <td><button name="darkorange" title="Dark orange"></button></td>
+                            <td><button name="yellow" title="Yellow"></button></td>
+                        </tr>
+                        <tr>
+                            <td><button name="green" title="Green"></button></td>
+                            <td><button name="royalblue" title="Royal blue"></button></td>
+                        </tr>
+                        <tr>
+                            <td><button name="blue" title="Blue"></button></td>
+                            <td><button name="purple" title="Purple"></button></td>
+                        </tr>
+                        <tr>
+                            <td><button name="white" title="White"></button></td>
+                            <td><button name="lightgray" title="Light gray"></button></td>
+                        </tr>
+                        <tr>
+                            <td><button name="sandybrown" title="Sandy brown"></button></td>
+                            <td><button name="hotpink" title="Pink"></button></td>
+                        </tr>
+                        <tr>
+                            <td><button name="orange" title="Orange"></button></td>
+                            <td><button name="palegoldenrod" title="Pale golden rod"></button></td>
+                        </tr>
+                        <tr>
+                            <td><button name="lime" title="Lime"></button></td>
+                            <td><button name="lightskyblue" title="Light sky blue"></button></td>
+                        </tr>
+                        <tr>
+                            <td><button name="slategray" title="Slate gray"></button></td>
+                            <td><button name="silver" title="Silver"></button></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="row clearfix">
+                <div class="col-xs-12 column">
+					<span class="btn btn-default btn-file">
+						<img src="img/draw/upload.png" alt="UploadImage">
+						<input type="file" id="imageLoader" name="image" title="Upload Image"/>
+						</span>
+                </div>
+            </div>
+            <div class="row clearfix">
+                <div class="col-xs-12 column">
+                    <ol class='layers'>
+                        <li value="0" class="selected"><span class="glyphicon glyphicon-move"></span> Layer 0</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="row clearfix">
+                <div class="col-xs-6 column addbutton">
+                    <button id="new_layer" title="Add new layer" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span></button>
+                </div>
+                <div class="col-xs-6 column removebutton">
+                    <button id="delete_layer" title="Delete layer" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    initCanvas();
+</script>
