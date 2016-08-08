@@ -2,6 +2,7 @@
 
 import express from 'express'
 import mongoose from 'mongoose';
+import {ensureAuthenticated} from './auth';
 import CommentSchema from '../db/models/comment';
 import Image from '../db/models/image';
 
@@ -31,5 +32,18 @@ router.get('/:id', (req, res) => {
         return res.status(200).json({comments: image.comments});
     });
 });
+
+router.delete('/:id', ensureAuthenticated, (req, res) => {
+   Image.findOne({_id: req.params.imageid}, (err, image) => {
+      if (err) return res.status(500).json({error: err});
+
+       image.comments.pull({_id: req.params.id});
+       image.save(err=> {if (err) return res.status(500).json({error: err});});
+
+       return res.status(200).json({status: 'Successfully deleted comment'});
+
+   });
+});
+
 
 export default router;

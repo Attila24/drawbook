@@ -67,13 +67,12 @@ router.delete('/:id', ensureAuthenticated, (req, res) => {
         user.images.pull(req.params.id);
         user.save(err => {if (err) return res.status(500).json({error: err});});
 
-        Image.findOneAndRemove(
-            {_id: req.params.id},
+        Image.findOneAndRemove({_id: req.params.id},
             err => {if (err) return res.status(500).json({error: err});});
 
         fs.unlink(`server/files/${req.params.id}.png`, (err) => {
-           if (err) throw err;
-           console.log(`Successfully deleted image file ${req.params.id}.png`);
+           if (err) console.log('Error: ' + err);
+           else console.log(`Successfully deleted image file ${req.params.id}.png`);
         });
 
         return res.status(200).json({status: 'Successfully deleted picture'});

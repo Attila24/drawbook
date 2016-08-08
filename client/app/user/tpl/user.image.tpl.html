@@ -18,6 +18,9 @@
                 Date: {{vm.image.image.date}}
                 <br>
 
+                <button class="btn btn-info" ng-show="!vm.isLiked()" ng-click="vm.addLike()">Like</button>
+                <button class="btn btn-warning" ng-show="vm.isLiked()" ng-click="vm.removeLike()">Unlike</button>
+
                 <div class="row">
                     <div class="col-md-8">
                         <img ng-src="{{vm.image.data}}" class="img-responsive" />
@@ -31,7 +34,7 @@
                                     {{comment.author}}
                                 </a>
                                  - {{comment.text}}
-                                <button class="btn btn-danger" ng-show="vm.currentUser.username == vm.user.username || vm.currentUser.username == comment.author">Delete</button>
+                                <button class="btn btn-danger" ng-click="vm.deleteComment(comment._id)" ng-show="vm.currentUser.username == vm.user.username || vm.currentUser.username == comment.author">Delete</button>
                             </li>
                         </ul>
 
@@ -42,6 +45,13 @@
                         <button class="btn btn-primary" ng-click="vm.addComment()" ng-disabled="!vm.comment">
                             Add comment
                         </button>
+
+                        <br>
+                        <ul class="list-unstyled">
+                            <li ng-repeat="like in vm.likes">
+                                <a ui-sref="user.gallery({username: like})">{{like}}</a>
+                            </li>
+                        </ul>
 
                     </div>
                 </div>

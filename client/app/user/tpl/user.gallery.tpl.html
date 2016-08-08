@@ -2,7 +2,12 @@
 <h3>Gallery</h3>
 <div class="row">
     <div ng-repeat="image in vm.images | orderBy: '-image.date' track by $index" ng-if="image" class="col-md-2 col-xs-4">
-        <span><b>{{$index}}</b> - {{image.image.date | date: 'medium'}} - <a ng-show="vm.currentUser.username === vm.user.username" href="#" ng-click="vm.deleteImage(image.image._id, $index)" style="color:red;">Delete</a></span>
+        <span><b>{{$index}}</b> - {{image.image.date | date: 'medium'}} </span>
+
+        <br>
+
+        <button class="btn btn-danger" ng-show="vm.currentUser.username === vm.user.username" ng-click="vm.deleteImage(image.image._id, $index)">Delete</button>
+
         <a ui-sref="user.gallery.image({id: image.image._id, index: $index})">
             <img ng-src="{{image.data}}" class="img-responsive img-thumbnail" />
         </a>

@@ -1,9 +1,9 @@
 'use strict';
 
-UserImageController.$inject = ['$stateParams', 'ImageService', 'user', '$state', '$scope', 'CommentService', 'localStorageService'];
+UserImageController.$inject = ['$stateParams', 'ImageService', 'user', '$state', '$scope', 'CommentService', 'localStorageService', 'LikeService'];
 
 /* @ngInject */
-export default function UserImageController($stateParams, ImageService, user, $state, $scope, CommentService, localStorageService) {
+export default function UserImageController($stateParams, ImageService, user, $state, $scope, CommentService, localStorageService, LikeService) {
 
     const vm = this;
     vm.title = 'UserImageController';
@@ -11,6 +11,12 @@ export default function UserImageController($stateParams, ImageService, user, $s
     vm.index = $stateParams.index;
     vm.navigate = navigate;
     vm.addComment = addComment;
+    vm.deleteComment = deleteComment;
+    vm.addLike = addLike;
+    vm.removeLike = removeLike;
+    vm.isLiked = isLiked;
+
+    vm.likes = [];
 
     init();
 
@@ -49,19 +55,26 @@ export default function UserImageController($stateParams, ImageService, user, $s
         ImageService.get(vm.user.username, $stateParams.id)
             .then(function (res) {
                 vm.image = res.data.data;
+                vm.comments = vm.image.image.comments;
             })
             .catch(function (res) {});
-
-        loadComments();
+        loadLikes();
     }
 
     function loadComments() {
         CommentService.get(vm.user.username, $stateParams.id)
             .then(function (res) {
                 vm.comments = res.image.comments;
-                console.log(vm.comments);
             })
             .catch(function (res) {});
+    }
+
+    function loadLikes() {
+        LikeService.get(vm.user.username, $stateParams.id)
+            .then(res => {
+                vm.likes = res.likes;
+            })
+            .catch(res=>{});
     }
 
     function navigate(keyCode) {
@@ -91,5 +104,33 @@ export default function UserImageController($stateParams, ImageService, user, $s
                 loadComments();
             })
             .catch(function (res) {});
+    }
+
+    function deleteComment(commentid) {
+        CommentService.delete(vm.user.username, $stateParams.id, commentid)
+            .then(res => {
+                loadComments();
+            })
+            .catch(res=>{});
+    }
+
+    function addLike() {
+        LikeService.post(vm.user.username, $stateParams.id, vm.currentUser.username)
+            .then(res=> {
+                vm.likes.push(vm.currentUser.username);
+            })
+            .catch(res=> {});
+    }
+    
+    function removeLike() {
+        LikeService.delete(vm.user.username, $stateParams.id, vm.currentUser.username)
+            .then(res => {
+                vm.likes.splice(vm.likes.indexOf(vm.currentUser.username), 1);
+            })
+            .catch(res => {});
+    }
+
+    function isLiked() {
+        return vm.likes.find(x => x == vm.currentUser.username) != undefined;
     }
 }

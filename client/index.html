@@ -22,17 +22,19 @@
 	<script src="libs/satellizer.min.js"></script>
 	<script src="libs/angular-local-storage.min.js"></script>
 	<script src="libs/ng-file-upload-all.min.js"></script>
+	<script src="libs/angular-loading-overlay.js"></script>
+	<script src="libs/angular-loading-overlay-http-interceptor.js"></script>
 
 	<!-- Bundled app source -->
 	<script src="main.min.js"></script>
 </head>
 <body>
-	<div class="container">
+	<div class="container" >
 
 		<h1><a ui-sref="home">Drawbook</a></h1>
 		<hr/>
 
-		<div ui-view>
+		<div ui-view bs-loading-overlay>
 		</div>
 	</div>
 </body>

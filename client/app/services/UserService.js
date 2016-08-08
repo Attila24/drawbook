@@ -1,33 +1,15 @@
 'use strict';
 
-UserService.$inject = ['$q', '$http', 'server'];
+UserService.$inject = ['$http', 'server'];
 
 /* @ngInject */
-export default function UserService($q, $http, server) {
+export default function UserService($http, server) {
     return {
-        get: function (username) {
-            var deferred = $q.defer();
+        get: (username) => {
             var url = username ? server.url + 'users/' + username : server.url + 'users/';
-            $http.get(url)
-                .success(function (data) {
-                    deferred.resolve(data);
-                })
-                .error(function (data) {
-                    deferred.reject('rejected: ' + data);
-                });
-
-            return deferred.promise;
+            return $http.get(url).then(res => res.data);
         },
-        update: function(user) {
-            var deferred = $q.defer;
-            $http.patch(server.url + 'users/' + user.username, {user: user})
-                .success(function (data) {
-
-                })
-                .error(function (data) {
-                    deferred.reject('rejected: ' + data);
-                });
-            return deferred.promise;
-        }
+        update: (user) => $http.patch(server.url + 'users/' + user.username, {user: user})
+                            .then(res => res.data)
     };
 }

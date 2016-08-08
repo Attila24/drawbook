@@ -68,7 +68,8 @@ gulp.task('copy-libs', () => {
         'node_modules/bootstrap-sass/assets/javascripts/bootstrap.min.js',
         'node_modules/jquery/dist/jquery.min.js',
         'node_modules/satellizer/satellizer.min.js',
-        'node_modules/ng-file-upload/dist/ng-file-upload-all.min.js'
+        'node_modules/ng-file-upload/dist/ng-file-upload-all.min.js',
+        'node_modules/angular-loading-overlay-http-interceptor/dist/angular-loading-overlay-http-interceptor.js'
     ];
 
     gulp.src(entries)
@@ -121,7 +122,7 @@ gulp.task('nodemon', ['compile'], cb => {
         script: 'server/dist/server.js',
         watch: 'server/src',
         ext: 'js',
-        /*ignore: 'client/*',*/
+        ignore: 'client/*',
         tasks: ['compile'],
         env: {'NODE_ENV': 'development'}
     }).on('start', () => {

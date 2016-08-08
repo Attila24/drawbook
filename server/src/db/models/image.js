@@ -8,7 +8,8 @@ const ImageSchema = new mongoose.Schema({
     title: String,
     url: {type: String, unique: true},
     date: {type: Date, default: Date.now},
-    comments: [CommentSchema]
+    comments: [CommentSchema],
+    likes: [String]
 });
 
 export default mongoose.model('Image', ImageSchema);
