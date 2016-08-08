@@ -37,11 +37,11 @@ router.post('/', (req, res) => {
 });
 
 router.post('/avatar', (req, res) => {
-    let path = req.files.file.path.replace('app\\', '');
+    let path = req.files.file.path.replace('client\\', '');
     path = path.replace(/\\/g, '/');
     User.findOneAndUpdate({username: req.params.username}, {$set: {avatarPath: path}}, err => {
         if (err) return res.status(500).json({error: err});
-        return res.status(200).json({status: 'Successfully saved avatar'});
+        return res.status(200).json({status: 'Successfully saved avatar', avatarPath: path});
     });
 });
 

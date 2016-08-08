@@ -1,4 +1,4 @@
-<div class="modal" tabindex="-1" role="dialog" ng-keyup="vm.navigate($event.keyCode)">
+<div class="modal" tabindex="-1" role="dialog" ng-keyup="vm.navigate($event.keyCode)" ng-init="vm.init()">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -18,9 +18,15 @@
                 Date: {{vm.image.image.date}}
                 <br>
 
-                <button class="btn btn-info" ng-show="!vm.isLiked()" ng-click="vm.addLike()">Like</button>
-                <button class="btn btn-warning" ng-show="vm.isLiked()" ng-click="vm.removeLike()">Unlike</button>
+                <button
+                    ng-class="vm.isLiked ? 'btn btn-warning' : 'btn btn-info'"
+                    ng-click="vm.likeOrDislike()">
+                    {{vm.isLiked ? 'Unlike' : 'Like'}}
+                </button>
 
+                <!--<button class="btn btn-info" ng-if="!vm.isLiked()" ng-click="vm.addLike()">Like</button>
+                <button class="btn btn-warning" ng-if="vm.isLiked()" ng-click="vm.removeLike()">Unlike</button>
+-->
                 <div class="row">
                     <div class="col-md-8">
                         <img ng-src="{{vm.image.data}}" class="img-responsive" />
@@ -49,7 +55,7 @@
                         <br>
                         <ul class="list-unstyled">
                             <li ng-repeat="like in vm.likes">
-                                <a ui-sref="user.gallery({username: like})">{{like}}</a>
+                                <a ui-sref="user.gallery({username: like})" ng-click="$hide()"> {{like}}</a>
                             </li>
                         </ul>
 

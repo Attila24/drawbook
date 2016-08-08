@@ -1,6 +1,7 @@
-app/main.min.js
-app/main.min.js.map
-app/uploads
+client/main.min.js
+client/main.min.js.map
+client/uploads
 server/dist
 server/files
 node_modules
+.idea

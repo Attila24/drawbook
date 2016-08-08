@@ -62,9 +62,9 @@ angular
 
     .run(bsLoadingOverlayService => {
         bsLoadingOverlayService.setGlobalConfig({
-            delay: 500,
+            delay: 400,
             activeClass: undefined,
-            templateUrl: 'loading-overlay-template.html',
+            templateUrl: './app/common/tpl/loading-overlay-template.html',
             templateOptions: undefined
         })
     });

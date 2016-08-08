@@ -10,7 +10,8 @@ router.post('/', (req, res) => {
 
         image.likes.push(req.body.author);
         image.save(err => {if (err) res.status(500).json({error: err});});
-
+        console.log('Registered like!');
+        console.log(image.likes);
         return res.status(200).json({status: 'Registered like!'});
     });
 });
@@ -29,6 +30,8 @@ router.delete('/:author', (req, res) => {
        image.likes.pull(req.params.author);
        image.save(err => {if (err) res.status(500).json({error: err});});
 
+       console.log('Unregistered like!');
+       console.log(image.likes);
        return res.status(200).json({status: 'Unregistered like!'});
    });
 });

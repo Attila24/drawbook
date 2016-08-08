@@ -6,7 +6,7 @@ LikeService.$inject = ['$q', '$http', 'server'];
 export default function LikeService($q, $http, server) {
     return {
         post: (username, id, author) => $http.post(server.url + '/users/' + username + '/images/' + id + '/likes/', {author: author}).then(res => res),
-        get: (username, id) => $http.get(server.url + '/users/' + username + '/images/' + id + '/likes/').then(res => res),
+        get: (username, id) => $http.get(server.url + '/users/' + username + '/images/' + id + '/likes/').then(res => res.data),
         delete: (username, id, author) => $http.delete(server.url + '/users/' + username + '/images/' + id + '/likes/' + author).then(res => res)
     }
 }
