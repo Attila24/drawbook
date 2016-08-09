@@ -15,7 +15,7 @@ router.post('/', (req, res) => {
         const Comment = mongoose.model('Comment', CommentSchema);
         const comment = new Comment({
             author: req.body.author,
-            authorAvatar: req.body.authorAvatar,
+            authorTimestamp: req.body.authorTimestamp,
             text: req.body.comment
         });
 

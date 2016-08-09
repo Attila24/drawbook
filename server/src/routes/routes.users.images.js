@@ -51,9 +51,9 @@ router.post('/avatar', (req, res) => {
 });
 
 router.get('/avatar', (req, res) => {
-   User.findOne({username: req.params.username}).select({avatarPath: 1}).exec((err, avatarPath) => {
+   User.findOne({username: req.params.username}).select({avatarPath: 1, timestamp: 1}).exec((err, data) => {
        if (err) return res.statuts(500).json({error: err});
-       return res.status(200).json({data: avatarPath});
+       return res.status(200).json(data);
    });
 });
 

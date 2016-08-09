@@ -7,7 +7,7 @@ export default function CommentService($http, server) {
     return {
         post: (username, imageid, comment, currentUser) => $http.post(server.url + '/users/' + username + '/images/' + imageid + '/comments/', {
             author: currentUser.username,
-            authorAvatar: currentUser.avatarPath,
+            authorTimestamp: currentUser.timestamp,
             comment: comment
         }).then(res => res.data),
         get: (user, imageid) => $http.get(server.url + '/users/' + user.username + '/images/' + imageid).then(res => res.data),

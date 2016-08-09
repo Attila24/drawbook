@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 
 export default new mongoose.Schema({
     author: String,
-    authorAvatar: String,
+    authorTimestamp: Date,
     text: String,
     date: {type: Date, default: Date.now}
 });

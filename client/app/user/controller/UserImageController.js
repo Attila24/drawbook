@@ -60,8 +60,6 @@ export default function UserImageController($stateParams, ImageService, user, $s
                 }
 
                 vm.image = res.data.data;
-
-
                 vm.comments = vm.image.image.comments;
                 loadAvatars();
             })
@@ -72,8 +70,7 @@ export default function UserImageController($stateParams, ImageService, user, $s
         for (let i = 0; i < vm.comments.length; i++) {
             UserService.getAvatarPath(vm.comments[i].author)
                 .then(data => {
-                        console.log(data);
-                        vm.comments[i].removedAuthor = data == null;
+                        vm.comments[i].removedAuthor = vm.comments[i].authorTimestamp < data.timestamp;
                         vm.comments[i].authorAvatar = data == null ? 'img/default-avatar.jpg' : data.avatarPath;
                     }
                 )

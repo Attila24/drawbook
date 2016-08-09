@@ -46,7 +46,9 @@
                                 </span>
 
                                  - {{comment.text}}
-                                <button class="btn btn-danger" ng-click="vm.deleteComment(comment._id)" ng-show="vm.currentUser.username == vm.user.username || vm.currentUser.username == comment.author">Delete</button>
+                                <button class="btn btn-danger"
+                                        ng-click="vm.deleteComment(comment._id)"
+                                        ng-show="vm.currentUser.username == vm.user.username || vm.currentUser.timestamp == comment.authorTimestamp">Delete</button>
                             </li>
                         </ul>
 
