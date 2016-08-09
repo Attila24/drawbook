@@ -22,8 +22,10 @@ export default function LoginController($state, $auth, localStorageService) {
 
         $auth.login(user)
             .then(function(res) {
-                localStorageService.set("currentUser", res.data.user);
-                $state.go('home');
+                if (res.status != 401) {
+                    localStorageService.set("currentUser", res.data.user);
+                    $state.go('home');
+                }
             })
             .catch(function(res) {
                 console.log('Error: ' + res);

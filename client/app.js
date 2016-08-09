@@ -20,6 +20,7 @@ angular
         'ngFileUpload',
         'bsLoadingOverlay',
         'bsLoadingOverlayHttpInterceptor',
+        'angular-growl',
         commonModule.name,
         userModule.name
     ])
@@ -40,12 +41,16 @@ angular
         $locationProvider.html5Mode(true);
         $stateProvider
             .state('draw', {
-                    url: '/draw',
-                    templateUrl: '/app/draw/draw.tpl.html',
-                    controller: DrawController,
-                    controllerAs: 'vm'
+                url: '/draw',
+                templateUrl: '/app/draw/draw.tpl.html',
+                controller: DrawController,
+                controllerAs: 'vm'
+            })
+            .state('404', {
+                url: '/404',
+                templateUrl: '/app/common/tpl/404.tpl.html'
             });
-        $urlRouterProvider.otherwise("/");
+        $urlRouterProvider.otherwise("/404");
     }])
 
     // Auth config
@@ -56,7 +61,11 @@ angular
     }])
 
     .factory('allHttpInterceptor', bsLoadingOverlayHttpInterceptorFactoryFactory => bsLoadingOverlayHttpInterceptorFactoryFactory())
-    .config(['$httpProvider', ($httpProvider) => {
+    .config(['$httpProvider', 'growlProvider', ($httpProvider, growlProvider) => {
+
+        growlProvider.globalTimeToLive(5000);
+
+        $httpProvider.interceptors.push(growlProvider.serverMessagesInterceptor);
         $httpProvider.interceptors.push('allHttpInterceptor');
     }])
 

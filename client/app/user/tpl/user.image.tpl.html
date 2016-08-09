@@ -35,10 +35,16 @@
 
                         <ul class="list-unstyled">
                             <li ng-repeat="comment in vm.comments">
-                                <a ui-sref="user.gallery({username: comment.author})" ng-click="$hide()">
+                                <a ng-if="!comment.removedAuthor" ui-sref="user.gallery({username: comment.author})" ng-click="$hide()">
                                     <img ng-src="{{comment.authorAvatar}}" alt="avatar" class="comment-avatar">
                                     {{comment.author}}
                                 </a>
+
+                                <span ng-if="comment.removedAuthor">
+	                                <img src="../../../img/default-avatar.jpg" alt="avatar" class="comment-avatar">
+	                                [Deleted user]
+                                </span>
+
                                  - {{comment.text}}
                                 <button class="btn btn-danger" ng-click="vm.deleteComment(comment._id)" ng-show="vm.currentUser.username == vm.user.username || vm.currentUser.username == comment.author">Delete</button>
                             </li>
@@ -53,6 +59,8 @@
                         </button>
 
                         <br>
+	                    <br>
+	                    <h3>Likes</h3>
                         <ul class="list-unstyled">
                             <li ng-repeat="like in vm.likes">
                                 <a ui-sref="user.gallery({username: like})" ng-click="$hide()"> {{like}}</a>

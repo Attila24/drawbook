@@ -39,10 +39,22 @@ router.post('/', (req, res) => {
 router.post('/avatar', (req, res) => {
     let path = req.files.file.path.replace('client\\', '');
     path = path.replace(/\\/g, '/');
-    User.findOneAndUpdate({username: req.params.username}, {$set: {avatarPath: path}}, err => {
+    User.findOneAndUpdate({username: req.params.username}, {$set: {avatarPath: path}}, (err, user) => {
         if (err) return res.status(500).json({error: err});
+
+        if (user.avatarPath != 'img/default-avatar.jpg') {
+            fs.unlink('client/' + user.avatarPath, err => {if (err) console.log('Error: ' + err);});
+        }
+
         return res.status(200).json({status: 'Successfully saved avatar', avatarPath: path});
     });
+});
+
+router.get('/avatar', (req, res) => {
+   User.findOne({username: req.params.username}).select({avatarPath: 1}).exec((err, avatarPath) => {
+       if (err) return res.statuts(500).json({error: err});
+       return res.status(200).json({data: avatarPath});
+   });
 });
 
 router.get('/:id', (req, res) => {

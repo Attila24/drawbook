@@ -1,9 +1,9 @@
 'use strict';
 
-UserImageController.$inject = ['$stateParams', 'ImageService', 'user', '$state', '$scope', 'CommentService', 'localStorageService', 'LikeService', '$q'];
+UserImageController.$inject = ['$stateParams', 'ImageService', 'user', '$state', '$scope', 'CommentService', 'localStorageService', 'LikeService', '$q', 'UserService'];
 
 /* @ngInject */
-export default function UserImageController($stateParams, ImageService, user, $state, $scope, CommentService, localStorageService, LikeService, $q) {
+export default function UserImageController($stateParams, ImageService, user, $state, $scope, CommentService, localStorageService, LikeService, $q, UserService) {
 
     const vm = this;
     vm.title = 'UserImageController';
@@ -20,6 +20,7 @@ export default function UserImageController($stateParams, ImageService, user, $s
     ////////////////////////////////////
 
     function init() {
+
         vm.isLiked = false;
         vm.currentUser = localStorageService.get('currentUser');
         loadLikes().then(res => {vm.isLiked = res;});
@@ -52,16 +53,38 @@ export default function UserImageController($stateParams, ImageService, user, $s
 
         ImageService.get(vm.user.username, $stateParams.id)
             .then(function (res) {
+
+                if (res.data.status == 500 || res.data.status == 404){
+                    $state.go('404');
+                    $scope.$hide();
+                }
+
                 vm.image = res.data.data;
+
+
                 vm.comments = vm.image.image.comments;
+                loadAvatars();
             })
             .catch(function (res) {});
+    }
+
+    function loadAvatars() {
+        for (let i = 0; i < vm.comments.length; i++) {
+            UserService.getAvatarPath(vm.comments[i].author)
+                .then(data => {
+                        console.log(data);
+                        vm.comments[i].removedAuthor = data == null;
+                        vm.comments[i].authorAvatar = data == null ? 'img/default-avatar.jpg' : data.avatarPath;
+                    }
+                )
+        }
     }
 
     function loadComments() {
         CommentService.get(vm.user.username, $stateParams.id)
             .then(function (res) {
                 vm.comments = res.image.comments;
+                loadAvatars();
             })
             .catch(function (res) {});
     }

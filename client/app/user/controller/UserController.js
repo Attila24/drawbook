@@ -1,9 +1,9 @@
 'use strict';
 
-UserController.$inject = ['$stateParams', 'UserService', 'ImageService', 'user'];
+UserController.$inject = ['user', '$state'];
 
 /* @ngInject */
-export default function UserController($stateParams, UserService, ImageService, user) {
+export default function UserController(user, $state) {
     var vm = this;
     vm.title = 'UserController';
     vm.images = [];
@@ -11,13 +11,9 @@ export default function UserController($stateParams, UserService, ImageService, 
 
     ////////////////
 
-    /*function deleteImage(_id, index) {
-        ImageService.delete(_id, vm.user.username)
-            .then(function (res){
-                delete vm.user.images[index];
-            })
-            .catch(function (res){});
-    }*/
+    if (vm.user == null) {
+        $state.go('home');
+    }
 }
 
 

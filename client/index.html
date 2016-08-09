@@ -8,6 +8,7 @@
 	<!--Stylesheets-->
 	<link rel="stylesheet" href="css/angular-motion.min.css">
 	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="css/angular-growl.min.css">
 
 	<!-- jQuery -->
 	<script src="libs/jquery.min.js"></script>
@@ -24,18 +25,18 @@
 	<script src="libs/ng-file-upload-all.min.js"></script>
 	<script src="libs/angular-loading-overlay.js"></script>
 	<script src="libs/angular-loading-overlay-http-interceptor.js"></script>
+	<script src="libs/angular-growl.min.js"></script>
 
 	<!-- Bundled app source -->
 	<script src="main.min.js"></script>
 </head>
 <body>
 	<div class="container" >
-
+		<div growl></div>
 		<h1><a ui-sref="home">Drawbook</a></h1>
 		<hr/>
 
-		<div ui-view bs-loading-overlay>
-		</div>
+		<div ui-view bs-loading-overlay></div>
 	</div>
 </body>
 </html>

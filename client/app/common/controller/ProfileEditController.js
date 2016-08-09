@@ -1,15 +1,16 @@
 'use strict';
 
-ProfileEditController.$inject = ['$state', 'localStorageService', 'UserService', 'Upload', 'server'];
+ProfileEditController.$inject = ['$state', 'localStorageService', 'UserService', 'Upload', 'server', '$auth'];
 
 /* @ngInject */
-export default function ProfileEditController($state, localStorageService, UserService, Upload, server) {
+export default function ProfileEditController($state, localStorageService, UserService, Upload, server, $auth) {
     const vm = this;
     vm.title = 'ProfileEditController';
     vm.genders = ['Male', 'Female'];
 
     vm.edit = edit;
     vm.upload = upload;
+    vm.remove = remove;
 
     const username = localStorageService.get('currentUser').username;
 
@@ -30,6 +31,16 @@ export default function ProfileEditController($state, localStorageService, UserS
         UserService.update(vm.user);
         upload();
         $state.go('home');
+    }
+    
+    function remove() {
+        UserService.delete(vm.user).then(res => {
+            if (res.status != 500) {
+                $auth.logout();
+                localStorageService.remove("currentUser");
+                $state.go('home');
+            }
+        });
     }
 
     function upload() {
