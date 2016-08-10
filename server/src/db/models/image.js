@@ -9,7 +9,7 @@ const ImageSchema = new mongoose.Schema({
     url: {type: String, unique: true},
     date: {type: Date, default: Date.now},
     comments: [CommentSchema],
-    likes: [String]
+    likes: [{author: String, authorTimestamp: String}]
 });
 
 export default mongoose.model('Image', ImageSchema);

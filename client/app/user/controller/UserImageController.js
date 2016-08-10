@@ -23,7 +23,7 @@ export default function UserImageController($stateParams, ImageService, user, $s
 
         vm.isLiked = false;
         vm.currentUser = localStorageService.get('currentUser');
-        loadLikes().then(res => {vm.isLiked = res;});
+        loadLikes().then(result => {vm.isLiked = result;});
 
         $(window).on('click', function(event) {
             if ($(event.target).is('.modal')) {
@@ -90,8 +90,17 @@ export default function UserImageController($stateParams, ImageService, user, $s
         let d = $q.defer();
         LikeService.get(vm.user.username, $stateParams.id)
             .then(data => {
-                vm.likes = data.likes || [];
-                d.resolve(isLiked());
+                vm.likes = [];
+                for (let i = 0; i < data.likes.length; i++) {
+                    UserService.getTimestamp(data.likes[i].author)
+                        .then(res => {
+                           if (res && data.likes[i].authorTimestamp == res.timestamp)
+                               vm.likes.push(data.likes[i]);
+
+                           if (i == data.likes.length-1)
+                               d.resolve(isLiked());
+                        });
+                }
             })
             .catch(data=>{});
         return d.promise;
@@ -119,25 +128,32 @@ export default function UserImageController($stateParams, ImageService, user, $s
     }
 
     function addLike() {
-        LikeService.post(vm.user.username, $stateParams.id, vm.currentUser.username)
+
+        LikeService.post(vm.user.username, $stateParams.id, vm.currentUser)
             .then(res=> {
-                vm.likes.push(vm.currentUser.username);
+                //vm.likes.push({author: vm.currentUser.username, authorTimestamp: vm.currentUser.timestamp});
+                loadLikes();
+
                 vm.isLiked = true;
             })
             .catch(res=> {});
     }
     
     function removeLike() {
-        LikeService.delete(vm.user.username, $stateParams.id, vm.currentUser.username)
+
+        let id = vm.likes.find(x => x.authorTimestamp == vm.currentUser.timestamp)._id;
+
+        LikeService.delete(vm.user.username, $stateParams.id, id)
             .then(res => {
-                vm.likes.splice(vm.likes.indexOf(vm.currentUser.username), 1);
+                vm.likes.splice(vm.likes.findIndex(x => x.authorTimestamp == vm.currentUser.timestamp), 1);
                 vm.isLiked = false;
             })
             .catch(res => {});
     }
 
     function isLiked() {
-        return vm.likes.find(x => x == vm.currentUser.username) != undefined;
+
+        return vm.likes.find(x => x.authorTimestamp == vm.currentUser.timestamp) != undefined;
     }
 
     function navigate(keyCode) {

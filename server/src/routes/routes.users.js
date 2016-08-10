@@ -32,7 +32,7 @@ router.post('/register', (req, res) => {
                 delete user.hash;
                 delete user.salt;
                 const token = createToken(user);
-                return res.status(200).json({status: 'Registration successful!', user, token, messages: [{"text": "Successful registration!", "severity:": "info"}]});
+                res.status(200).json({status: 'Registration successful!', user, token, messages: [{"text": "Successful registration!", "severity": "info"}]});
             });
         });
 });
@@ -54,7 +54,7 @@ router.post('/login', (req, res, next) => {
             delete user.salt;
             const token = createToken(user);
 
-            res.status(200).json({status: 'Login successful!', user, token});
+            res.status(200).json({status: 'Login successful!', user, token, messages: [{"text": "Welcome!", "severity": "info"}]});
         });
     })(req, res, next);
 });
@@ -69,6 +69,14 @@ router.get('/', (req, res) => {
         if (err) res.send(err);
         res.status(200).json(users);
     });
+});
+
+router.get('/:username/timestamp', (req, res) => {
+   User.find({username: req.params.username}).select({timestamp: 1}).exec((err, data) => {
+       if (err) res.status(500).json({error: err});
+       console.log('data: ' + data);
+       res.status(200).json(data);
+   });
 });
 
 router.route('/:username')
@@ -109,7 +117,7 @@ router.route('/:username')
                         });
                 });
             });
-            return res.status(200).json({messages: [{'text': 'Successfully removed user.', 'severity': 'info'}]});
+            return res.status(200).json({messages: [{'text': 'Bye!', 'severity': 'info'}]});
         });
     });
 

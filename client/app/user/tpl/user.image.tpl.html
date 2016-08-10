@@ -65,7 +65,7 @@
 	                    <h3>Likes</h3>
                         <ul class="list-unstyled">
                             <li ng-repeat="like in vm.likes">
-                                <a ui-sref="user.gallery({username: like})" ng-click="$hide()"> {{like}}</a>
+                                <a ui-sref="user.gallery({username: like.author})" ng-click="$hide()"> {{like.author}}</a>
                             </li>
                         </ul>
 
