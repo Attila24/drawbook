@@ -45,39 +45,64 @@
   opacity: 0;
 }
 
-/* Progress bar for upload*/
-
-.thumb {
-  width: 24px;
-  height: 24px;
-  float: none;
-  position: relative;
-  top: 7px;
-}
-
-form .progress {
-  line-height: 15px;
-}
-
-.progress {
-  display: inline-block;
-  width: 100px;
-  border: 3px groove #CCC;
-}
-
-.progress div {
-  font-size: smaller;
-  background: orange;
-  width: 0;
-}
-
 //
+
+.popover-content {
+  padding: 0;
+}
+
+.notifications-list {
+  padding: 0;
+}
+
+.notification-container {
+  padding: 10px 10px 0 10px;
+}
+
+.notification-container:hover {
+  cursor: pointer;
+  background: #CCCCCC;
+}
+
+.new-notification {
+  color: red;
+}
+.new-notification:hover {
+  color: pink;
+}
+
+.no-notifications {
+  padding: 20px;
+}
+
+.popover > .arrow {
+  display: none;
+}
+
+.popover {
+  min-width: 400px;
+  max-height: 600px;
+  overflow: scroll;
+}
+
+body {
+  padding-top: 80px;
+}
 
 img.avatar {
   width: 150px;
 }
 img.comment-avatar {
   width: 50px;
+}
+
+img.notification {
+  width: 60px;
+}
+
+.navbar .navbar-nav {
+  display: inline-block;
+  float: none;
 }
 
 /* Loader */

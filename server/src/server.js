@@ -10,10 +10,17 @@ import passport from 'passport';
 import multipart from 'connect-multiparty';
 import path from 'path';
 import helmet from 'helmet';
+import http from 'http';
+import socket from 'socket.io';
+
 import {MONGO_URI} from './config';
 
 let app     = express();
 const port    = process.env.PORT || 5000;
+
+
+let server = http.Server(app);
+let io = new socket(server);
 
 // Configuration ======================
 
@@ -53,8 +60,31 @@ app.use((err, req, res, next) => {
     });
 });
 
+
+import {setSocket, getSocket, saveNotification} from './socket';
+
+io.on('connection', (socket) => {
+
+    socket.on('setUserId', (id) => {
+        setSocket(id, socket.id);
+    });
+
+    socket.on('notification', (msg) => {
+
+        saveNotification(msg.from, msg.to, msg.type, msg.imageid, (msg.comment || ''));
+
+        getSocket(msg.to)
+            .then(res => {
+                io.to(res.socketid).emit('notification', {'from': msg.author, 'type': msg.type, 'to': res.username, 'imageid': msg.imageid, 'comment': msg.comment});
+            })
+            .catch(error => {
+                console.log('Error:' + error);
+            });
+    })
+});
+
 // start ===============================
 
-app.listen(port);
-console.log('Listening on port 5000.');
-export default app;
+server.listen(port, () => {
+    console.log('Listening on port 5000.');
+});

@@ -1,9 +1,9 @@
 'use strict';
 
-RegisterController.$inject = ['$state', '$auth', 'UserService', 'localStorageService'];
+RegisterController.$inject = ['$state', '$auth', 'UserService', 'localStorageService', 'socket'];
 
 /* @ngInject */
-export default function RegisterController($state, $auth, UserService, localStorageService) {
+export default function RegisterController($state, $auth, UserService, localStorageService, socket) {
     const vm = this;
 
     vm.title = 'RegisterController';
@@ -34,9 +34,10 @@ export default function RegisterController($state, $auth, UserService, localStor
         };
         $auth.signup(user)
             .then(res => {
-                localStorageService.set("currentUser", res.data.user);
+                localStorageService.set('currentUser', res.data.user);
                 $auth.login(user)
                     .then(res => {
+                        socket.emit('setUserId', res.data.user._id);
                         $state.go('home');
                     })
                     .catch(res =>{});

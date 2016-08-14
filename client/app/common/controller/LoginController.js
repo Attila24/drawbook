@@ -1,9 +1,9 @@
 'use strict';
 
-LoginController.$inject = ['$state', '$auth', 'localStorageService'];
+LoginController.$inject = ['$state', '$auth', 'localStorageService', 'socket'];
 
 /* @ngInject */
-export default function LoginController($state, $auth, localStorageService) {
+export default function LoginController($state, $auth, localStorageService, socket) {
     const vm = this;
 
     vm.title = 'LoginController';
@@ -23,6 +23,7 @@ export default function LoginController($state, $auth, localStorageService) {
         $auth.login(user)
             .then(function(res) {
                 if (res.status != 401) {
+                    socket.emit('setUserId', res.data.user._id);
                     localStorageService.set("currentUser", res.data.user);
                     $state.go('home');
                 }

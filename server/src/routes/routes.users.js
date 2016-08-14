@@ -3,9 +3,9 @@
 import express from 'express';
 import passport from 'passport';
 import del from 'del';
-import fs from 'fs';
 import User from '../db/models/user';
 import Image from '../db/models/image';
+import Notification from '../db/models/notification';
 import {createToken} from './auth';
 
 const router = express.Router({mergeParams: true});
@@ -74,15 +74,37 @@ router.get('/', (req, res) => {
 router.get('/:username/timestamp', (req, res) => {
    User.find({username: req.params.username}).select({timestamp: 1}).exec((err, data) => {
        if (err) res.status(500).json({error: err});
-       console.log('data: ' + data);
        res.status(200).json(data);
    });
+});
+
+
+router.get('/:username/notifications/:id', (req, res) => {
+    Notification.findById(req.params.id)
+        .populate({path: 'from'})
+        .exec((err, notification) => {
+           if (err) return res.status(500).json({error: err});
+           return res.status(200).json(notification);
+        });
+});
+
+router.get('/:username/notifications', (req, res) => {
+   User.findOne({'username' : req.params.username})
+       .populate({
+           path: 'notifications',
+           options: {sort: {'date': -1}},
+           populate: {path: 'from'}
+       })
+       .exec((err, user) => {
+           if (err) return res.status(500).json({error: err});
+           return res.status(200).json(user);
+       })
 });
 
 router.route('/:username')
     .get((req, res) => {
         User.findOne({'username': req.params.username})
-            .populate({path: 'images', options: {sort: {'date': -1}}})
+            .populate({path: 'images followers', options: {sort: {'date': -1}}})
             .exec((err, user) => {
                 if (err) return res.status(500).json({error: err});
                 return res.status(200).json({'user': user})
@@ -97,6 +119,12 @@ router.route('/:username')
     .delete((req, res) => {
         User.findOneAndRemove({'username': req.params.username}, (err, user) => {
             if (err) return res.status(500).json({error: err, messages: [{'text': 'A problem occured while deleting user', 'severity': 'error'}]});
+
+            for (let i = 0; i < user.notifications.length; i++) {
+                Notification.findByIdAndRemove(user.notifications[i], (err, notification) => {
+                    if (err) console.log('Error: ' + err);
+                });
+            }
 
             Image.find({_author: user._id}).lean().exec((err, images) => {
                 if (err) console.log('Error: ' + err);
@@ -120,6 +148,40 @@ router.route('/:username')
             return res.status(200).json({messages: [{'text': 'Bye!', 'severity': 'info'}]});
         });
     });
+
+
+router.post('/:username/followers', (req, res) => {
+
+    User.findOneAndUpdate({username: req.params.username}, {$push: {'followers': req.body.who}}, (err, user) => {
+       if (err) return res.status(500).json({error: err});
+
+       User.findByIdAndUpdate(req.body.who, {$push: {'feed': {$each: user.images}, 'following': user._id}}, (err, user) => {
+          if (err) return res.status(500).json({error: err});
+          else return res.status(200).json({messages: [{'text': 'Followed!', 'severity': 'info'}]});
+       });
+    });
+});
+
+router.delete('/:username/followers/:id', (req, res) => {
+
+    User.findOneAndUpdate({username: req.params.username}, {$pull: {'followers': req.params.id}}, (err, user) => {
+       if (err) return res.status(500).json({error: err});
+
+
+
+       User.findByIdAndUpdate(req.params.id, {$pullAll: {'feed': user.images}}, (err, who) => {
+           if (err) return res.status(500).json({error: err});
+
+           who.following.pull(user._id);
+           who.save(err => {if (err) console.log('Error: ' + err);});
+
+           return res.status(200).json({messages: [{'text': 'Unfollowed!', 'severity': 'info'}]});
+       });
+
+    });
+
+});
+
 
 export default router;
 

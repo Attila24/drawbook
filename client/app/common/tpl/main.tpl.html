@@ -1,0 +1,27 @@
+<div class="container">
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <h2 class="navbar-text">
+                    <a ui-sref="home">Drawbook</a>
+                </h2>
+            </div>
+
+            <ul class="nav navbar navbar-nav navbar-right" ng-show="vm.isAuthenticated()">
+                <li>
+                    <h3>
+                    <a href="#" notifications-popover bind="vm.init" ng-click="showPopover()">
+                        <span class="glyphicon glyphicon-globe" ng-class="{'new-notification': vm.hasNewNotifications}" ng-click="vm.setNotificationsToRead()"></span>
+                    </a>
+                    </h3>
+                </li>
+
+                <li><h3><a ui-sref="edit"><span class="glyphicon glyphicon-cog"></span></a></h3></li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <div growl></div>
+    <div ui-view bs-loading-overlay></div>
+</div>

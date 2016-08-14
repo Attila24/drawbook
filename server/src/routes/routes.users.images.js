@@ -60,15 +60,17 @@ router.get('/avatar', (req, res) => {
 router.get('/:id', (req, res) => {
     Image.findOne({_id: req.params.id}, (err, image) => {
         if (err) return res.status(500).json({error: err});
+        else if (image == null) return res.status(404).json({message: 'Not found'});
+        else {
+            fs.readFile(image.url, 'base64', (err, data) => {
+                if (err) return res.status(500).json({error: err});
 
-        fs.readFile(image.url, 'base64', (err, data) => {
-            if (err) return res.status(500).json({error: err});
-
-            return res.status(200).json({
-                'image': image,
-                'data': `data:image/png;base64,${data}`
+                return res.status(200).json({
+                    'image': image,
+                    'data': `data:image/png;base64,${data}`
+                });
             });
-        });
+        }
     });
 });
 

@@ -11,6 +11,10 @@
             <li><b>Gender:</b> {{vm.user.gender}}</li>
         </ul>
     </div>
+    <div class="col-md-2" ng-if="vm.user._id != vm.currentUser._id">
+        <button ng-if="!vm.isFollowed()" class="btn btn-primary" ng-click="vm.follow()">Follow</button>
+        <button ng-if="vm.isFollowed()" class="btn btn-info" ng-click="vm.unfollow()">Unfollow</button>
+    </div>
 </div>
 
 <div ui-view />

@@ -26,17 +26,12 @@
 	<script src="libs/angular-loading-overlay.js"></script>
 	<script src="libs/angular-loading-overlay-http-interceptor.js"></script>
 	<script src="libs/angular-growl.min.js"></script>
+	<script src="libs/socket.io.js"></script>
+	<script src="libs/socket.min.js"></script>
 
 	<!-- Bundled app source -->
 	<script src="main.min.js"></script>
 </head>
-<body>
-	<div class="container" >
-		<div growl></div>
-		<h1><a ui-sref="home">Drawbook</a></h1>
-		<hr/>
-
-		<div ui-view bs-loading-overlay></div>
-	</div>
+<body ui-view="main">
 </body>
 </html>

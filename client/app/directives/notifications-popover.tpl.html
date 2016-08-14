@@ -1,0 +1,28 @@
+<ul class="list-unstyled notifications-list">
+    <li ng-repeat="notification in notifications | orderBy: '-date'" class="notification-container" ng-click="notification.deleted ? null : closePopover()">
+        <div ng-click="notification.deleted ? null : goToImage({username: user.username, openImage: notification.imageid})">
+            <div class="row">
+
+                <div class="col-md-2">
+                    <img src="{{notification.from.avatarPath || 'img/default-avatar.jpg'}}" alt="avatar" class="comment-avatar">
+                </div>
+
+                <div class="col-md-7">
+                    {{notification.from.username || '[deleted user]'}} <span ng-if="notification.type=='like'">liked your drawing</span>
+                    <span ng-if="notification.type=='comment'"> commented on your drawing: "{{notification.comment | limitTo: 27 }}{{notification.comment.length > 27 ? '...' : ''}}"</span> <br>
+                    <small>{{notification.date | date: medium}}</small> <br>
+                </div>
+                <div class="col-md-3">
+                    <img ng-src="{{notification.imagedata}}" alt="image" class="img-responsive img-thumbnail notification">
+                </div>
+            </div>
+        </div>
+        <hr>
+    </li>
+</ul>
+
+<button class="btn btn-info" ng-click="loadMoreNotifications()" ng-show="loaded < notif_arr.length">Load more</button>
+
+<div ng-if="notifications.length === 0" class="no-notifications">
+    No notifications!
+</div>

@@ -1,9 +1,9 @@
 'use strict';
 
-LikeService.$inject = ['$q', '$http', 'server'];
+LikeService.$inject = ['$http', 'server'];
 
 /* @ngInject */
-export default function LikeService($q, $http, server) {
+export default function LikeService($http, server) {
     return {
         post: (username, id, user) => $http.post(server.url + '/users/' + username + '/images/' + id + '/likes/', {author: user.username, authorTimestamp: user.timestamp}).then(res => res),
         get: (username, id) => $http.get(server.url + '/users/' + username + '/images/' + id + '/likes/').then(res => res.data),

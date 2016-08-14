@@ -1,9 +1,9 @@
 'use strict';
 
-UserGalleryController.$inject = ['user', 'ImageService', 'localStorageService'];
+UserGalleryController.$inject = ['user', 'ImageService', 'localStorageService', '$stateParams', '$state'];
 
 /* @ngInject */
-export default function UserGalleryController(user, ImageService, localStorageService) {
+export default function UserGalleryController(user, ImageService, localStorageService, $stateParams, $state) {
     const vm = this;
     vm.title = 'UserGalleryController';
     vm.user = user.user;
@@ -19,6 +19,10 @@ export default function UserGalleryController(user, ImageService, localStorageSe
     ////////////////////
 
     function init(){
+        if ($stateParams.openImage !== null && $stateParams.openImage !== undefined) {
+            $state.go('user.gallery.image', {id: $stateParams.openImage, index: null});
+        }
+
         vm.currentUser = localStorageService.get('currentUser');
 
         vm.loaded = vm.user.images.length < limit ? vm.user.images.length : limit;

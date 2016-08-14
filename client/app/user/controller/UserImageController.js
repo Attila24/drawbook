@@ -1,9 +1,9 @@
 'use strict';
 
-UserImageController.$inject = ['$stateParams', 'ImageService', 'user', '$state', '$scope', 'CommentService', 'localStorageService', 'LikeService', '$q', 'UserService'];
+UserImageController.$inject = ['$stateParams', 'ImageService', 'user', '$state', '$scope', 'CommentService', 'localStorageService', 'LikeService', '$q', 'UserService', 'socket'];
 
 /* @ngInject */
-export default function UserImageController($stateParams, ImageService, user, $state, $scope, CommentService, localStorageService, LikeService, $q, UserService) {
+export default function UserImageController($stateParams, ImageService, user, $state, $scope, CommentService, localStorageService, LikeService, $q, UserService, socket) {
 
     const vm = this;
     vm.title = 'UserImageController';
@@ -28,19 +28,19 @@ export default function UserImageController($stateParams, ImageService, user, $s
         $(window).on('click', function(event) {
             if ($(event.target).is('.modal')) {
                 $state.go('user.gallery', {user: vm.username})
-                    .then(function() {
+                    .then(() => {
                         $scope.$hide();
                     });
             }
         });
 
         if (vm.index === undefined || vm.index === null) {
-            vm.index = vm.user.images.map(function (e) {return e._id}).indexOf($stateParams.id);
+            vm.index = vm.user.images.map(e => e._id).indexOf($stateParams.id);
         }
 
         if (vm.user.images.length == 1) {
             vm.prev = vm.next = undefined;
-        } else if (vm.index == 0) {
+        } else if (vm.index === 0) {
             vm.next = vm.user.images[vm.index+1]._id;
             vm.prev = undefined;
         } else if (vm.index > 0 && vm.index < vm.user.images.length-1) {
@@ -52,7 +52,7 @@ export default function UserImageController($stateParams, ImageService, user, $s
         }
 
         ImageService.get(vm.user.username, $stateParams.id)
-            .then(function (res) {
+            .then(res => {
 
                 if (res.data.status == 500 || res.data.status == 404){
                     $state.go('404');
@@ -63,15 +63,20 @@ export default function UserImageController($stateParams, ImageService, user, $s
                 vm.comments = vm.image.image.comments;
                 loadAvatars();
             })
-            .catch(function (res) {});
+            .catch(res => {});
     }
 
     function loadAvatars() {
         for (let i = 0; i < vm.comments.length; i++) {
             UserService.getAvatarPath(vm.comments[i].author)
                 .then(data => {
-                        vm.comments[i].removedAuthor = vm.comments[i].authorTimestamp < data.timestamp;
-                        vm.comments[i].authorAvatar = data == null ? 'img/default-avatar.jpg' : data.avatarPath;
+                        if (data === null || vm.comments[i].authorTimestamp < data.timestamp) {
+                            vm.comments[i].removedAuthor = true;
+                            vm.comments[i].authorAvatar = 'img/default-avatar.jpg';
+                        } else {
+                            vm.comments[i].removedAuthor = false;
+                            vm.comments[i].authorAvatar = data.avatarPath;
+                        }
                     }
                 )
         }
@@ -79,11 +84,11 @@ export default function UserImageController($stateParams, ImageService, user, $s
 
     function loadComments() {
         CommentService.get(vm.user.username, $stateParams.id)
-            .then(function (res) {
+            .then(res => {
                 vm.comments = res.image.comments;
                 loadAvatars();
             })
-            .catch(function (res) {});
+            .catch(res => {});
     }
 
     function loadLikes() {
@@ -108,11 +113,14 @@ export default function UserImageController($stateParams, ImageService, user, $s
 
     function addComment() {
         CommentService.post(vm.user.username, $stateParams.id, vm.comment, vm.currentUser)
-            .then(function (res) {
+            .then(res => {
+                if (vm.user._id != vm.currentUser._id) {
+                    socket.emit('notification', {'to': vm.user._id, 'from': vm.currentUser._id, 'author': vm.currentUser.username, 'type': 'comment', imageid: $stateParams.id, 'comment': vm.comment});
+                }
                 vm.comment = "";
                 loadComments();
             })
-            .catch(function (res) {});
+            .catch(res => {});
     }
 
     function deleteComment(commentid) {
@@ -120,7 +128,7 @@ export default function UserImageController($stateParams, ImageService, user, $s
             .then(res => {
                 loadComments();
             })
-            .catch(res=>{});
+            .catch(res => {});
     }
 
     function likeOrDislike() {
@@ -128,19 +136,18 @@ export default function UserImageController($stateParams, ImageService, user, $s
     }
 
     function addLike() {
-
         LikeService.post(vm.user.username, $stateParams.id, vm.currentUser)
-            .then(res=> {
-                //vm.likes.push({author: vm.currentUser.username, authorTimestamp: vm.currentUser.timestamp});
+            .then(res => {
                 loadLikes();
-
                 vm.isLiked = true;
+                if (vm.user._id != vm.currentUser._id) {
+                    socket.emit('notification', {'to': vm.user._id, 'from': vm.currentUser._id, 'author': vm.currentUser.username, 'type': 'like', imageid: $stateParams.id});
+                }
             })
-            .catch(res=> {});
+            .catch(res => {});
     }
     
     function removeLike() {
-
         let id = vm.likes.find(x => x.authorTimestamp == vm.currentUser.timestamp)._id;
 
         LikeService.delete(vm.user.username, $stateParams.id, id)
@@ -152,27 +159,25 @@ export default function UserImageController($stateParams, ImageService, user, $s
     }
 
     function isLiked() {
-
-        return vm.likes.find(x => x.authorTimestamp == vm.currentUser.timestamp) != undefined;
+        return vm.likes.find(x => x.authorTimestamp == vm.currentUser.timestamp) !== undefined;
     }
 
     function navigate(keyCode) {
-        if (vm.prev != undefined && keyCode == 37) { // left
+        if (vm.prev !== undefined && keyCode == 37) { // left
             $state.go('user.gallery.image', {id: vm.prev, index: vm.index-1})
-                .then(function() {
+                .then(() => {
                     $scope.$hide();
                 });
-        } else if (vm.next != undefined && keyCode == 39) { // right
+        } else if (vm.next !== undefined && keyCode == 39) { // right
             $state.go('user.gallery.image', {id: vm.next, index: vm.index+1})
-                .then(function() {
+                .then(() => {
                     $scope.$hide();
                 });
         } else if (keyCode == 27) { // escape
             $state.go('user.gallery', {user: vm.username})
-                .then(function() {
+                .then(() => {
                     $scope.$hide();
                 });
         }
     }
-
 }

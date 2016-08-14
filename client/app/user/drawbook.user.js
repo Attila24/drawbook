@@ -15,6 +15,7 @@ export default angular.module('drawbook.user', [])
             $stateProvider
                 .state('user', {
                     abstract: true,
+                    parent: 'master',
                     url: '/:username',
                     templateUrl: '/app/user/tpl/user.tpl.html',
                     controller: UserController,
@@ -26,6 +27,7 @@ export default angular.module('drawbook.user', [])
                 })
                 .state('user.gallery', {
                     url: '/',
+                    params: {openImage: null},
                     templateUrl: '/app/user/tpl/user.gallery.tpl.html',
                     controller: UserGalleryController,
                     controllerAs: 'vm'

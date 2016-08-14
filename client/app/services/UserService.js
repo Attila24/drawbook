@@ -12,6 +12,8 @@ export default function UserService($http, server) {
         update: (user) => $http.patch(server.url + 'users/' + user.username, {user: user}).then(res => res.data),
         delete: (user) => $http.delete(server.url + 'users/' + user.username).then(res => res),
         getAvatarPath: (username) => $http.get(server.url  + 'users/' + username + '/images/avatar').then(res => res.data),
-        getTimestamp: (username) => $http.get(server.url + 'users/' + username + '/timestamp').then(res => res.data[0])
+        getTimestamp: (username) => $http.get(server.url + 'users/' + username + '/timestamp').then(res => res.data[0]),
+        follow: (who, whom) => $http.post(server.url + 'users/' + whom.username + '/followers', {who: who._id}).then(res => res.data),
+        unfollow: (who, whom) => $http.delete(server.url + 'users/' + whom.username + '/followers/' + who._id).then(res => res.data)
     };
 }
