@@ -1,47 +1,19 @@
-<p>
-	<h2>Home</h2>
+<p ng-show="!vm.isAuthenticated()">
+	<a ui-sref="login">Login</a>
+	<a ui-sref="register">Register</a>
+</p>
 
-	<h3 ng-show="vm.isAuthenticated()">Welcome
-		<a ui-sref="user.gallery({username: vm.user.username})">{{vm.user.username}}</a>
-	</h3>
-
-	<a ui-sref="login" ng-show="!vm.isAuthenticated()">Login</a>
-	<button class="btn btn-default" ng-show="vm.isAuthenticated()" ng-click="vm.logout()">Logout</button>
-
-<br>
-	<a ui-sref="register" ng-show="!vm.isAuthenticated()">Register</a>
-
-<br>
-
-	<div ng-if="vm.isAuthenticated()">
-		<button class="btn btn-info" ui-sref="draw">New Drawing</button>
-		<br />
-		<button class="btn btn-default" ui-sref="edit">Edit Profile</button>
-		<p>
-			<h3>Users: </h3>
-			<ul class="list-unstyled">
-				<li ng-repeat="user in vm.users">
-					> <a ui-sref="user.gallery({username: user.username})">{{user.username}}</a>
-				</li>
-			</ul>
-		</p>
-
-<!--		<b>Notifications</b>
-			<ul class="dropdown-menu">
-				<li ng-repeat="notification in vm.notifications | orderBy: '-date'">
-					<hr>
-					Type: {{notification.type}} <br>
-					From: {{notification.from.username || '[deleted user]'}} <br>
-					Date: {{notification.date}} <br>
-					Image:
-					<a ui-sref="user.gallery({username: vm.user.username, openImage: notification.imageid})">
-						<img ng-src="{{notification.imagedata}}" alt="image" class="img-responsive img-thumbnail notification">
-					</a>
-				</li>
-			</ul>
-
-			<button style="btn btn-info" ng-click="vm.loadMoreNotifications()" ng-show="vm.loaded < vm.notif_arr.length">Load more</button>-->
-
-
-	</div>
+<p ng-show="vm.isAuthenticated()">
+	<h3><a ui-sref="user.gallery({username: vm.user.username})">{{vm.user.username}}</a></h3>
+	<button class="btn btn-default" ng-click="vm.logout()">Logout</button>
+	<button class="btn btn-info" ui-sref="draw">New Drawing</button>
+	<button class="btn btn-default" ui-sref="edit">Edit Profile</button>
+	<p>
+		<h3>Users: </h3>
+		<ul class="list-unstyled">
+			<li ng-repeat="user in vm.users">
+				> <a ui-sref="user.gallery({username: user.username})">{{user.username}}</a>
+			</li>
+		</ul>
+	</p>
 </p>

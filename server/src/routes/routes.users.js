@@ -117,35 +117,42 @@ router.route('/:username')
         });
     })
     .delete((req, res) => {
-        User.findOneAndRemove({'username': req.params.username}, (err, user) => {
-            if (err) return res.status(500).json({error: err, messages: [{'text': 'A problem occured while deleting user', 'severity': 'error'}]});
+        User.findOneAndRemove({'username': req.params.username})
+            .populate({path: 'followers', select: 'feed'})
+            .exec((err, user) => {
+                if (err) return res.status(500).json({error: err, messages: [{'text': 'A problem occured while deleting user', 'severity': 'error'}]});
 
-            for (let i = 0; i < user.notifications.length; i++) {
-                Notification.findByIdAndRemove(user.notifications[i], (err, notification) => {
+                for (let i = 0; i < user.notifications.length; i++) {
+                    Notification.findByIdAndRemove(user.notifications[i], err => {if (err) console.log('Error: ' + err);});
+                }
+
+                Image.find({_author: user._id}).lean().exec((err, images) => {
                     if (err) console.log('Error: ' + err);
+
+                    let img_paths = (Array.from(images)).map(img => img.url);
+
+                    if (user.avatarPath != 'img/default-avatar.jpg')
+                        img_paths.push('client/' + user.avatarPath);
+
+                    del(img_paths, {force: true}).then(paths => {
+                        console.log('Deleted files:\n', paths.join('\n'));
+
+                        Image.remove({_author: user._id},
+                             err => {if (err)
+                                 return res.status(500).json({error: err, messages: [{'text': 'A problem occured while deleting images', 'severity': 'error'}]})
+                            });
+                    });
+
+                    for (let i = 0; i < user.followers.length; i++) {
+                        for (let j = 0; j < images.length; j++) {
+                            user.followers[i].feed.pull(images[j]._id);
+                        }
+                        user.followers[i].following.pull(user._id);
+                        user.followers[i].save(err => {if (err) console.log('Error: ' + err);});
+                    }
+
                 });
-            }
-
-            Image.find({_author: user._id}).lean().exec((err, images) => {
-                if (err) console.log('Error: ' + err);
-
-                let img_paths = (Array.from(images)).map(img => img.url);
-
-                if (user.avatarPath != 'img/default-avatar.jpg')
-                    img_paths.push('client/' + user.avatarPath);
-
-                console.log(img_paths);
-
-                del(img_paths, {force: true}).then(paths => {
-                    console.log('Deleted files:\n', paths.join('\n'));
-
-                    Image.remove({_author: user._id},
-                         err => {if (err)
-                             return res.status(500).json({error: err, messages: [{'text': 'A problem occured while deleting images', 'severity': 'error'}]})
-                        });
-                });
-            });
-            return res.status(200).json({messages: [{'text': 'Bye!', 'severity': 'info'}]});
+                return res.status(200).json({messages: [{'text': 'Bye!', 'severity': 'info'}]});
         });
     });
 
@@ -167,8 +174,6 @@ router.delete('/:username/followers/:id', (req, res) => {
     User.findOneAndUpdate({username: req.params.username}, {$pull: {'followers': req.params.id}}, (err, user) => {
        if (err) return res.status(500).json({error: err});
 
-
-
        User.findByIdAndUpdate(req.params.id, {$pullAll: {'feed': user.images}}, (err, who) => {
            if (err) return res.status(500).json({error: err});
 
@@ -180,6 +185,15 @@ router.delete('/:username/followers/:id', (req, res) => {
 
     });
 
+});
+
+router.get('/:username/feed', (req, res) => {
+    User.findOne({username: req.params.username})
+        .populate({path: 'feed', options: {sort: {'_id': -1}}})
+        .exec((err, user) => {
+           if (err) return res.status(500).json({error: err});
+           else return res.status(200).json(user);
+        });
 });
 
 

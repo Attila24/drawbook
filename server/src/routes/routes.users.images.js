@@ -9,7 +9,9 @@ import {ensureAuthenticated} from './auth';
 const router = express.Router({mergeParams: true});
 
 router.post('/', (req, res) => {
-    User.findOne({username: req.params.username}, (err, user) => {
+    User.findOne({username: req.params.username})
+        .populate({path: 'followers', select: 'feed'})
+        .exec((err, user) => {
         if (err) return res.status(500).json({error: err});
 
         // Save image file
@@ -31,6 +33,11 @@ router.post('/', (req, res) => {
         // Save to user
         user.images.push(image);
         user.save(err => {if (err) return res.status(500).json({error: err});});
+
+        for (let i = 0; i < user.followers.length; i++) {
+            user.followers[i].feed.push(image);
+            user.followers[i].save(err => {if (err) console.log('Error: ' + err);});
+        }
 
         return res.status(200).json({status: 'Successfully saved image'})
     });
@@ -75,7 +82,9 @@ router.get('/:id', (req, res) => {
 });
 
 router.delete('/:id', ensureAuthenticated, (req, res) => {
-    User.findOne({username: req.params.username}, (err, user) => {
+    User.findOne({username: req.params.username})
+        .populate({path: 'followers', select: 'feed'})
+        .exec((err, user) => {
         if (err) return res.status(500).json({error: err});
 
         user.images.pull(req.params.id);
@@ -88,6 +97,11 @@ router.delete('/:id', ensureAuthenticated, (req, res) => {
            if (err) console.log('Error: ' + err);
            else console.log(`Successfully deleted image file ${req.params.id}.png`);
         });
+
+        for (let i = 0; i < user.followers.length; i++) {
+            user.followers[i].feed.pull(req.params.id);
+            user.followers[i].save(err => {if (err) console.log('Error: ' + err);});
+        }
 
         return res.status(200).json({status: 'Successfully deleted picture'});
     });
