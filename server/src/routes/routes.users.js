@@ -4,6 +4,7 @@ import express from 'express';
 import passport from 'passport';
 import del from 'del';
 import fs from 'fs';
+import async from 'async';
 import User from '../db/models/user';
 import Image from '../db/models/image';
 import Notification from '../db/models/notification';
@@ -77,29 +78,6 @@ router.get('/:username/timestamp', (req, res) => {
        if (err) res.status(500).json({error: err});
        res.status(200).json(data);
    });
-});
-
-
-router.get('/:username/notifications/:id', (req, res) => {
-    Notification.findById(req.params.id)
-        .populate({path: 'from'})
-        .exec((err, notification) => {
-           if (err) return res.status(500).json({error: err});
-           return res.status(200).json(notification);
-        });
-});
-
-router.get('/:username/notifications', (req, res) => {
-   User.findOne({'username' : req.params.username})
-       .populate({
-           path: 'notifications',
-           options: {sort: {'date': -1}},
-           populate: {path: 'from'}
-       })
-       .exec((err, user) => {
-           if (err) return res.status(500).json({error: err});
-           return res.status(200).json(user);
-       })
 });
 
 router.route('/:username')
@@ -194,18 +172,18 @@ router.get('/:username/feed', (req, res) => {
         .lean()
         .exec((err, user) => {
            if (err) return res.status(500).json({error: err});
+           if (user.feed.length == 0) return res.status(200).json(user.feed);
 
-           for (let i = 0; i < user.feed.length; i++) {
-               fs.readFile(user.feed[i].url, 'base64', (err, data) => {
-                  if (err) return res.status(500).json({error: err});
-                  user.feed[i].data = `data:image/png;base64,${data}`;
-
-                   if (i == user.feed.length - 1) {
-                       return res.status(200).json(user.feed);
-                   }
-               });
-
-           }
+            async.each(user.feed, (image, callback) => {
+                fs.readFile(image.url, 'base64', (err, data) => {
+                    if (err) return res.status(500).json({error: err});
+                    image.data = `data:image/png;base64,${data}`;
+                    callback();
+                });
+            }, (err) => {
+                if (err) return res.status(500).json({error: err});
+                else res.status(200).json(user.feed);
+            });
         });
 });
 

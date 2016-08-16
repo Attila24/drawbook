@@ -61,7 +61,8 @@ app.use((err, req, res, next) => {
 });
 
 
-import {setSocket, getSocket, saveNotification} from './socket';
+import {setSocket, getSocket} from './socket';
+import {saveNotification} from'./routes/routes.users.notifications';
 
 io.on('connection', (socket) => {
 

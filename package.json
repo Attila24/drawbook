@@ -13,6 +13,7 @@
     "angular": "^1.4.9",
     "angular-animate": "^1.4.9",
     "angular-loading-overlay-http-interceptor": "^1.1.0",
+    "async": "^2.0.1",
     "body-parser": "^1.14.2",
     "bootstrap-sass": "^3.3.6",
     "connect-multiparty": "^2.0.0",

@@ -19,8 +19,10 @@
 
 	<h3>Feed</h3>
 
-	<div ng-repeat="image in vm.feed">
-		- {{image.date}} <br>
+	<div ng-repeat="image in vm.feed" class="panel panel-default">
+		<div class="panel-body">
+			<img ng-src="{{image.data}}" alt="image">
+		</div>
 	</div>
 
 </div>
