@@ -3,17 +3,24 @@
 	<a ui-sref="register">Register</a>
 </p>
 
-<p ng-show="vm.isAuthenticated()">
+<div ng-show="vm.isAuthenticated()">
 	<h3><a ui-sref="user.gallery({username: vm.user.username})">{{vm.user.username}}</a></h3>
 	<button class="btn btn-default" ng-click="vm.logout()">Logout</button>
 	<button class="btn btn-info" ui-sref="draw">New Drawing</button>
 	<button class="btn btn-default" ui-sref="edit">Edit Profile</button>
-	<p>
-		<h3>Users: </h3>
-		<ul class="list-unstyled">
-			<li ng-repeat="user in vm.users">
-				> <a ui-sref="user.gallery({username: user.username})">{{user.username}}</a>
-			</li>
-		</ul>
-	</p>
-</p>
+
+	<h3>Users: </h3>
+	<ul class="list-unstyled">
+		<li ng-repeat="user in vm.users">
+			> <a ui-sref="user.gallery({username: user.username})">{{user.username}}</a>
+		</li>
+	</ul>
+
+
+	<h3>Feed</h3>
+
+	<div ng-repeat="image in vm.feed">
+		- {{image.date}} <br>
+	</div>
+
+</div>

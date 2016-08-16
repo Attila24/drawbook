@@ -21,6 +21,13 @@ export default function HomeController($auth, localStorageService, UserService, 
             .then(res => {
                 vm.users = res;
             });
+
+        UserService.getFeed(vm.user.username)
+            .then(res => {
+                console.log(res);
+                vm.feed = res;
+                console.log(vm.feed);
+            });
     }
 
     function isAuthenticated() {

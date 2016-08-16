@@ -12,33 +12,32 @@ export default function UserController(user, $state, localStorageService, UserSe
 
     vm.follow = follow;
     vm.unfollow = unfollow;
-    vm.isFollowed = isFollowed;
 
     ////////////////
 
     if (vm.user == null) {
-        $state.go('home');
+        $state.go('404');
+    }
+
+    init();
+
+    function init() {
+        vm.isFollowed = vm.user.followers.find(x => x._id == vm.currentUser._id) !== undefined;
     }
 
     function follow() {
         UserService.follow(vm.currentUser, vm.user)
             .then(res => {
                 vm.user.followers.push(vm.currentUser._id);
+                vm.isFollowed = true;
             });
     }
 
     function unfollow() {
         UserService.unfollow(vm.currentUser, vm.user)
             .then(res => {
-
+                vm.user.followers.splice(vm.user.followers.findIndex(x => x._id == vm.currentUser._id), 1);
+                vm.isFollowed = false;
             });
     }
-
-    function isFollowed() {
-        return vm.user.followers.find(x => x._id == vm.currentUser._id) !== undefined;
-    }
-
 }
-
-
-

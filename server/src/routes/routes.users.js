@@ -3,6 +3,7 @@
 import express from 'express';
 import passport from 'passport';
 import del from 'del';
+import fs from 'fs';
 import User from '../db/models/user';
 import Image from '../db/models/image';
 import Notification from '../db/models/notification';
@@ -190,9 +191,21 @@ router.delete('/:username/followers/:id', (req, res) => {
 router.get('/:username/feed', (req, res) => {
     User.findOne({username: req.params.username})
         .populate({path: 'feed', options: {sort: {'_id': -1}}})
+        .lean()
         .exec((err, user) => {
            if (err) return res.status(500).json({error: err});
-           else return res.status(200).json(user);
+
+           for (let i = 0; i < user.feed.length; i++) {
+               fs.readFile(user.feed[i].url, 'base64', (err, data) => {
+                  if (err) return res.status(500).json({error: err});
+                  user.feed[i].data = `data:image/png;base64,${data}`;
+
+                   if (i == user.feed.length - 1) {
+                       return res.status(200).json(user.feed);
+                   }
+               });
+
+           }
         });
 });
 
