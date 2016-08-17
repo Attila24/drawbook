@@ -15,6 +15,6 @@ export default function UserService($http, server) {
         getTimestamp: (username) => $http.get(server.url + 'users/' + username + '/timestamp').then(res => res.data[0]),
         follow: (who, whom) => $http.post(server.url + 'users/' + whom.username + '/followers', {who: who._id}).then(res => res),
         unfollow: (who, whom) => $http.delete(server.url + 'users/' + whom.username + '/followers/' + who._id).then(res => res),
-        getFeed: (username) => $http.get(server.url + 'users/' + username + '/feed').then(res => res.data)
+        getFeed: (username, skip) => $http({url: server.url + 'users/' + username + '/feed', method: 'GET', params: {skip: skip}}).then(res => res.data)
     };
 }

@@ -21,8 +21,7 @@ export default angular.module('drawbook.user', [])
                     controller: UserController,
                     controllerAs: 'vm',
                     resolve: {
-                        user: ['$stateParams', 'UserService', ($stateParams, UserService) => UserService.get($stateParams.username)
-                        ]
+                        user: ['$stateParams', 'UserService', ($stateParams, UserService) => UserService.get($stateParams.username)]
                     }
                 })
                 .state('user.gallery', {

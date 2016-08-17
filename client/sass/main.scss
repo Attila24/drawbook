@@ -100,9 +100,20 @@ img.notification {
   width: 60px;
 }
 
-.navbar .navbar-nav {
-  display: inline-block;
-  float: none;
+img.menu-item {
+  width: 25px;
+}
+
+img.feed {
+  width: 30em;
+}
+
+button.menu {
+  margin-right: 5px;
+}
+
+span.menu-item {
+  font-size: 1.3em;
 }
 
 /* Loader */

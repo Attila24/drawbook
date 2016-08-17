@@ -168,11 +168,19 @@ router.delete('/:username/followers/:id', (req, res) => {
 
 router.get('/:username/feed', (req, res) => {
     User.findOne({username: req.params.username})
-        .populate({path: 'feed', options: {sort: {'_id': -1}}})
+        .populate({
+            path: 'feed',
+            options: {
+                sort: {'_id': -1},
+                limit: 10,
+                skip: parseInt(req.query.skip)
+            },
+            populate: {path: '_author', select: 'username avatarPath'}
+        })
         .lean()
         .exec((err, user) => {
            if (err) return res.status(500).json({error: err});
-           if (user.feed.length == 0) return res.status(200).json(user.feed);
+           if (user == null || user.feed.length == 0) return res.status(200).json([]);
 
             async.each(user.feed, (image, callback) => {
                 fs.readFile(image.url, 'base64', (err, data) => {

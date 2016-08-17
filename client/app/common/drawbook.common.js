@@ -29,7 +29,10 @@ export default angular.module('drawbook.common', [])
                 parent: 'master',
                 templateUrl: '/app/common/tpl/home.tpl.html',
                 controller: HomeController,
-                controllerAs: 'vm'
+                controllerAs: 'vm',
+                resolve: {
+                    currentUser: ['localStorageService', (localStorageService) => localStorageService.get('currentUser')]
+                }
             }).
             state('register', {
                 url: '/register',

@@ -1,9 +1,9 @@
 'use strict';
 
-MainController.$inject = ['$auth', 'UserService', 'localStorageService', 'socket'];
+MainController.$inject = ['$auth', 'UserService', 'localStorageService', 'socket', '$state'];
 
 /* @ngInject */
-export default function MainController($auth, UserService, localStorageService, socket) {
+export default function MainController($auth, UserService, localStorageService, socket, $state) {
 
     const vm = this;
     vm.title = "MainController";
@@ -11,6 +11,8 @@ export default function MainController($auth, UserService, localStorageService, 
     vm.hasNewNotifications = false;
     vm.setNotificationsToRead = setNotificationsToRead;
     vm.isAuthenticated = isAuthenticated;
+    vm.goToHome = goToHome;
+    vm.logout = logout;
 
     if (vm.isAuthenticated()) init();
 
@@ -38,4 +40,14 @@ export default function MainController($auth, UserService, localStorageService, 
         return $auth.isAuthenticated();
     }
 
+
+    function goToHome() {
+        if ($state.is('home')) $state.reload();
+        else $state.go('home');
+    }
+
+    function logout() {
+        $auth.logout();
+        localStorageService.remove("currentUser");
+    }
 }

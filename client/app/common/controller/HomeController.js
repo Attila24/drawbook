@@ -1,15 +1,15 @@
 'use strict';
 
-HomeController.$inject = ['$auth', 'localStorageService', 'UserService', 'NotificationService', 'ImageService', '$q'];
+HomeController.$inject = ['$auth', 'currentUser', 'UserService'];
 
 /* @ngInject */
-export default function HomeController($auth, localStorageService, UserService, NotificationService, ImageService, $q) {
+export default function HomeController($auth, currentUser, UserService) {
     const vm = this;
     vm.title = 'HomeController';
-    vm.user = localStorageService.get("currentUser");
+    vm.user = currentUser;
 
     vm.isAuthenticated = isAuthenticated;
-    vm.logout = logout;
+    vm.loadFeed = loadFeed;
     if (isAuthenticated()) init();
 
     const limit = 10;
@@ -21,22 +21,26 @@ export default function HomeController($auth, localStorageService, UserService, 
             .then(res => {
                 vm.users = res;
             });
+        vm.feed = [];
+        vm.loaded = 0;
 
-        UserService.getFeed(vm.user.username)
+        console.log(vm.user.feed);
+
+        loadFeed();
+    }
+
+    function loadFeed() {
+        console.log(vm.loaded);
+        UserService.getFeed(vm.user.username, vm.loaded)
             .then(res => {
-                console.log(res);
-                vm.feed = res;
-                console.log(vm.feed);
+               console.log(res);
+               vm.feed.push(...res);
+               vm.loaded += limit;
             });
     }
 
     function isAuthenticated() {
         return $auth.isAuthenticated();
-    }
-
-    function logout() {
-        $auth.logout();
-        localStorageService.remove("currentUser");
     }
 }
 

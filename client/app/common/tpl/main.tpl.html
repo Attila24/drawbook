@@ -1,26 +1,47 @@
 <div class="container">
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
-            <div class="navbar-header">
-                <h2 class="navbar-text">
-                    <a ui-sref="home">Drawbook</a>
-                </h2>
-            </div>
 
-            <ul class="nav navbar navbar-nav navbar-right" ng-show="vm.isAuthenticated()">
-                <li>
-                    <h3>
-                    <a href="#" notifications-popover bind="vm.init" ng-click="showPopover()">
-                        <span class="glyphicon glyphicon-globe" ng-class="{'new-notification': vm.hasNewNotifications}" ng-click="vm.setNotificationsToRead()"></span>
-                    </a>
-                    </h3>
-                </li>
+	        <div class="navbar-header">
+		        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+			        <span class="icon-bar"></span>
+			        <span class="icon-bar"></span>
+			        <span class="icon-bar"></span>
+		        </button>
+	        </div>
 
-                <li><h3><a ui-sref="edit"><span class="glyphicon glyphicon-cog"></span></a></h3></li>
-            </ul>
+	        <!--Left-->
+	        <div class="nav navbar-nav navbar-left">
+		        <h4><a href="#" ng-click="vm.goToHome()" class="navbar-link">Drawbook</a></h4>
+	        </div>
+
+	        <div class="navbar-collapse collapse">
+		        <!--Right-->
+		        <ul ng-show="vm.isAuthenticated()" class="nav navbar-nav navbar-right">
+			        <li>
+				        <button href="#" ui-sref="draw" class="btn btn-primary navbar-btn menu"><span class="glyphicon glyphicon-pencil menu-item"></span> New Drawing</button>
+			        </li>
+			        <li>
+				        <button ui-sref="user.gallery({username: vm.user.username})" class="btn btn-default navbar-btn menu">
+					        <img ng-src="{{vm.user.avatarPath}}" alt="avatar" class="menu-item">
+					        {{vm.user.username}}
+				        </button>
+			        </li>
+			        <li>
+				        <button class="btn btn-default navbar-btn menu" notifications-popover bind="vm.init" ng-click="showPopover()">
+					        <span class="glyphicon glyphicon-globe menu-item" ng-class="{'new-notification': vm.hasNewNotifications}" ng-click="vm.setNotificationsToRead()"></span>
+				        </button>
+			        </li>
+			        <li>
+				        <button class="btn btn-default navbar-btn menu" ui-sref="edit"><span class="glyphicon glyphicon-cog menu-item"></span></button>
+			        </li>
+			        <li>
+				        <button class="btn btn-default navbar-btn menu" ng-click="vm.logout()"><span class="glyphicon glyphicon-log-out menu-item"></span></button>
+			        </li>
+		        </ul>
+	        </div>
         </div>
     </nav>
-
 
     <div growl></div>
     <div ui-view bs-loading-overlay></div>
