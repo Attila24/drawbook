@@ -10,7 +10,7 @@ export default function ImageService($http, server) {
             url: server.url + 'users/' + username + '/images/' + id,
             headers: {'Content-Type': 'images/png'}
         }).then(res => ({data: res, id: id})),
-
+        getMany: (username, skip, limit) => $http({url: server.url + 'users/' + username + '/images', method: 'GET', params: {skip: skip, limit: limit}}).then(res => res.data),
         post: (username, img, title) => $http.post(server.url + 'users/' + username + '/images/', {
             "title": title,
             "image": img

@@ -1,9 +1,11 @@
 'use strict';
 
-UserController.$inject = ['user', '$state', 'localStorageService', 'UserService'];
+import FollowModalController from './FollowModalController';
+
+UserController.$inject = ['user', '$state', 'localStorageService', 'UserService', 'socket', '$modal', '$timeout', 'bsLoadingOverlayService'];
 
 /* @ngInject */
-export default function UserController(user, $state, localStorageService, UserService) {
+export default function UserController(user, $state, localStorageService, UserService, socket, $modal, $timeout, bsLoadingOverlayService) {
     var vm = this;
     vm.title = 'UserController';
     vm.images = [];
@@ -12,8 +14,14 @@ export default function UserController(user, $state, localStorageService, UserSe
 
     vm.follow = follow;
     vm.unfollow = unfollow;
+    vm.openModal = openModal;
 
     ////////////////
+
+    // endless reload fix
+    $timeout(()=> {
+        bsLoadingOverlayService.stop();
+    }, 400);
 
     if (vm.user == null) {
         $state.go('404');
@@ -30,6 +38,7 @@ export default function UserController(user, $state, localStorageService, UserSe
             .then(res => {
                 vm.user.followers.push(vm.currentUser._id);
                 vm.isFollowed = true;
+                socket.emit('notification', {'to': vm.user._id, 'from': vm.currentUser._id, 'author': vm.currentUser.username, 'type': 'follow'});
             });
     }
 
@@ -39,5 +48,40 @@ export default function UserController(user, $state, localStorageService, UserSe
                 vm.user.followers.splice(vm.user.followers.findIndex(x => x._id == vm.currentUser._id), 1);
                 vm.isFollowed = false;
             });
+    }
+
+    function openModal(type) {
+        if (type == 'followers') {
+
+            $modal({
+               title: 'Followers',
+               templateUrl: '/app/user/tpl/followmodal.tpl.html',
+               controller: FollowModalController,
+               controllerAs: 'vm',
+               resolve: {
+                   type: () => 'followers',
+                   user: () => vm.user
+               },
+               animation: 'am-fade',
+               backdropAnimation: 'backdrop-anim',
+               keyboard: false
+            });
+
+        } else if (type == 'following') {
+
+            $modal({
+                title: 'Following',
+                templateUrl: '/app/user/tpl/followmodal.tpl.html',
+                controller: FollowModalController,
+                controllerAs: 'vm',
+                resolve: {
+                    type: () => 'following',
+                    user: () => vm.user
+                },
+                animation: 'am-fade',
+                backdropAnimation: 'backdrop-anim',
+                keyboard: false
+            });
+        }
     }
 }

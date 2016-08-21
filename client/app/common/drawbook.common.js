@@ -5,6 +5,7 @@ import LoginController from './controller/LoginController';
 import RegisterController from './controller/RegisterController';
 import ProfileEditController from './controller/ProfileEditController';
 import MainController from './controller/MainController';
+import UsersController from './controller/UsersController';
 
 export default angular.module('drawbook.common', [])
         .controller(HomeController)
@@ -54,5 +55,12 @@ export default angular.module('drawbook.common', [])
                 templateUrl: '/app/common/tpl/profile-edit.tpl.html',
                 controller: ProfileEditController,
                 controllerAs: 'vm'
+            })
+            .state('users', {
+              url: '/users',
+              parent: 'master',
+              templateUrl: '/app/common/tpl/users.tpl.html',
+              controller: UsersController,
+              controllerAs: 'vm'
             });
         }]);

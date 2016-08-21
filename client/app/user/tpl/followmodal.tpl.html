@@ -1,0 +1,19 @@
+<div class="modal" tabindex="-1" role="dialog">
+	<div class="modal-dialog slim" role="document">
+		<div class="modal-content">
+			<div class="modal-header"><h4>{{vm.type == 'followers' ? 'Followers' : 'Followings'}}</h4></div>
+			<div class="modal-body">
+				<ul class="list-unstyled">
+					<li ng-repeat="user in vm.arr">
+						<img ng-src="{{user.avatarPath}}" alt="avatar" class="comment-avatar">
+						<a ui-sref="user.gallery({username: user.username})" ng-click="$hide()">{{user.username}}</a>
+						<hr/>
+					</li>
+				</ul>
+
+				<button class="btn btn-info" ng-if="vm.type == 'followers'" ng-show="vm.loaded < vm.user.followers.length" ng-click="vm.loadFollowers()">Load more</button>
+				<button class="btn btn-info" ng-if="vm.type == 'followings'" ng-show="vm.loaded < vm.user.followings.length" ng-click="vm.loadFollowings()">Load more</button>
+			</div>
+		</div>
+	</div>
+</div>

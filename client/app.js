@@ -24,6 +24,7 @@ angular
         'bsLoadingOverlayHttpInterceptor',
         'angular-growl',
         'btford.socket-io',
+        'ngSanitize',
         commonModule.name,
         userModule.name
     ])
@@ -101,27 +102,31 @@ angular
     .run(['socket', 'growl', 'ImageService', (socket, growl, ImageService) =>  {
        socket.on('notification', msg => {
 
-           ImageService.get(msg.to, msg.imageid)
-               .then(res => {
-                  let img = res.data.data.data;
+           if (msg.type == 'like' || msg.type == 'comment') {
+               ImageService.get(msg.to, msg.imageid)
+                   .then(res => {
+                       let img = res.data.data.data;
 
-                   switch (msg.type) {
-                       case 'like': {
-                           growl.info('<strong>' + msg.from + '</strong> liked your drawing! <img src="' + img + '" class="img-responsive notification">');
-                           break;
-                       }
-                       case 'comment': {
-                           if (msg.comment.length > 30) {
-                               msg.comment = msg.comment.substring(0,27);
-                               msg.comment += '...';
+                       switch (msg.type) {
+                           case 'like': {
+                               growl.info('<strong>' + msg.from + '</strong> liked your drawing! <img src="' + img + '" class="img-responsive notification">');
+                               break;
+                           }
+                           case 'comment': {
+                               if (msg.comment.length > 30) {
+                                   msg.comment = msg.comment.substring(0,27);
+                                   msg.comment += '...';
+                               }
+
+                               growl.info('<strong>' + msg.from + '</strong>  commented on your drawing: "'+ msg.comment +'" <img src="' + img + '" class="img-responsive notification">');
+                               break;
                            }
 
-                           growl.info('<strong>' + msg.from + '</strong>  commented on your drawing: "'+ msg.comment +'" <img src="' + img + '" class="img-responsive notification">');
-                           break;
                        }
-
-                   }
-               });
+                   });
+           } else { // follow
+               growl.info('<strong>' + msg.from + '</strong> followed you!');
+           }
        })
     }]);
 

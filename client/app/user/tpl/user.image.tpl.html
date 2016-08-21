@@ -20,37 +20,33 @@
 
                 <button
                     ng-class="vm.isLiked ? 'btn btn-warning' : 'btn btn-info'"
-                    ng-click="vm.likeOrDislike()">
+                    ng-click="vm.isLiked ? vm.dislike() : vm.like()">
                     {{vm.isLiked ? 'Unlike' : 'Like'}}
                 </button>
 
-                <!--<button class="btn btn-info" ng-if="!vm.isLiked()" ng-click="vm.addLike()">Like</button>
-                <button class="btn btn-warning" ng-if="vm.isLiked()" ng-click="vm.removeLike()">Unlike</button>
--->
                 <div class="row">
                     <div class="col-md-8">
                         <img ng-src="{{vm.image.data}}" class="img-responsive" />
                     </div>
                     <div class="col-md-4">
 
-                        <ul class="list-unstyled">
-                            <li ng-repeat="comment in vm.comments">
-                                <a ng-if="!comment.removedAuthor" ui-sref="user.gallery({username: comment.author})" ng-click="$hide()">
-                                    <img ng-src="{{comment.authorAvatar}}" alt="avatar" class="comment-avatar">
-                                    {{comment.author}}
-                                </a>
+	                    <div id="comment-box">
+		                    <ul class="list-unstyled">
+			                    <li ng-repeat="comment in vm.comments">
+				                    <a  ui-sref="user.gallery({username: comment.authorUsername})" ng-click="$hide()">
+					                    <img ng-src="{{comment.authorAvatarPath}}" alt="avatar" class="comment-avatar">
+					                    {{comment.authorUsername}}
+				                    </a>
 
-                                <span ng-if="comment.removedAuthor">
-	                                <img src="../../../img/default-avatar.jpg" alt="avatar" class="comment-avatar">
-	                                [Deleted user]
-                                </span>
+				                    - {{comment.text}}
+				                    <button class="btn btn-danger"
+				                            ng-click="vm.deleteComment(comment._id)"
+				                            ng-show="vm.currentUser._id == vm.user._id || vm.currentUser._id == comment.authorId">Delete</button>
+			                    </li>
+		                    </ul>
 
-                                 - {{comment.text}}
-                                <button class="btn btn-danger"
-                                        ng-click="vm.deleteComment(comment._id)"
-                                        ng-show="vm.currentUser.username == vm.user.username || vm.currentUser.timestamp == comment.authorTimestamp">Delete</button>
-                            </li>
-                        </ul>
+		                    <button class="btn btn-default" ng-show="vm.allComments > vm.loadedComments" ng-click="vm.loadComments()">Load more</button>
+	                    </div>
 
                         <label for="comment">Comment </label>
                         <input type="text" ng-model="vm.comment" id="comment" required maxlength="500">
@@ -65,7 +61,7 @@
 	                    <h3>Likes</h3>
                         <ul class="list-unstyled">
                             <li ng-repeat="like in vm.likes">
-                                <a ui-sref="user.gallery({username: like.author})" ng-click="$hide()"> {{like.author}}</a>
+                                <a ui-sref="user.gallery({username: like.username})" ng-click="$hide()"> {{like.username}}</a>
                             </li>
                         </ul>
 

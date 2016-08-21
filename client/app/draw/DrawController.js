@@ -35,7 +35,7 @@ export default function DrawController($state, localStorageService, ImageService
 
         ImageService.post(username, img, (vm.imagetitle || 'Untitled'))
             .then(res => {
-                $state.go('home');
+                $state.go('user.gallery', {username: username});
             })
             .catch(res => {});
     }

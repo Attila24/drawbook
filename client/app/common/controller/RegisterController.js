@@ -38,7 +38,7 @@ export default function RegisterController($state, $auth, UserService, localStor
                 $auth.login(user)
                     .then(res => {
                         socket.emit('setUserId', res.data.user._id);
-                        $state.go('home');
+                        $state.go('home', {}, {reload: true});
                     })
                     .catch(res =>{});
             })

@@ -2,15 +2,18 @@
 <h3>Gallery</h3>
 <div class="row">
     <div ng-repeat="image in vm.images | orderBy: '-image.date' track by $index" ng-if="image" class="col-md-2 col-xs-4">
-        <span><b>{{$index}}</b> - {{image.image.date | date: 'medium'}} </span>
+        <span><b>{{$index}}</b> - {{image.date | date: 'medium'}} </span>
 
         <br>
 
-        <button class="btn btn-danger" ng-show="vm.currentUser.username === vm.user.username" ng-click="vm.deleteImage(image.image._id, $index)">Delete</button>
+        <button class="btn btn-danger" ng-show="vm.currentUser.username === vm.user.username" ng-click="vm.deleteImage(image._id, $index)">Delete</button>
 
-        <a ui-sref="user.gallery.image({id: image.image._id, index: $index})">
+        <a ui-sref="user.gallery.image({id: image._id, index: $index})">
             <img ng-src="{{image.data}}" class="img-responsive img-thumbnail" />
         </a>
+		likes: {{image.likes.length}} <br>
+	    comments: {{image.commentCount}}
     </div>
 </div>
-<button ng-click="vm.loadMore()" class="btn btn-primary" ng-show="vm.loaded < vm.user.images.length" >Load more</button>
+
+<button ng-click="vm.loadImages()" class="btn btn-primary" ng-show="vm.loaded < vm.user.images.length" >Load more</button>-

@@ -25,8 +25,7 @@ router.post('/register', (req, res) => {
             age: req.body.age,
             gender: req.body.gender
         }),
-        req.body.password,
-        (err, account) => {
+        req.body.password, (err, account) => {
             if (err) return res.status(500).json({error: err});
 
             passport.authenticate('local')(req, res, () => {
@@ -66,18 +65,22 @@ router.get('/logout', (req, res) => {
     res.status(200).json({status: 'Bye!'});
 });
 
-router.get('/', (req, res) => {
-    User.find((err, users) => {
-        if (err) res.send(err);
-        res.status(200).json(users);
+router.get('/count', (req, res) => {
+    User.count((err, count) => {
+        if (err) return res.status(500).json({error: err});
+        return res.status(200).json(count);
     });
 });
 
-router.get('/:username/timestamp', (req, res) => {
-   User.find({username: req.params.username}).select({timestamp: 1}).exec((err, data) => {
-       if (err) res.status(500).json({error: err});
-       res.status(200).json(data);
-   });
+router.get('', (req, res) => {
+    User.find(req.query.search ? {username: {'$regex': req.query.search}} : {})
+        .sort({_id: -1})
+        .limit(parseInt(req.query.limit))
+        .skip(parseInt(req.query.skip))
+        .exec((err, users) => {
+            if (err) res.send(err);
+            res.status(200).json(users);
+        });
 });
 
 router.route('/:username')
@@ -97,7 +100,8 @@ router.route('/:username')
     })
     .delete((req, res) => {
         User.findOneAndRemove({'username': req.params.username})
-            .populate({path: 'followers', select: 'feed'})
+            .populate({path: 'followers', select: 'feed following'})
+            .populate({path: 'following', select: 'followers'})
             .exec((err, user) => {
                 if (err) return res.status(500).json({error: err, messages: [{'text': 'A problem occured while deleting user', 'severity': 'error'}]});
 
@@ -122,6 +126,7 @@ router.route('/:username')
                             });
                     });
 
+                    // Delete presence from followers' data
                     for (let i = 0; i < user.followers.length; i++) {
                         for (let j = 0; j < images.length; j++) {
                             user.followers[i].feed.pull(images[j]._id);
@@ -130,41 +135,34 @@ router.route('/:username')
                         user.followers[i].save(err => {if (err) console.log('Error: ' + err);});
                     }
 
+                    // Delete presence from followed people's data
+                    for (let i = 0; i < user.following.length; i++) {
+                        user.following[i].followers.pull(user._id);
+                        user.following[i].save(err => {if (err) console.log('Error: ' + err);});
+                    }
+
                 });
                 return res.status(200).json({messages: [{'text': 'Bye!', 'severity': 'info'}]});
         });
     });
 
-
-router.post('/:username/followers', (req, res) => {
-
-    User.findOneAndUpdate({username: req.params.username}, {$push: {'followers': req.body.who}}, (err, user) => {
-       if (err) return res.status(500).json({error: err});
-
-       User.findByIdAndUpdate(req.body.who, {$push: {'feed': {$each: user.images}, 'following': user._id}}, (err, user) => {
-          if (err) return res.status(500).json({error: err});
-          else return res.status(200).json({messages: [{'text': 'Followed!', 'severity': 'info'}]});
-       });
-    });
-});
-
-router.delete('/:username/followers/:id', (req, res) => {
-
-    User.findOneAndUpdate({username: req.params.username}, {$pull: {'followers': req.params.id}}, (err, user) => {
-       if (err) return res.status(500).json({error: err});
-
-       User.findByIdAndUpdate(req.params.id, {$pullAll: {'feed': user.images}}, (err, who) => {
+router.get('/:username/following', (req, res) => {
+   User.findOne({username: req.params.username})
+       .populate({
+           path: 'following',
+           options: {
+               limit: 20,
+               skip: parseInt(req.query.skip)
+           }
+       })
+       .select('following')
+       .exec((err, data) => {
            if (err) return res.status(500).json({error: err});
-
-           who.following.pull(user._id);
-           who.save(err => {if (err) console.log('Error: ' + err);});
-
-           return res.status(200).json({messages: [{'text': 'Unfollowed!', 'severity': 'info'}]});
+           return res.status(200).json(data.following);
        });
-
-    });
-
 });
+
+
 
 router.get('/:username/feed', (req, res) => {
     User.findOne({username: req.params.username})
@@ -188,7 +186,7 @@ router.get('/:username/feed', (req, res) => {
                     image.data = `data:image/png;base64,${data}`;
                     callback();
                 });
-            }, (err) => {
+            }, err => {
                 if (err) return res.status(500).json({error: err});
                 else res.status(200).json(user.feed);
             });

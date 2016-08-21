@@ -116,6 +116,15 @@ span.menu-item {
   font-size: 1.3em;
 }
 
+.modal-dialog.slim {
+  width: 400px;
+}
+
+#comment-box {
+  max-height: 400px;
+  overflow: scroll;
+}
+
 /* Loader */
 /* Transparent Overlay */
 .loading:before {

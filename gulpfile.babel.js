@@ -69,7 +69,8 @@ gulp.task('copy-libs', () => {
         'node_modules/jquery/dist/jquery.min.js',
         'node_modules/satellizer/satellizer.min.js',
         'node_modules/ng-file-upload/dist/ng-file-upload-all.min.js',
-        'node_modules/angular-loading-overlay-http-interceptor/dist/angular-loading-overlay-http-interceptor.js'
+        'node_modules/angular-loading-overlay-http-interceptor/dist/angular-loading-overlay-http-interceptor.js',
+        'node_modules/angular-sanitize/angular-sanitize.min.js'
     ];
 
     gulp.src(entries)

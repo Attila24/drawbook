@@ -4,83 +4,82 @@ NotificationsController.$inject = ['$scope', 'localStorageService', 'UserService
 
 function NotificationsController($scope, localStorageService, UserService, NotificationService, ImageService, $q, $state) {
 
-    $scope.user = localStorageService.get('currentUser');
     $scope.init = init;
-    $scope.loadMoreNotifications = loadMoreNotifications;
+    $scope.load = load;
     $scope.setLastReadNotification = setLastReadNotification;
-    $scope.goToImage = goToImage;
-
-    const limit = 5;
+    $scope.openLink = openLink;
 
     function init(){
         $scope.notifications = [];
-        $scope.notif_arr = [];
-        $scope.user = localStorageService.get('currentUser');
-
-
-        UserService.get($scope.user.username)
+        UserService.get(localStorageService.get('currentUser').username)
             .then(res => {
-
                 $scope.user = res.user;
-
-                $scope.notif_arr = res.user.notifications.reverse();
-                $scope.loaded = $scope.notif_arr.length < limit ? $scope.notif_arr.length : limit;
-
-                loadNotifications(0, $scope.loaded)
-                    .then(() => {
-                        loadNotificationImages(0, $scope.loaded)
+                $scope.loaded = 0;
+                if ($scope.user.notifications.length !== 0) {
+                    load();
+                }
+                NotificationService.getCount($scope.user.username)
+                    .then(count => {
+                        $scope.notificationsCount = count;
                     })
+            });
+    }
+
+    function load() {
+        loadNotifications().then(from => {
+                loadNotificationImages(from, $scope.loaded)
             })
     }
 
-    function loadNotifications(from, to) {
+    function loadNotifications() {
         let d = $q.defer();
 
-        for (let i = from; i < to; i++) {
-            NotificationService.get($scope.user.username, $scope.notif_arr[i])
-                .then(res => {
-                    $scope.notifications.push(res);
-                    if (i == to - 1) d.resolve();
-                })
-                .catch(err => {d.reject(err);});
-        }
+        NotificationService.get($scope.user.username, $scope.loaded)
+            .then(res => {
+               let from = $scope.notifications.length;
+               $scope.notifications.push(...res);
+               $scope.loaded = $scope.notifications.length;
+               d.resolve(from);
+            });
+
         return d.promise;
     }
 
     function loadNotificationImages(from, to) {
         for (let i = from; i < to; i++) {
-            ImageService.get($scope.user.username, $scope.notifications[i].imageid)
-                .then(res => {
-                    if (res.data.status == 404) {
-                        $scope.notifications[i].deleted = true;
-                        $scope.notifications[i].imagedata = 'img/img-placeholder.png';
-                    } else {
-                        $scope.notifications[i].deleted = false;
-                        $scope.notifications[i].imagedata = res.data.data.data;
-                    }
-                })
+            if ($scope.notifications[i].type == 'follow') {
+                $scope.notifications[i].deleted = false;
+            } else {
+                ImageService.get($scope.user.username, $scope.notifications[i].imageid)
+                    .then(res => {
+                        if (res.data.status == 404) {
+                            $scope.notifications[i].deleted = true;
+                            $scope.notifications[i].imagedata = 'img/img-placeholder.png';
+                        } else {
+                            $scope.notifications[i].deleted = false;
+                            $scope.notifications[i].imagedata = res.data.data.data;
+                        }
+                    });
+            }
         }
     }
 
-    function loadMoreNotifications() {
-        $scope.current = $scope.loaded;
-        $scope.loaded = $scope.notif_arr.length < $scope.loaded + limit ? $scope.notif_arr.length : $scope.loaded + limit;
-
-        loadNotifications($scope.current, $scope.loaded).then(() => {
-            loadNotificationImages($scope.current, $scope.loaded)
-        });
-    }
-
     function setLastReadNotification() {
-        $scope.user.lastReadNotificationId = $scope.notif_arr[0];
+        if ($scope.notifications.length !== 0) {
+            $scope.user.lastReadNotificationId = $scope.notifications[0]._id;
 
-        UserService.update($scope.user)
-            .then(res => {})
-            .catch(res => {});
+            UserService.update($scope.user)
+                .then(res => {})
+                .catch(res => {});
+        }
     }
 
-    function goToImage(params) {
-        $state.go('user.gallery', params);
+    function openLink(follower, imageid, type) {
+        if (type == 'follow') {
+            $state.go('user.gallery', {username: follower});
+        } else {
+            $state.go('user.gallery', {username: $scope.user.username, openImage: imageid});
+        }
     }
 }
 

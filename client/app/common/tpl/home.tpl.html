@@ -16,6 +16,13 @@
 						<a ui-sref="user.gallery({username: image._author.username, openImage: image._id})">
 							<img ng-src="{{image.data}}" alt="image" class="img-responsive feed">
 						</a>
+						<a href ng-show="image.likes.length > 0" data-placement="bottom" data-html="true" bs-tooltip="vm.tooltip($index)">{{image.likes.length}} likes</a> <br>
+						<span ng-show="image.commentCount"> comments: {{image.commentCount}} </span>
+						<button
+								ng-class="image.isLiked ? 'btn btn-warning' : 'btn btn-info'"
+								ng-click="image.isLiked ? vm.dislike(image._author.username, image._id, $index) : vm.like(image._author, image._id, $index)">
+							{{image.isLiked ? 'Unlike' : 'Like'}}
+						</button>
 					</div>
 				</div>
 			</div>
@@ -30,6 +37,9 @@
 					<a ui-sref="user.gallery({username: user.username})">{{user.username}}</a>
 				</li>
 			</ul>
+
+			<a ui-sref="users">Browse all users</a>
+
 		</div>
 	</div>
 </div>

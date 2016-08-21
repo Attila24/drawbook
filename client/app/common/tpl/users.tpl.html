@@ -1,0 +1,25 @@
+<h2>All users</h2>
+
+<form class="form-inline">
+	<input type="text" class="form-control" placeholder="Search username..." ng-model="vm.searchInput">
+	<button type="submit" class="btn btn-default" ng-click="vm.search()" ng-disabled="!vm.searchInput">Search</button>
+	<button type="submit" class="btn btn-danger" ng-click="vm.clear()" ng-show="vm.searchMode">Clear</button>
+</form>
+
+<div ng-if="vm.searchMode">
+	<h3>Search results for "{{vm.searchInput}}"</h3>
+</div>
+
+<ul class="list-unstyled">
+	<li ng-repeat="user in vm.users">
+		<img ng-src="{{user.avatarPath}}" alt="avatar" class="comment-avatar">
+		<a ui-sref="user.gallery({username: user.username})">{{user.username}}</a>
+	</li>
+</ul>
+
+<nav ng-show="!vm.searchMode">
+	<ul class="pager">
+		<li><a href="#" ng-click="vm.prev()" ng-show="vm.skip !== 0">Previous</a></li>
+		<li><a href="#" ng-click="vm.next()" ng-show="vm.count % (vm.skip + vm.users.length) > 0">Next</a></li>
+	</ul>
+</nav>

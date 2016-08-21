@@ -26,7 +26,7 @@ export default angular.module('drawbook.user', [])
                 })
                 .state('user.gallery', {
                     url: '/',
-                    params: {openImage: null},
+                    params: {username: null, openImage: null},
                     templateUrl: '/app/user/tpl/user.gallery.tpl.html',
                     controller: UserGalleryController,
                     controllerAs: 'vm'
@@ -34,7 +34,7 @@ export default angular.module('drawbook.user', [])
                 .state('user.gallery.image', {
                     url: 'image/:id',
                     params: {index: null},
-                    onEnter: ['$modal', '$state', 'user', '$stateParams', ($modal, $state, user) => {
+                    onEnter: ['$modal', 'user', ($modal, user) => {
                         $modal({
                             templateUrl: '/app/user/tpl/user.image.tpl.html',
                             controller: UserImageController,

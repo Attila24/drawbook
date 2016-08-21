@@ -25,7 +25,7 @@ export default function LoginController($state, $auth, localStorageService, sock
                 if (res.status != 401) {
                     socket.emit('setUserId', res.data.user._id);
                     localStorageService.set("currentUser", res.data.user);
-                    $state.go('home');
+                    $state.go('home', {}, {reload: true});
                 }
             })
             .catch(function(res) {

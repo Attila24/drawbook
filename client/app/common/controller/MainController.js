@@ -49,5 +49,6 @@ export default function MainController($auth, UserService, localStorageService, 
     function logout() {
         $auth.logout();
         localStorageService.remove("currentUser");
+        $state.go('home', {}, {reload: true});
     }
 }

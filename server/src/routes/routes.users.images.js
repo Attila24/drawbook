@@ -2,8 +2,10 @@
 
 import express from 'express';
 import fs from 'fs';
+import async from 'async';
 import Image from '../db/models/image';
 import User from '../db/models/user';
+import Comment from '../db/models/comment';
 import {ensureAuthenticated} from './auth';
 
 const router = express.Router({mergeParams: true});
@@ -64,6 +66,34 @@ router.get('/avatar', (req, res) => {
    });
 });
 
+router.get('', (req,res) => {
+    User.findOne({username: req.params.username})
+        .populate({
+            path: 'images',
+            options: {
+                sort: {_id: -1},
+                limit: parseInt(req.query.limit),
+                skip: parseInt(req.query.skip)
+            }
+        })
+        .select('images')
+        .lean()
+        .exec((err, data) => {
+            if (err) return res.status(500).json({error: err});
+
+            async.each(data.images, (image, callback) => {
+               fs.readFile(image.url, 'base64', (err, data) => {
+                   if (err) return res.status(500).json({error: err});
+                   image.data = `data:image/png;base64,${data}`;
+                   callback();
+               });
+            }, err => {
+                if (err) return res.status(500).json({error: err});
+                else return res.status(200).json(data);
+            });
+        });
+});
+
 router.get('/:id', (req, res) => {
     Image.findOne({_id: req.params.id}, (err, image) => {
         if (err) return res.status(500).json({error: err});
@@ -85,26 +115,36 @@ router.delete('/:id', ensureAuthenticated, (req, res) => {
     User.findOne({username: req.params.username})
         .populate({path: 'followers', select: 'feed'})
         .exec((err, user) => {
-        if (err) return res.status(500).json({error: err});
+            if (err) return res.status(500).json({error: err});
 
-        user.images.pull(req.params.id);
-        user.save(err => {if (err) return res.status(500).json({error: err});});
+            user.images.pull(req.params.id);
+            user.save(err => {if (err) return res.status(500).json({error: err});});
 
-        Image.findOneAndRemove({_id: req.params.id},
-            err => {if (err) return res.status(500).json({error: err});});
+            Image.findByIdAndRemove(req.params.id, (err, image) => {
+                if (err) return res.status(500).json({error: err});
 
-        fs.unlink(`server/files/${req.params.id}.png`, (err) => {
-           if (err) console.log('Error: ' + err);
-           else console.log(`Successfully deleted image file ${req.params.id}.png`);
-        });
+                async.each(image.comments, (comment, callback) => {
+                    Comment.findByIdAndRemove(comment._id, (err, c) => {
+                        if (err) console.log('Error: ' + err);
+                        callback();
+                    });
+                });
 
-        for (let i = 0; i < user.followers.length; i++) {
-            user.followers[i].feed.pull(req.params.id);
-            user.followers[i].save(err => {if (err) console.log('Error: ' + err);});
-        }
+            });
 
-        return res.status(200).json({status: 'Successfully deleted picture'});
+            fs.unlink(`server/files/${req.params.id}.png`, (err) => {
+               if (err) console.log('Error: ' + err);
+               else console.log(`Successfully deleted image file ${req.params.id}.png`);
+            });
+
+            for (let i = 0; i < user.followers.length; i++) {
+                user.followers[i].feed.pull(req.params.id);
+                user.followers[i].save(err => {if (err) console.log('Error: ' + err);});
+            }
+
+            return res.status(200).json({status: 'Successfully deleted picture'});
     });
+
 });
 
 
