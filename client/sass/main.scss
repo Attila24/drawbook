@@ -85,6 +85,10 @@
   overflow: scroll;
 }
 
+.thumbnail.gallery-item {
+  height: 320px;
+}
+
 body {
   padding-top: 80px;
 }
@@ -116,8 +120,17 @@ span.menu-item {
   font-size: 1.3em;
 }
 
+body {
+  padding-bottom: 50px;
+}
+
 .modal-dialog.slim {
   width: 400px;
+
+  .modal-content {
+    max-height: 400px;
+    overflow: scroll;
+  }
 }
 
 #comment-box {

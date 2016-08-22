@@ -3,12 +3,12 @@
 <form>
 	<div class="form-group">
 		<label for="firstName">First Name</label>
-		<input type="text" class="form-control" ng-model="vm.user.firstName" placeholder="First Name"  id="firstName">
+		<input type="text" class="form-control" ng-model="vm.user.firstName" placeholder="First Name"  id="firstName" maxlength="20">
 	</div>
 
 	<div class="form-group">
 		<label for="lastName">Last Name</label>
-		<input type="text" class="form-control" ng-model="vm.user.lastName" placeholder="Last Name"  id="lastName">
+		<input type="text" class="form-control" ng-model="vm.user.lastName" placeholder="Last Name"  id="lastName" maxlength="20">
 	</div>
 
 	<div class="form-group">
@@ -24,7 +24,7 @@
 
 	<div class="form-group">
 		<label for="age">Age</label>
-		<input type="number" class="form-control" ng-model="vm.user.age" id="age">
+		<input type="number" class="form-control" ng-model="vm.user.age" id="age" max="999">
 	</div>
 
 	<div class="form-group">

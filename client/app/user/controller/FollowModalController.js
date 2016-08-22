@@ -34,7 +34,6 @@ export default function FollowModalController(type, UserService, user) {
     function loadFollowing() {
         UserService.getFollowing(vm.user.username, vm.loaded)
             .then(res => {
-                console.log(res);
                vm.arr.push(...res);
                vm.loaded = vm.arr.length;
             });

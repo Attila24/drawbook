@@ -1,9 +1,9 @@
 'use strict';
 
-ProfileEditController.$inject = ['$state', 'localStorageService', 'UserService', 'Upload', 'server', '$auth'];
+ProfileEditController.$inject = ['$state', 'localStorageService', 'UserService', 'Upload', 'server', '$auth', 'ConfirmService'];
 
 /* @ngInject */
-export default function ProfileEditController($state, localStorageService, UserService, Upload, server, $auth) {
+export default function ProfileEditController($state, localStorageService, UserService, Upload, server, $auth, ConfirmService) {
     const vm = this;
     vm.title = 'ProfileEditController';
     vm.genders = ['Male', 'Female'];
@@ -11,6 +11,8 @@ export default function ProfileEditController($state, localStorageService, UserS
     vm.edit = edit;
     vm.upload = upload;
     vm.remove = remove;
+    vm.checkNumber = checkNumber;
+    vm.removeAvatar = removeAvatar;
 
     const username = localStorageService.get('currentUser').username;
 
@@ -28,19 +30,34 @@ export default function ProfileEditController($state, localStorageService, UserS
     }
 
     function edit() {
+        vm.user.avatarPath = vm.avatarPath;
         UserService.update(vm.user);
         upload();
-        $state.go('home');
+        $state.go('home', {}, {reload: true});
+    }
+
+    function removeAvatar() {
+        vm.file = null;
+        vm.avatarPath = 'img/default-avatar.jpg';
     }
     
     function remove() {
-        UserService.delete(vm.user).then(res => {
-            if (res.status != 500) {
-                $auth.logout();
-                localStorageService.remove("currentUser");
-                $state.go('home');
+        ConfirmService.show().then(res => {
+            if (res === 'yes') {
+                UserService.delete(vm.user).then(res => {
+                    if (res.status != 500) {
+                        $auth.logout();
+                        localStorageService.remove("currentUser");
+                        $state.go('home');
+                    }
+                });
             }
         });
+    }
+
+    function checkNumber() {
+        if (vm.user.age === undefined)
+            vm.user.age = 999;
     }
 
     function upload() {
@@ -63,6 +80,8 @@ export default function ProfileEditController($state, localStorageService, UserS
             }, res => {
                 if (res.status > 0) {
                     vm.errorMsg = `${res.status}: ${res.data}`;
+                } else if (res.status) {
+                    vm.errorMsg = res.status;
                 }
             });
         }

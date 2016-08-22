@@ -9,6 +9,7 @@ import ImageService from './app/services/ImageService';
 import CommentService from './app/services/CommentService';
 import LikeService from './app/services/LikeService';
 import NotificationService from './app/services/NotificationService';
+import ConfirmService from './app/services/ConfirmService';
 import NotificationsPopover from './app/directives/notifications-popover';
 
 angular
@@ -37,6 +38,7 @@ angular
     .factory('CommentService', CommentService)
     .factory('LikeService', LikeService)
     .factory('NotificationService', NotificationService)
+    .factory('ConfirmService', ConfirmService)
 
     // Instance of socket
     .factory('socket', (socketFactory) => socketFactory())

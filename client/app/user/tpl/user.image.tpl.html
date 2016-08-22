@@ -31,6 +31,7 @@
                     <div class="col-md-4">
 
 	                    <div id="comment-box">
+		                    <button class="btn btn-default" ng-show="vm.allComments > vm.loadedComments" ng-click="vm.loadComments()">Load more</button>
 		                    <ul class="list-unstyled">
 			                    <li ng-repeat="comment in vm.comments">
 				                    <a  ui-sref="user.gallery({username: comment.authorUsername})" ng-click="$hide()">
@@ -38,14 +39,13 @@
 					                    {{comment.authorUsername}}
 				                    </a>
 
-				                    - {{comment.text}}
+				                    - {{comment.text}} <br>
+				                    <small>{{comment.date | date: 'medium'}}</small>
 				                    <button class="btn btn-danger"
 				                            ng-click="vm.deleteComment(comment._id)"
 				                            ng-show="vm.currentUser._id == vm.user._id || vm.currentUser._id == comment.authorId">Delete</button>
 			                    </li>
 		                    </ul>
-
-		                    <button class="btn btn-default" ng-show="vm.allComments > vm.loadedComments" ng-click="vm.loadComments()">Load more</button>
 	                    </div>
 
                         <label for="comment">Comment </label>

@@ -23,6 +23,7 @@ router.get('/', (req, res) => {
         .select('likes')
         .exec((err, data) => {
            if (err) return res.status(500).json({error: err});
+           else if (data == null) res.status(404).json({error: err});
 
            async.filter(data.likes, (like, callback) => {
                User.count({_id: like}, (err, count) => {

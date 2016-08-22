@@ -1,9 +1,9 @@
 'use strict';
 
-UserGalleryController.$inject = ['user', 'ImageService', 'localStorageService', '$stateParams', '$state', 'LikeService', 'CommentService', '$q'];
+UserGalleryController.$inject = ['user', 'ImageService', 'localStorageService', '$stateParams', '$state', 'LikeService', 'CommentService', '$q', 'ConfirmService'];
 
 /* @ngInject */
-export default function UserGalleryController(user, ImageService, localStorageService, $stateParams, $state, LikeService, CommentService, $q) {
+export default function UserGalleryController(user, ImageService, localStorageService, $stateParams, $state, LikeService, CommentService, $q, ConfirmService) {
     const vm = this;
     vm.title = 'UserGalleryController';
     vm.user = user.user;
@@ -12,6 +12,7 @@ export default function UserGalleryController(user, ImageService, localStorageSe
 
     vm.loadImages = loadImages;
     vm.deleteImage = deleteImage;
+    vm.tooltip = tooltip;
 
     init();
 
@@ -47,8 +48,36 @@ export default function UserGalleryController(user, ImageService, localStorageSe
     }
 
     function deleteImage(id, index) {
-        ImageService.delete(id, vm.user.username)
-            .then(res => {vm.images.splice(index, 1);})
-            .catch(res => {})
+
+        ConfirmService.show().then(res => {
+            if (res === 'yes') {
+                ImageService.delete(id, vm.user.username)
+                    .then(res => {vm.images.splice(index, 1);})
+                    .catch(res => {})
+            }
+        });
+    }
+
+    function tooltip(index) {
+        if (vm.images[index].likes.length > 0) {
+            let str = '';
+            const limit = 5;
+
+            if (vm.images[index].likes.length <= limit) {
+                str = vm.images[index].likes
+                    .map(x => x.username)
+                    .reduce((prev, curr) => prev + "<br />" + curr);
+            } else {
+                str = vm.images[index].likes.slice(0, limit)
+                    .map(x => x.username)
+                    .reduce((prev, curr) => prev + "<br />" + curr);
+
+                str += "<br />" + (vm.images[index].likes.length - limit) + " more";
+            }
+
+            return {
+                title: str
+            }
+        }
     }
 }

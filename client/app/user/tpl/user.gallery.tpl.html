@@ -1,19 +1,20 @@
 
 <h3>Gallery</h3>
 <div class="row">
-    <div ng-repeat="image in vm.images | orderBy: '-image.date' track by $index" ng-if="image" class="col-md-2 col-xs-4">
-        <span><b>{{$index}}</b> - {{image.date | date: 'medium'}} </span>
+    <div ng-repeat="image in vm.images | orderBy: '-image.date' track by $index" ng-if="image" class="col-xs-6 col-md-3">
+	    <div class="thumbnail gallery-item">
+		    <a ui-sref="user.gallery.image({id: image._id, index: $index})">
+			    <img ng-src="{{image.data}}" class="img-responsive img-thumbnail" />
+		    </a>
+		    <div class="caption">
+			    <span>{{image.date | date: 'medium'}} </span> <br>
+			    <button class="btn btn-danger" ng-show="vm.currentUser.username === vm.user.username" ng-click="vm.deleteImage(image._id, $index)">Delete</button>
+			    <a href ng-if="image.likes.length > 0" data-html="true" data-placement="bottom" bs-tooltip="vm.tooltip($index)">{{image.likes.length}} likes</a>
 
-        <br>
-
-        <button class="btn btn-danger" ng-show="vm.currentUser.username === vm.user.username" ng-click="vm.deleteImage(image._id, $index)">Delete</button>
-
-        <a ui-sref="user.gallery.image({id: image._id, index: $index})">
-            <img ng-src="{{image.data}}" class="img-responsive img-thumbnail" />
-        </a>
-		likes: {{image.likes.length}} <br>
-	    comments: {{image.commentCount}}
+			    <span ng-if="image.commentCount > 0">{{image.commentCount}} comments</span>
+		    </div>
+	    </div>
     </div>
 </div>
 
-<button ng-click="vm.loadImages()" class="btn btn-primary" ng-show="vm.loaded < vm.user.images.length" >Load more</button>-
+<button ng-click="vm.load()" class="btn btn-primary" ng-show="vm.loaded < vm.user.images.length" >Load more</button>-

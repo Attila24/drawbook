@@ -87,7 +87,7 @@ export default function UserImageController($stateParams, ImageService, user, $s
     function loadComments() {
         CommentService.get(vm.user.username, $stateParams.id, vm.loadedComments, vm.commentLimit)
             .then(res => {
-               vm.comments.push(...res);
+               vm.comments.unshift(...res.reverse());
                vm.loadedComments = vm.comments.length;
             })
             .catch(res => {});

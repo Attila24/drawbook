@@ -124,7 +124,7 @@ router.delete('/:id', ensureAuthenticated, (req, res) => {
                 if (err) return res.status(500).json({error: err});
 
                 async.each(image.comments, (comment, callback) => {
-                    Comment.findByIdAndRemove(comment._id, (err, c) => {
+                    Comment.findByIdAndRemove(comment, (err, c) => {
                         if (err) console.log('Error: ' + err);
                         callback();
                     });
