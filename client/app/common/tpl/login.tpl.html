@@ -1,17 +1,16 @@
-<h3>Login</h3>
+<div class="container slim">
+	<h2>Login</h2> <br>
 
-<form>
-	<div class="form-group">
-		<label for="username">Username</label>
-		<input type="text" name="username" class="form-control" ng-model="vm.user.name" placeholder="Username" required id="username">
-	</div>
-	<div class="form-group">
-		<label for="password">Password</label>
-		<input type="password" name="password" class="form-control" ng-model="vm.user.password" placeholder="Password" required id="password">
-	</div>
+	<form>
+		<div class="form-group">
+			<label for="username">Username</label>
+			<input type="text" name="username" class="form-control" ng-model="vm.user.name" placeholder="Username" required id="username">
+		</div>
+		<div class="form-group">
+			<label for="password">Password</label>
+			<input type="password" name="password" class="form-control" ng-model="vm.user.password" placeholder="Password" required id="password">
+		</div>
 
-	<!--<span ng-show="vm.incorrectLogin">Password or username are incorrect!<br></span>-->
-	<button class="btn btn-primary" ng-click="vm.login()">Login</button>
-
-
+		<button class="btn btn-primary" ng-click="vm.login()">Login</button>
 </form>
+</div>

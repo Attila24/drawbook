@@ -55,12 +55,14 @@ angular
                 parent: 'master',
                 templateUrl: '/app/draw/draw.tpl.html',
                 controller: DrawController,
-                controllerAs: 'vm'
+                controllerAs: 'vm',
+                onEnter: ['$window', ($window) => {$window.document.title = 'Drawbook - New drawing'}]
             })
             .state('404', {
                 url: '/404',
                 parent: 'master',
-                templateUrl: '/app/common/tpl/404.tpl.html'
+                templateUrl: '/app/common/tpl/404.tpl.html',
+                onEnter: ['$window', ($window) => {$window.document.title = 'Drawbook - 404';}]
             });
         $urlRouterProvider.otherwise("/404");
     }])

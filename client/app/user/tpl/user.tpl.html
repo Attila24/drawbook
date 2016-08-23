@@ -1,21 +1,20 @@
-
-<div class="row">
+<div class="row profile-details">
     <div class="col-md-2">
         <img ng-src="{{vm.user.avatarPath}}" alt="Avatar" class="avatar">
     </div>
-    <div class="col-md-4">
+    <div class="col-md-10">
+	    <div ng-if="vm.isAuthenticated() && vm.user._id != vm.currentUser._id" class="pull-right">
+		    <button ng-show="!vm.isFollowed" class="btn btn-primary" ng-click="vm.follow()">Follow</button>
+		    <button ng-show="vm.isFollowed" class="btn btn-info" ng-click="vm.unfollow()">Unfollow</button>
+	    </div>
         <h1>{{vm.user.username}}</h1>
-        <ul class="list-unstyled">
-            <li><b>Full name:</b> {{vm.user.firstName}} {{vm.user.lastName}}</li>
-            <li><b>Age:</b> {{vm.user.age}}</li>
-            <li><b>Gender:</b> {{vm.user.gender}}</li>
-            <li><b><a href="#" ng-click="vm.openModal('followers')">{{vm.user.followers.length}} follower<span ng-show="vm.user.followers.length > 1">s</span></a></b></li>
-	        <li><b><a href="#" ng-click="vm.openModal('following')">{{vm.user.following.length}} following<span ng-show="vm.user.followings.length > 1">s</span></a></b></li>
-	        <li ng-if="vm.user._id != vm.currentUser._id">
-		        <button ng-show="!vm.isFollowed" class="btn btn-primary" ng-click="vm.follow()">Follow</button>
-		        <button ng-show="vm.isFollowed" class="btn btn-info" ng-click="vm.unfollow()">Unfollow</button>
-	        </li>
-        </ul>
+        {{vm.user.firstName}} {{vm.user.lastName}} <span ng-if="vm.user.age">| {{vm.user.age}}</span> <span ng-if="vm.user.gender"> | {{vm.user.gender}}</span>
+
+        {{vm.user.description}}
+        <b><a href="#" ng-click="vm.openModal('followers')">{{vm.user.followers.length}} follower<span ng-show="vm.user.followers.length !== 1">s</span></a></b></li>
+        <b><a href="#" ng-click="vm.openModal('following')">{{vm.user.following.length}} following<span ng-show="vm.user.followings.length !== 1">s</span></a></b></li>
+
+
     </div>
 </div>
 

@@ -1,18 +1,26 @@
-<p ng-if="!vm.isAuthenticated()">
-	<a ui-sref="login">Login</a>
-	<a ui-sref="register">Register</a>
-</p>
-
-<div ng-if="vm.isAuthenticated()">
+<div>
 	<div class="row">
-		<div class="col-md-10">
+		<div div class="col-md-9" ng-if="!vm.isAuthenticated()">
+
+			<div class="jumbotron">
+				<h1>Welcome!</h1>
+				<a class="btn btn-primary btn-lg" ui-sref="login">Login</a> <br><br>
+				<a class="btn btn-primary btn-lg" ui-sref="register">Register</a> <br><br>
+				<a class="btn btn-default btn-lg" ui-sref="draw">Try drawing</a>
+			</div>
+
+		</div>
+
+
+		<div class="col-md-6 col-md-offset-3" ng-if="vm.isAuthenticated()">
 			<div ng-repeat="image in vm.feed" class="row center-block">
 				<div class="panel panel-default">
 					<div class="panel-body">
-						<img ng-src="{{image._author.avatarPath}}" alt="avatar" class="notification">
-						<a ui-sref="user.gallery({username: image._author.username})">{{image._author.username}}</a> <br>
-						<small>{{image.date | date: 'medium' }}</small>
-						<br>
+						<div class="pull-right"><small>{{image.date | date: 'medium' }}</small></div>
+						<img ng-src="{{image._author.avatarPath}}" alt="avatar" class="comment-avatar">
+						<a ui-sref="user.gallery({username: image._author.username})">{{image._author.username}}</a>
+
+
 						<a ui-sref="user.gallery({username: image._author.username, openImage: image._id})">
 							<img ng-src="{{image.data}}" alt="image" class="img-responsive feed">
 						</a>
@@ -29,7 +37,7 @@
 			<button class="btn btn-primary" ng-click="vm.loadFeed()" ng-show="vm.user.feed.length > vm.loaded">Load more</button>
 		</div>
 
-		<div class="col-md-2">
+		<div class="col-md-3">
 			<h3>Latest users: </h3>
 			<ul class="list-unstyled">
 				<li ng-repeat="user in vm.users">

@@ -1,9 +1,120 @@
+$navbar-height: 50px;
+$nav-link-padding: 5px 15px;
+
 @import "bootstrap";
+
+$font-stack: Helvetica sans-serif;
+$primary-color: #000;
+
+body {
+  color: $primary-color;
+  padding: 70px 50px;
+}
+
+img {
+  &.menu-item {
+    height: 22px;
+    width: 22px;
+  }
+
+  &.feed {
+    width: 40em;
+  }
+
+  &.avatar {
+    width: 150px;
+  }
+
+  &.notification {
+    width: 60px;
+  }
+
+  &.comment-avatar {
+    width: 40px;
+  }
+}
+
+.popover-content {
+  padding: 0;
+}
+
+.notifications-list {
+  padding: 0;
+}
+
+.notification-container {
+  padding: 10px 10px 0 10px;
+
+  &:hover {
+    cursor: pointer;
+    background: #CCCCCC;
+  }
+}
+
+.new-notification {
+  color: red;
+
+  &:hover {
+    color: pink;
+  }
+}
+
+.no-notifications {
+  padding: 20px;
+}
+
+
+.popover {
+  min-width: 400px;
+  max-height: 600px;
+  overflow: scroll;
+
+  &.arrow {
+    display: none;
+  }
+}
+
+.thumbnail {
+  .gallery-item {
+    height: 320px;
+  }
+}
+
+.menu-item {
+  font-size: 1.2em;
+}
+
+@media screen and (min-width: 992px) {
+  .container.slim {
+    width: 65%;
+  }
+}
+
+div.profile-details {
+  padding-bottom: 30px;
+}
+
+
+#comment-box {
+  max-height: 400px;
+  overflow: scroll;
+}
+
 
 /* Modal window settings */
 .modal {
   text-align: center;
 }
+
+.modal-dialog.slim {
+  width: 400px;
+
+  .modal-content {
+    max-height: 400px;
+    overflow: scroll;
+  }
+}
+
 
 @media screen and (min-width: 768px) {
   .modal:before {
@@ -45,98 +156,6 @@
   opacity: 0;
 }
 
-//
-
-.popover-content {
-  padding: 0;
-}
-
-.notifications-list {
-  padding: 0;
-}
-
-.notification-container {
-  padding: 10px 10px 0 10px;
-}
-
-.notification-container:hover {
-  cursor: pointer;
-  background: #CCCCCC;
-}
-
-.new-notification {
-  color: red;
-}
-.new-notification:hover {
-  color: pink;
-}
-
-.no-notifications {
-  padding: 20px;
-}
-
-.popover > .arrow {
-  display: none;
-}
-
-.popover {
-  min-width: 400px;
-  max-height: 600px;
-  overflow: scroll;
-}
-
-.thumbnail.gallery-item {
-  height: 320px;
-}
-
-body {
-  padding-top: 80px;
-}
-
-img.avatar {
-  width: 150px;
-}
-img.comment-avatar {
-  width: 50px;
-}
-
-img.notification {
-  width: 60px;
-}
-
-img.menu-item {
-  width: 25px;
-}
-
-img.feed {
-  width: 30em;
-}
-
-button.menu {
-  margin-right: 5px;
-}
-
-span.menu-item {
-  font-size: 1.3em;
-}
-
-body {
-  padding-bottom: 50px;
-}
-
-.modal-dialog.slim {
-  width: 400px;
-
-  .modal-content {
-    max-height: 400px;
-    overflow: scroll;
-  }
-}
-
-#comment-box {
-  max-height: 400px;
-  overflow: scroll;
-}
 
 /* Loader */
 /* Transparent Overlay */

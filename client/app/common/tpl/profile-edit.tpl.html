@@ -1,59 +1,61 @@
-<h1>Edit Profile</h1>
+<div class="container slim">
+    <h1>Edit Profile</h1>
 
-<form>
-    <div class="form-group">
-        <label for="firstName">First Name</label>
-        <input type="text" class="form-control" ng-model="vm.user.firstName" placeholder="First Name"  id="firstName" maxlength="20">
-    </div>
+    <form>
+        <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="text" class="form-control" ng-model="vm.user.firstName" placeholder="First Name"  id="firstName" maxlength="20">
+        </div>
 
-    <div class="form-group">
-        <label for="lastName">Last Name</label>
-        <input type="text" class="form-control" ng-model="vm.user.lastName" placeholder="Last Name"  id="lastName" maxlength="20">
-    </div>
+        <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" class="form-control" ng-model="vm.user.lastName" placeholder="Last Name"  id="lastName" maxlength="20">
+        </div>
 
-    <div class="form-group">
-        <label>Username</label>
-        <input type="text" class="form-control" ng-model="vm.user.username" placeholder="Username" disabled>
-    </div>
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" class="form-control" ng-model="vm.user.username" placeholder="Username" disabled>
+        </div>
 
-    <div class="form-group">
-        <label for="age">Age</label>
-        <input type="number" class="form-control" ng-model="vm.user.age" id="age" min="0" max="999" maxlength="3" ng-change="vm.checkNumber()">
-    </div>
+        <div class="form-group">
+            <label for="age">Age</label>
+            <input type="number" class="form-control" ng-model="vm.user.age" id="age" min="0" max="999" maxlength="3" ng-change="vm.checkNumber()">
+        </div>
 
-    <div class="form-group">
-        <label for="gender">Gender</label>
-        <select name="gender" class="form-control"  ng-options="g as g for g in vm.genders" ng-model="vm.user.gender" id="gender"></select>
-    </div>
+        <div class="form-group">
+            <label for="gender">Gender</label>
+            <select name="gender" class="form-control"  ng-options="g as g for g in vm.genders" ng-model="vm.user.gender" id="gender"></select>
+        </div>
 
-    <b>Current Avatar: </b>
-    <br>
-    <img ngf-thumbnail="vm.file || vm.avatarPath" alt="Avatar" class="avatar">
-    <button ng-click="vm.removeAvatar()" ng-show="vm.file || vm.avatarPath != 'img/default-avatar.jpg'">Remove</button>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea name="description" id="description" rows="3" class="form-control" ng-model="vm.user.description" maxlength="500"></textarea>
+        </div>
 
-    <div class="form-group">
-        <button class="btn btn-info"
-                ngf-select
-                ng-model="vm.file"
-                ngf-min-height="150"
-                ngf-min-width="150"
-                ngf-max-size="1MB"
-                ngf-pattern="'image/*'"
-                ngf-accept="'image/*'"
-                ngf-resize="{width: 300, height: 300}">
-            Upload profile picture
-        </button>
+        <b>Current Avatar: </b>
         <br>
-        File: {{vm.file.name}}
-        <br>
-        {{vm.errorMsg}}
-    </div>
+        <img ngf-thumbnail="vm.file || vm.avatarPath" alt="Avatar" class="avatar">
+        <button ng-click="vm.removeAvatar()" ng-show="vm.file || vm.avatarPath != 'img/default-avatar.jpg'">Remove</button>
 
-    <button class="btn btn-primary"
-            ng-click="vm.edit()"
-    >Save</button>
+        <div class="form-group">
+            <button class="btn btn-info"
+                    ngf-select
+                    ng-model="vm.file"
+                    ngf-min-height="150"
+                    ngf-min-width="150"
+                    ngf-max-size="1MB"
+                    ngf-pattern="'image/*'"
+                    ngf-accept="'image/*'"
+                    ngf-resize="{width: 300, height: 300}">
+                Upload profile picture
+            </button>
+            <br>
+            File: {{vm.file.name}}
+            <br>
+            {{vm.errorMsg}}
+        </div>
 
-    <br>
-
-    <button class="btn btn-danger" ng-click="vm.remove()">Remove user</button>
-</form>
+        <button class="btn btn-danger pull-right" ng-click="vm.remove()">Delete account</button>
+        <button class="btn btn-primary" ng-click="vm.edit()">Save</button>
+    </form>
+</div>

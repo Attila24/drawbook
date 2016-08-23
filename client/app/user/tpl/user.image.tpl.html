@@ -19,6 +19,7 @@
                 <br>
 
                 <button
+		            ng-if="vm.isAuthenticated()"
                     ng-class="vm.isLiked ? 'btn btn-warning' : 'btn btn-info'"
                     ng-click="vm.isLiked ? vm.dislike() : vm.like()">
                     {{vm.isLiked ? 'Unlike' : 'Like'}}
@@ -48,13 +49,15 @@
 		                    </ul>
 	                    </div>
 
-                        <label for="comment">Comment </label>
-                        <input type="text" ng-model="vm.comment" id="comment" required maxlength="500">
+	                    <!-- Comment box -->
+	                    <div ng-if="vm.isAuthenticated()">
+		                    <input type="text" ng-model="vm.comment" id="comment" required maxlength="500">
 
-                        <br>
-                        <button class="btn btn-primary" ng-click="vm.addComment()" ng-disabled="!vm.comment">
-                            Add comment
-                        </button>
+		                    <br>
+		                    <button class="btn btn-primary" ng-click="vm.addComment()" ng-disabled="!vm.comment">
+		                        Add comment
+		                    </button>
+	                    </div>
 
                         <br>
 	                    <br>

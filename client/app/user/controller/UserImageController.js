@@ -1,9 +1,9 @@
 'use strict';
 
-UserImageController.$inject = ['$stateParams', 'ImageService', 'user', '$state', '$scope', 'CommentService', 'localStorageService', 'LikeService', '$q', 'UserService', 'socket'];
+UserImageController.$inject = ['$stateParams', 'ImageService', 'user', '$state', '$scope', 'CommentService', 'localStorageService', 'LikeService', '$q', 'UserService', 'socket', '$auth'];
 
 /* @ngInject */
-export default function UserImageController($stateParams, ImageService, user, $state, $scope, CommentService, localStorageService, LikeService, $q, UserService, socket) {
+export default function UserImageController($stateParams, ImageService, user, $state, $scope, CommentService, localStorageService, LikeService, $q, UserService, socket, $auth) {
 
     const vm = this;
     vm.title = 'UserImageController';
@@ -19,6 +19,7 @@ export default function UserImageController($stateParams, ImageService, user, $s
     vm.like = like;
     vm.dislike = dislike;
     vm.init = init;
+    vm.isAuthenticated = isAuthenticated;
 
     ////////////////////////////////////
 
@@ -159,7 +160,11 @@ export default function UserImageController($stateParams, ImageService, user, $s
     }
 
     function isLiked() {
-        return vm.likes.find(x => x._id == vm.currentUser._id) !== undefined;
+        if (isAuthenticated()) {
+            return vm.likes.find(x => x._id == vm.currentUser._id) !== undefined;
+        } else {
+            return false;
+        }
     }
 
 
@@ -182,5 +187,9 @@ export default function UserImageController($stateParams, ImageService, user, $s
                     $scope.$hide();
                 });
         }
+    }
+
+    function isAuthenticated() {
+        return $auth.isAuthenticated();
     }
 }

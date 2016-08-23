@@ -13,9 +13,10 @@ export default function HomeController($auth, currentUser, UserService, LikeServ
     vm.like = like;
     vm.dislike = dislike;
     vm.tooltip = tooltip;
-    if (isAuthenticated()) init();
 
     const limit = 10;
+
+    init();
 
     ////////////////////////////////////////////
 
@@ -24,10 +25,13 @@ export default function HomeController($auth, currentUser, UserService, LikeServ
             .then(res => {
                 vm.users = res;
             });
-        vm.feed = [];
-        vm.loaded = 0;
 
-        loadFeed();
+        if (isAuthenticated()) {
+            vm.feed = [];
+            vm.loaded = 0;
+
+            loadFeed();
+        }
     }
 
     function loadFeed() {

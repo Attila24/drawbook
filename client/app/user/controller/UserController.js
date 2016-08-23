@@ -2,10 +2,10 @@
 
 import FollowModalController from './FollowModalController';
 
-UserController.$inject = ['user', '$state', 'localStorageService', 'UserService', 'socket', '$modal', '$timeout', 'bsLoadingOverlayService'];
+UserController.$inject = ['user', '$state', 'localStorageService', 'UserService', 'socket', '$modal', '$timeout', 'bsLoadingOverlayService', '$auth'];
 
 /* @ngInject */
-export default function UserController(user, $state, localStorageService, UserService, socket, $modal, $timeout, bsLoadingOverlayService) {
+export default function UserController(user, $state, localStorageService, UserService, socket, $modal, $timeout, bsLoadingOverlayService, $auth) {
     var vm = this;
     vm.title = 'UserController';
     vm.images = [];
@@ -15,6 +15,7 @@ export default function UserController(user, $state, localStorageService, UserSe
     vm.follow = follow;
     vm.unfollow = unfollow;
     vm.openModal = openModal;
+    vm.isAuthenticated = isAuthenticated;
 
     ////////////////
 
@@ -30,7 +31,9 @@ export default function UserController(user, $state, localStorageService, UserSe
     init();
 
     function init() {
-        vm.isFollowed = vm.user.followers.find(x => x._id == vm.currentUser._id) !== undefined;
+        if (vm.isAuthenticated()) {
+            vm.isFollowed = vm.user.followers.find(x => x._id == vm.currentUser._id) !== undefined;
+        }
     }
 
     function follow() {
@@ -48,6 +51,10 @@ export default function UserController(user, $state, localStorageService, UserSe
                 vm.user.followers.splice(vm.user.followers.findIndex(x => x._id == vm.currentUser._id), 1);
                 vm.isFollowed = false;
             });
+    }
+
+    function isAuthenticated() {
+        return $auth.isAuthenticated();
     }
 
     function openModal(type) {

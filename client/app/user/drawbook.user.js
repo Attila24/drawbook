@@ -22,7 +22,8 @@ export default angular.module('drawbook.user', [])
                     controllerAs: 'vm',
                     resolve: {
                         user: ['$stateParams', 'UserService', ($stateParams, UserService) => UserService.get($stateParams.username)]
-                    }
+                    },
+                    onEnter: ['$window', '$stateParams', ($window, $stateParams) => {$window.document.title = 'Drawbook  - ' + $stateParams.username;}]
                 })
                 .state('user.gallery', {
                     url: '/',

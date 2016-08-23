@@ -1,13 +1,14 @@
 'use strict';
 
-DrawController.$inject = ['$state', 'localStorageService', 'ImageService'];
+DrawController.$inject = ['$state', 'localStorageService', 'ImageService', '$auth'];
 
 /* @ngInject */
-export default function DrawController($state, localStorageService, ImageService) {
+export default function DrawController($state, localStorageService, ImageService, $auth) {
     const vm = this;
     vm.title = 'DrawController';
 
     vm.saveImage = saveImage;
+    vm.isAuthenticated = isAuthenticated;
 
     ///////////////////////////////
 
@@ -38,6 +39,10 @@ export default function DrawController($state, localStorageService, ImageService
                 $state.go('user.gallery', {username: username});
             })
             .catch(res => {});
+    }
+
+    function isAuthenticated() {
+        return $auth.isAuthenticated();
     }
 
 }

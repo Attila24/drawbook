@@ -30,7 +30,8 @@ export default function RegisterController($state, $auth, UserService, localStor
             firstName: vm.user.firstName,
             lastName: vm.user.lastName,
             age: vm.user.age,
-            gender: vm.user.gender
+            gender: vm.user.gender,
+            description: vm.user.description
         };
         $auth.signup(user)
             .then(res => {

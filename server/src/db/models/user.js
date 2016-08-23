@@ -10,6 +10,7 @@ const UserSchema = new mongoose.Schema({
     lastName: String,
     age: Number,
     gender: String,
+    description: String,
     images: [{type: mongoose.Schema.Types.ObjectId, ref: 'Image'}],
     avatarPath: {type: String, default: 'img/default-avatar.jpg'},
     timestamp: {type: Date, default: Date.now},
