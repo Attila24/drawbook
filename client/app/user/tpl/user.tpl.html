@@ -1,21 +1,32 @@
 <div class="row profile-details">
-    <div class="col-md-2">
-        <img ng-src="{{vm.user.avatarPath}}" alt="Avatar" class="avatar">
+    <div class="col-md-2 well">
+        <img ng-src="{{vm.user.avatarPath}}" alt="Avatar" class="img-responsive center-block avatar">
+
+	    <div ng-if="vm.isAuthenticated() && vm.user._id != vm.currentUser._id" class="text-center follow-button">
+		    <button ng-show="!vm.isFollowed" class="btn btn-success" ng-click="vm.follow()">Follow</button>
+		    <button ng-show="vm.isFollowed" class="btn btn-warning" ng-click="vm.unfollow()">Unfollow</button>
+	    </div>
+
     </div>
     <div class="col-md-10">
-	    <div ng-if="vm.isAuthenticated() && vm.user._id != vm.currentUser._id" class="pull-right">
-		    <button ng-show="!vm.isFollowed" class="btn btn-primary" ng-click="vm.follow()">Follow</button>
-		    <button ng-show="vm.isFollowed" class="btn btn-info" ng-click="vm.unfollow()">Unfollow</button>
-	    </div>
-        <h1>{{vm.user.username}}</h1>
-        {{vm.user.firstName}} {{vm.user.lastName}} <span ng-if="vm.user.age">| {{vm.user.age}}</span> <span ng-if="vm.user.gender"> | {{vm.user.gender}}</span>
+
+        <h2>{{vm.user.username}}</h2>
+
+        <div class="bottom-buffer">
+	        {{vm.user.firstName}} {{vm.user.lastName}} <span ng-if="vm.user.age">| {{vm.user.age}}</span> <span ng-if="vm.user.gender"> | {{vm.user.gender}}</span>
+        </div>
 
         {{vm.user.description}}
-        <b><a href="#" ng-click="vm.openModal('followers')">{{vm.user.followers.length}} follower<span ng-show="vm.user.followers.length !== 1">s</span></a></b></li>
-        <b><a href="#" ng-click="vm.openModal('following')">{{vm.user.following.length}} following<span ng-show="vm.user.followings.length !== 1">s</span></a></b></li>
 
-
+	    <div class="row top-buffer">
+		    <div class="col-md-2">
+			    <strong><a href="#" ng-click="vm.openModal('followers')">{{vm.user.followers.length}} follower<span ng-show="vm.user.followers.length !== 1">s</span></a></strong>
+			    <br>
+			    <strong><a href="#" ng-click="vm.openModal('following')">{{vm.user.following.length}} following<span ng-show="vm.user.followings.length !== 1">s</span></a></strong>
+		    </div>
+		    </div>
     </div>
+
 </div>
 
 <div ui-view />
