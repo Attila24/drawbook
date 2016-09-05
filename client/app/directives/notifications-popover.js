@@ -18,7 +18,7 @@ function NotificationsController($scope, localStorageService, UserService, Notif
                 if ($scope.user.notifications.length !== 0) {
                     load();
                 }
-                NotificationService.getCount($scope.user.username)
+                NotificationService.getCount($scope.user)
                     .then(count => {
                         $scope.notificationsCount = count;
                     })
@@ -92,13 +92,14 @@ export default function NotificationsPopover($popover) {
                 title: 'Notifications',
                 contentTemplate: 'app/directives/notifications-popover.tpl.html',
                 html: true,
-                container: 'body',
+                container: 'nav',
                 trigger: 'manual',
                 autoClose: true,
                 placement: 'bottom',
                 onBeforeShow: $scope.init,
                 onShow: $scope.setLastReadNotification,
-                scope: $scope
+                scope: $scope,
+                id: 'notifications'
             });
             $scope.showPopover = () => {
                 popover.show();

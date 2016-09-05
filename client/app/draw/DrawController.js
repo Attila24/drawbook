@@ -34,7 +34,7 @@ export default function DrawController($state, localStorageService, ImageService
         let img = tmpcanvas[0].toDataURL();
         let username = localStorageService.get("currentUser").username;
 
-        ImageService.post(username, img, (vm.imagetitle || 'Untitled'))
+        ImageService.post(username, img, (vm.imagetitle))
             .then(res => {
                 $state.go('user.gallery', {username: username});
             })

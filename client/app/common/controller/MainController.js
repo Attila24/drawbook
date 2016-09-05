@@ -1,9 +1,9 @@
 'use strict';
 
-MainController.$inject = ['$auth', 'UserService', 'localStorageService', 'socket', '$state'];
+MainController.$inject = ['$auth', 'UserService', 'localStorageService', 'socket', '$state', '$rootScope'];
 
 /* @ngInject */
-export default function MainController($auth, UserService, localStorageService, socket, $state) {
+export default function MainController($auth, UserService, localStorageService, socket, $state, $rootScope) {
 
     const vm = this;
     vm.title = "MainController";
@@ -12,6 +12,7 @@ export default function MainController($auth, UserService, localStorageService, 
     vm.setNotificationsToRead = setNotificationsToRead;
     vm.isAuthenticated = isAuthenticated;
     vm.goToHome = goToHome;
+    vm.searchUser = searchUser;
     vm.logout = logout;
 
     if (vm.isAuthenticated()) init();
@@ -46,9 +47,21 @@ export default function MainController($auth, UserService, localStorageService, 
         else $state.go('home');
     }
 
+    function searchUser() {
+        $state.go('users', {searchInput: vm.searchInput});
+        vm.searchInput = '';
+    }
+
     function logout() {
         $auth.logout();
         localStorageService.remove("currentUser");
         $state.go('home', {}, {reload: true});
     }
+
+    $rootScope.$on('avatar-change', (event, data) => {
+        UserService.getAvatarPath(vm.user.username)
+            .then(res => {
+                vm.user.avatarPath = res.avatarPath;
+            });
+    })
 }

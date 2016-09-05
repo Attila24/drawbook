@@ -138,7 +138,8 @@ function initCanvas () {
 		// töröljük a listából a réteget
 		$("ol.layers > li").eq(layer_index).remove();
 		
-		// kitöröljük a megfelelő canvas objektumot is a DOM-ból		
+
+		// kitöröljük a megfelelő canvas objektumot is a DOM-ból
 		$(".canvas").get(layer_index).remove();
 
 		// töröljük a tömbből a réteget
@@ -264,7 +265,7 @@ function initCanvas () {
 		});
 		$(this).append(hr);
 	});
-		
+
 
 	$("#colorpicker").val("#000000");
 

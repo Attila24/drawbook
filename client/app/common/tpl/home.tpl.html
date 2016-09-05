@@ -3,14 +3,12 @@
 		<div div class="col-md-9" ng-if="!vm.isAuthenticated()">
 
 			<div class="jumbotron">
-				<h1>Welcome!</h1>
+				<h1 class="bottom-buffer">Welcome to Drawbook!</h1>
 				<a class="btn btn-primary btn-lg" ui-sref="login">Login</a> <br><br>
 				<a class="btn btn-primary btn-lg" ui-sref="register">Register</a> <br><br>
 				<a class="btn btn-default btn-lg" ui-sref="draw">Try drawing</a>
 			</div>
-
 		</div>
-
 
 		<div class="col-md-6 col-md-offset-3" ng-if="vm.isAuthenticated()">
 			<div ng-repeat="image in vm.feed" class="row center-block">
@@ -21,7 +19,8 @@
 
 						<a ui-sref="user.gallery({username: image._author.username})">
 							<img ng-src="{{image._author.avatarPath}}" alt="avatar" class="comment-avatar">
-							{{image._author.username}}
+							&nbsp;
+							<strong>{{image._author.username}}</strong>
 						</a>
 					</div>
 
@@ -55,19 +54,25 @@
 					</div>
 				</div>
 			</div>
-			<button class="btn btn-primary" ng-click="vm.loadFeed()" ng-show="vm.user.feed.length > vm.loaded">Load more</button>
+			<div class="text-center">
+				<button class="btn btn-primary" ng-click="vm.loadFeed()" ng-show="vm.user.feed.length > vm.loaded">Load more</button>
+			</div>
 		</div>
 
 		<div class="col-md-3">
 			<h3>Latest users: </h3>
 			<ul class="list-unstyled">
 				<li ng-repeat="user in vm.users">
-					<img ng-src="{{user.avatarPath}}" alt="avatar" class="comment-avatar">
-					<a ui-sref="user.gallery({username: user.username})">{{user.username}}</a>
+					<a ui-sref="user.gallery({username: user.username})">
+						<div class="user-box">
+							<img ng-src="{{user.avatarPath}}" alt="avatar" class="comment-avatar">
+							<span class="username">{{user.username}}</span>
+						</div>
+					</a>
 				</li>
 			</ul>
 
-			<a ui-sref="users">Browse all users</a>
+			<a ui-sref="users"><strong>Browse all users</strong></a>
 
 		</div>
 	</div>

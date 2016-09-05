@@ -1,0 +1,5 @@
+<ul class="list-unstyled">
+	<li ng-repeat="like in vm.likes">
+		<a ui-sref="user.gallery({username: like.username})" ng-click="vm.hide()"> {{like.username}}</a>
+	</li>
+</ul>

@@ -15,7 +15,7 @@ export default function ImageService($http, server) {
             "title": title,
             "image": img
         }).then(res => res.data),
-
+        updateTitle: (username, id, title) => $http.patch(server.url + 'users/' + username + '/images/' + id + '/title', {title: title}).then(res => res.data),
         delete: (id, username) => $http.delete(server.url + 'users/' + username + '/images/' + id).then(res => res.data)
     };
 }

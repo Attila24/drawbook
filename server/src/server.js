@@ -12,9 +12,12 @@ import path from 'path';
 import helmet from 'helmet';
 import http from 'http';
 import socket from 'socket.io';
-
+import Repeat from 'repeat';
+import moment from 'moment';
 import async from 'async';
-import fs from 'fs';
+
+import Notification from './db/models/notification';
+import User from './db/models/user';
 
 import {MONGO_URI} from './config';
 
@@ -86,6 +89,37 @@ io.on('connection', (socket) => {
             });
     })
 });
+
+Repeat(()=> {
+    let date = moment().subtract(30, 'days').toDate();
+
+    console.log('Removing old notifications and feed items added before the date of: ', date);
+
+    Notification.remove({date: {$lt: date}}, (err) => {
+        if (err) console.log('Error while deleting notifications: ', err);
+        else console.log('Successfully removed old notifications!');
+    });
+
+    User.find({})
+        .populate({
+            path: 'feed',
+            match: {date: {$lt: date}},
+            select: '_id'
+        })
+        .select('feed')
+        .exec((err, data) => {
+
+           async.each(data, (user, callback) => {
+               let arr = user.feed.map(x => x._id);
+               User.update({_id: user._id}, {$pull: {feed: {$in: arr}}}, err => {
+                  if (err) console.log('Error while deleting feed elements: ', err);
+               });
+           }, (err) => {
+                console.log('Successfully removed old feed items!');
+           });
+        });
+
+}).every(24, 'h').start.now(); // every day once
 
 // start ===============================
 

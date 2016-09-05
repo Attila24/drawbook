@@ -1,73 +1,119 @@
 <div class="modal" tabindex="-1" role="dialog" ng-keyup="vm.navigate($event.keyCode)" ng-init="vm.init()">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">{{vm.image.image.title}}</h4>
-            </div>
             <div class="modal-body">
-                <a ui-sref="user.gallery.image({id: vm.prev, index: vm.index-1})"
-                   ng-hide="vm.prev == undefined"
-                   href="#"
-                   ng-click="$hide()">Prev</a>
-                -
-                <a ui-sref="user.gallery.image({id: vm.next, index: vm.index+1})"
-                   ng-hide="vm.next == undefined"
-                   href="#"
-                   ng-click="$hide()">Next</a>
-                <br>
-                Date: {{vm.image.image.date}}
-                <br>
-
-                <button
-		            ng-if="vm.isAuthenticated()"
-                    ng-class="vm.isLiked ? 'btn btn-warning' : 'btn btn-info'"
-                    ng-click="vm.isLiked ? vm.dislike() : vm.like()">
-                    {{vm.isLiked ? 'Unlike' : 'Like'}}
-                </button>
-
                 <div class="row">
-                    <div class="col-md-8">
-                        <img ng-src="{{vm.image.data}}" class="img-responsive" />
+	                <!-- Image -->
+                    <div class="col-md-7">
+	                    <div class="img-container">
+		                    <img ng-src="{{vm.image.data}}" class="img-responsive"/>
+		                    <a class="prev"
+		                       ui-sref="user.gallery.image({id: vm.prev, index: vm.index-1})"
+		                       ng-hide="vm.prev == undefined"
+		                       ng-click="$hide()">
+			                    <i class="fa fa-arrow-left fa-2x"></i>
+		                    </a>
+		                    <a class="next"
+			                   ui-sref="user.gallery.image({id: vm.next, index: vm.index+1})"
+		                       ng-hide="vm.next == undefined"
+		                       href="#"
+		                       ng-click="$hide()">
+			                    <i class="fa fa-arrow-right fa-2x"></i>
+		                    </a>
+		                    <a href class="close"
+		                       ng-click="$hide()">
+			                    <i class="fa fa-times fa-lg"></i>
+		                    </a>
+	                    </div>
+
                     </div>
-                    <div class="col-md-4">
 
+                    <div class="col-md-5">
+	                    <small class="pull-right">{{vm.image.image.date | date: 'short'}}</small>
+	                        <p>
+		                        <img ng-src="{{vm.user.avatarPath}}" class="comment-avatar">
+		                        <a ui-sref="user.gallery({username: vm.user.username})" ng-click="$hide()"><strong>{{vm.user.username}}</strong></a> <br>
+							</p>
+
+	                        <div class="image-info">
+
+		                        <!-- Editable title -->
+		                        <form ng-submit="vm.updateImageTitle()" ng-if="vm.currentUser._id == vm.user._id">
+			                        <input type="text" ng-model="vm.image.image.title" class="form-control image-title" maxlength="100">
+		                        </form>
+
+		                        <!-- Title -->
+		                        <p ng-if="vm.currentUser._id != vm.user._id">
+			                        {{vm.image.image.title}}
+		                        </p>
+
+		                        <!-- Likes, comments stats -->
+		                        <p >
+			                        <a href ng-if="vm.likes.length > 0" id="likes"
+			                           data-content-template="app/user/tpl/likes.tpl.html"
+			                           data-auto-close="true"
+			                           data-title="Likes"
+			                           data-placement="right"
+			                           data-html="true"
+			                           bs-popover>
+				                        {{vm.likes.length}}
+				                        <i class="fa fa-thumbs-o-up"></i>
+				                        &nbsp;
+			                        </a>
+			                        <span ng-show="vm.allComments">
+									{{vm.allComments}} <i class="fa fa-comment-o"></i>
+								</span>
+		                        </p>
+	                        </div>
+	                    <!-- Comments -->
 	                    <div id="comment-box">
-		                    <button class="btn btn-default" ng-show="vm.allComments > vm.loadedComments" ng-click="vm.loadComments()">Load more</button>
+		                    <div class="text-center">
+			                    <button class="btn btn-default btn-sm" ng-show="vm.allComments > vm.loadedComments" ng-click="vm.loadComments()">Load more</button>
+		                    </div>
 		                    <ul class="list-unstyled">
-			                    <li ng-repeat="comment in vm.comments">
-				                    <a  ui-sref="user.gallery({username: comment.authorUsername})" ng-click="$hide()">
-					                    <img ng-src="{{comment.authorAvatarPath}}" alt="avatar" class="comment-avatar">
-					                    {{comment.authorUsername}}
-				                    </a>
+			                    <li ng-repeat="comment in vm.comments" class="comment-item">
 
-				                    - {{comment.text}} <br>
-				                    <small>{{comment.date | date: 'medium'}}</small>
-				                    <button class="btn btn-danger"
-				                            ng-click="vm.deleteComment(comment._id)"
-				                            ng-show="vm.currentUser._id == vm.user._id || vm.currentUser._id == comment.authorId">Delete</button>
+				                    <div class="row">
+					                    <div class="col-md-2">
+						                    <a ui-sref="user.gallery({username: comment.authorUsername})"
+						                       ng-click="$hide()"
+						                       data-trigger="hover"
+						                       data-placement="left"
+						                       data-title="{{comment.date | date: 'short'}}" bs-tooltip>
+							                    <img ng-src="{{comment.authorAvatarPath}}" alt="avatar" class="comment-avatar">
+						                    </a>
+					                    </div>
+					                    <div class="col-md-10">
+						                    <a ui-sref="user.gallery({username: comment.authorUsername})"
+						                       ng-click="$hide()">
+						                        <strong>{{comment.authorUsername}}</strong>
+						                    </a>
+						                    &nbsp;
+						                    <a href class="pull-right remove-item"
+						                       title="Delete comment"
+						                       ng-click="vm.deleteComment(comment._id)"
+						                       ng-show="vm.currentUser._id == vm.user._id || vm.currentUser._id == comment.authorId"><i class="fa fa-times"></i></a>
+						                    {{comment.text}}  <br>
+					                    </div>
+				                    </div>
 			                    </li>
 		                    </ul>
 	                    </div>
 
 	                    <!-- Comment box -->
-	                    <div ng-if="vm.isAuthenticated()">
-		                    <input type="text" ng-model="vm.comment" id="comment" required maxlength="500">
-
-		                    <br>
-		                    <button class="btn btn-primary" ng-click="vm.addComment()" ng-disabled="!vm.comment">
-		                        Add comment
-		                    </button>
+	                    <div class="input-group" ng-if="vm.isAuthenticated()">
+			                <span class="input-group-btn">
+		                        <button
+					                    ng-class="vm.isLiked ? 'btn btn-info' : 'btn btn-default'"
+					                    ng-click="vm.isLiked ? vm.dislike() : vm.like()">
+				                    {{vm.isLiked ? 'Liked' : 'Like'}}
+				                    <i ng-class="vm.isLiked ? 'fa fa-thumbs-up fa-lg' : 'fa fa-thumbs-o-up fa-lg'"></i>
+			                    </button>
+			                </span>
+		                    <form ng-submit="vm.addComment()" ng-disabled="!vm.comment">
+			                    <input type="text" class="form-control" ng-model="vm.comment" id="comment" maxlength="500">
+		                    </form>
 	                    </div>
-
-                        <br>
-	                    <br>
-	                    <h3>Likes</h3>
-                        <ul class="list-unstyled">
-                            <li ng-repeat="like in vm.likes">
-                                <a ui-sref="user.gallery({username: like.username})" ng-click="$hide()"> {{like.username}}</a>
-                            </li>
-                        </ul>
-
                     </div>
                 </div>
 

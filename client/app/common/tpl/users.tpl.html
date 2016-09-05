@@ -1,6 +1,4 @@
-<h2>All users</h2>
-
-<form class="form-inline">
+<form class="form-inline bottom-buffer">
 	<input type="text" class="form-control" placeholder="Search username..." ng-model="vm.searchInput">
 	<button type="submit" class="btn btn-default" ng-click="vm.search()" ng-disabled="!vm.searchInput">Search</button>
 	<button type="submit" class="btn btn-danger" ng-click="vm.clear()" ng-show="vm.searchMode">Clear</button>
@@ -10,12 +8,26 @@
 	<h3>Search results for "{{vm.searchInput}}"</h3>
 </div>
 
-<ul class="list-unstyled">
-	<li ng-repeat="user in vm.users">
-		<img ng-src="{{user.avatarPath}}" alt="avatar" class="comment-avatar">
-		<a ui-sref="user.gallery({username: user.username})">{{user.username}}</a>
-	</li>
-</ul>
+<div class="row" ng-repeat="user in vm.users" ng-switch="" on="$index % 2">
+	<div class="col-md-6" ng-switch-when="0">
+		<a ui-sref="user.gallery({username: vm.users[$index].username})">
+			<div class="user-box">
+				<img ng-src="{{vm.users[$index].avatarPath}}" alt="avatar" class="notification">
+				<span class="username">{{vm.users[$index].username}}</span>
+			</div>
+		</a>
+	</div>
+
+	<div class="col-md-6" ng-switch-when="0" ng-show="vm.users[$index+1]">
+		<a ui-sref="user.gallery({username: vm.users[$index+1].username})">
+			<div class="user-box">
+				<img ng-src="{{vm.users[$index+1].avatarPath}}" alt="avatar" class="notification">
+				<span class="username">{{vm.users[$index+1].username}}</span>
+			</div>
+		</a>
+	</div>
+</div>
+
 
 <nav ng-show="!vm.searchMode">
 	<ul class="pager">

@@ -10,10 +10,16 @@ export default function RegisterController($state, $auth, UserService, localStor
     vm.genders = ['Male', 'Female'];
     vm.takenUsername = false;
 
+    vm.checkNumber = checkNumber;
     vm.checkUsername = checkUsername;
     vm.register = register;
 
     ////////////////////////////////////////////
+
+    function checkNumber() {
+        if (vm.user.age === undefined)
+            vm.user.age = 999;
+    }
 
     function checkUsername() {
         UserService.get(vm.user.username)

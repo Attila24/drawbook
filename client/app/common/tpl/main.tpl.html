@@ -2,23 +2,18 @@
     <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container">
 
-	        <div class="navbar-header">
-		        <div class="nav navbar-nav navbar-brand">
-			        <a href="#" ng-click="vm.goToHome()" class="navbar-link">Drawbook</a>
-		        </div>
+	            <div class="nav navbar-nav navbar-left">
+		            <div class="navbar-brand">
+			            <a href="#" ng-click="vm.goToHome()" class="navbar-link">Drawbook</a>
+		            </div>
+		            <form ng-submit="vm.searchUser()" class="navbar-form navbar-left hidden-xs">
+			            <input type="text" class="form-control" placeholder="Search username..." ng-model="vm.searchInput">
+		            </form>
+	            </div>
 
-		        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-			        <span class="icon-bar"></span>
-			        <span class="icon-bar"></span>
-			        <span class="icon-bar"></span>
-		        </button>
-	        </div>
-
-	        <div class="navbar-collapse collapse">
-		        <!--Right-->
 		        <ul ng-show="vm.isAuthenticated()" class="nav navbar-nav navbar-right">
 			        <li>
-				        <a href="#" ui-sref="draw" class="menu-item"><span class="glyphicon glyphicon-pencil"></span> New Drawing</a>
+				        <a href="#" ui-sref="draw" class="menu-item"><span class="glyphicon glyphicon-pencil"></span> <span class="hidden-xs">New Drawing</span></a>
 			        </li>
 			        <li>
 				        <a ui-sref="user.gallery({username: vm.user.username})" class="menu-item">
@@ -27,8 +22,8 @@
 				        </a>
 			        </li>
 			        <li>
-				        <a href notifications-popover bind="vm.init" ng-click="showPopover()" class="menu-item">
-					        <span class="glyphicon glyphicon-globe" ng-class="{'new-notification': vm.hasNewNotifications}" ng-click="vm.setNotificationsToRead()"></span>
+				        <a href notifications-popover bind="vm.init" ng-click="showPopover()" class="menu-item" ng-class="{'new-notification': vm.hasNewNotifications}">
+					        <span class="glyphicon glyphicon-globe" ng-click="vm.setNotificationsToRead()"></span>
 				        </a>
 			        </li>
 			        <li>
@@ -38,8 +33,8 @@
 				        <a href ng-click="vm.logout()" class="menu-item"><span class="glyphicon glyphicon-log-out"></span></a>
 			        </li>
 		        </ul>
-	        </div>
         </div>
+
     </nav>
 
     <div growl></div>

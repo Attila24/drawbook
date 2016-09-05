@@ -20,9 +20,12 @@
 
 	    <div class="row top-buffer">
 		    <div class="col-md-2">
-			    <strong><a href="#" ng-click="vm.openModal('followers')">{{vm.user.followers.length}} follower<span ng-show="vm.user.followers.length !== 1">s</span></a></strong>
-			    <br>
-			    <strong><a href="#" ng-click="vm.openModal('following')">{{vm.user.following.length}} following<span ng-show="vm.user.followings.length !== 1">s</span></a></strong>
+			    <p>
+				    <strong><a href="#" ng-click="vm.openModal('followers')">{{vm.user.followers.length}} follower<span ng-show="vm.user.followers.length !== 1">s</span></a></strong>
+			    </p>
+			    <p>
+				    <strong><a href="#" ng-click="vm.openModal('following')">{{vm.user.following.length}} following<span ng-show="vm.user.followings.length !== 1">s</span></a></strong>
+			    </p>
 		    </div>
 		    </div>
     </div>

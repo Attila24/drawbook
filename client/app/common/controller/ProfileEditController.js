@@ -1,9 +1,9 @@
 'use strict';
 
-ProfileEditController.$inject = ['$state', 'localStorageService', 'UserService', 'Upload', 'server', '$auth', 'ConfirmService'];
+ProfileEditController.$inject = ['$state', 'localStorageService', 'UserService', 'Upload', 'server', '$auth', 'ConfirmService', '$rootScope'];
 
 /* @ngInject */
-export default function ProfileEditController($state, localStorageService, UserService, Upload, server, $auth, ConfirmService) {
+export default function ProfileEditController($state, localStorageService, UserService, Upload, server, $auth, ConfirmService, $rootScope) {
     const vm = this;
     vm.title = 'ProfileEditController';
     vm.genders = ['Male', 'Female'];
@@ -30,6 +30,9 @@ export default function ProfileEditController($state, localStorageService, UserS
     }
 
     function edit() {
+        if (vm.user.avatarPath != vm.avatarPath) {
+            $rootScope.$emit('avatar-change', 'Avatar changed!');
+        }
         vm.user.avatarPath = vm.avatarPath;
         UserService.update(vm.user);
         upload();

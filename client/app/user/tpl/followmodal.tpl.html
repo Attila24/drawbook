@@ -1,18 +1,27 @@
 <div class="modal" tabindex="-1" role="dialog">
 	<div class="modal-dialog slim" role="document">
 		<div class="modal-content">
-			<div class="modal-header"><h4>{{vm.type == 'followers' ? 'Followers' : 'Followings'}}</h4></div>
+			<div class="modal-header">
+				<button type="button" class="close" ng-click="$hide()" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				{{vm.type == 'followers' ? 'Followers' : 'Followings'}}
+			</div>
 			<div class="modal-body">
 				<ul class="list-unstyled">
 					<li ng-repeat="user in vm.arr">
-						<img ng-src="{{user.avatarPath}}" alt="avatar" class="comment-avatar">
-						<a ui-sref="user.gallery({username: user.username})" ng-click="$hide()">{{user.username}}</a>
-						<hr/>
+						<a ui-sref="user.gallery({username: user.username})" ng-click="$hide()">
+							<div class="user-box">
+								<img ng-src="{{user.avatarPath}}" alt="avatar" class="comment-avatar">
+								{{user.username}}
+							</div>
+						</a>
 					</li>
 				</ul>
-
-				<button class="btn btn-info" ng-if="vm.type == 'followers'" ng-show="vm.loaded < vm.user.followers.length" ng-click="vm.loadFollowers()">Load more</button>
-				<button class="btn btn-info" ng-if="vm.type == 'followings'" ng-show="vm.loaded < vm.user.followings.length" ng-click="vm.loadFollowings()">Load more</button>
+				<div class="text-center">
+					<button class="btn btn-default btn-sm" ng-if="vm.type == 'followers'" ng-show="vm.loaded < vm.user.followers.length" ng-click="vm.loadFollowers()">Load more</button>
+					<button class="btn btn-default btn-sm" ng-if="vm.type == 'following'" ng-show="vm.loaded < vm.user.following.length" ng-click="vm.loadFollowing()">Load more</button>
+				</div>
 			</div>
 		</div>
 	</div>

@@ -13,7 +13,7 @@
 			    </a>
 			    <span ng-if="image.commentCount > 0">{{image.commentCount}} <i class="fa fa-comment-o"></i></span>
 
-			    <a href class="delete-image pull-right" ng-show="vm.currentUser._id === vm.user._id" ng-click="vm.deleteImage(image._id, $index)">
+			    <a href class="remove-item pull-right" ng-show="vm.currentUser._id === vm.user._id" ng-click="vm.deleteImage(image._id, $index)">
 				    Delete &nbsp;
 				    <i class="fa fa-trash"></i>
 			    </a>

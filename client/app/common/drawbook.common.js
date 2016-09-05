@@ -63,6 +63,7 @@ export default angular.module('drawbook.common', [])
             .state('users', {
               url: '/users',
               parent: 'master',
+              params: {searchInput: null},
               templateUrl: '/app/common/tpl/users.tpl.html',
               controller: UsersController,
               controllerAs: 'vm',

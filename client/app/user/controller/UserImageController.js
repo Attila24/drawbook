@@ -20,6 +20,8 @@ export default function UserImageController($stateParams, ImageService, user, $s
     vm.dislike = dislike;
     vm.init = init;
     vm.isAuthenticated = isAuthenticated;
+    vm.hide = hide;
+    vm.updateImageTitle = updateImageTitle;
 
     ////////////////////////////////////
 
@@ -86,15 +88,31 @@ export default function UserImageController($stateParams, ImageService, user, $s
     }
 
     function loadComments() {
-        CommentService.get(vm.user.username, $stateParams.id, vm.loadedComments, vm.commentLimit)
-            .then(res => {
-               vm.comments.unshift(...res.reverse());
-               vm.loadedComments = vm.comments.length;
-            })
-            .catch(res => {});
+        loadCommentTexts().then(amount => {loadCommentAvatars(amount)});
     }
 
+    function loadCommentTexts() {
+        let d = $q.defer();
 
+        CommentService.get(vm.user.username, $stateParams.id, vm.loadedComments, vm.commentLimit)
+            .then(res => {
+                let original_length = vm.comments.length;
+                vm.comments.unshift(...res.reverse());
+                vm.loadedComments = vm.comments.length;
+                d.resolve(vm.loadedComments - original_length);
+            })
+            .catch(res => {});
+        return d.promise;
+    }
+
+    function loadCommentAvatars(amount) {
+        for (let i = 0; i < amount; i++) {
+            UserService.getAvatarPath(vm.comments[i].authorUsername)
+                .then(res => {
+                    vm.comments[i].authorAvatarPath = res.avatarPath;
+                });
+        }
+    }
 
     function addComment() {
         CommentService.post(vm.user.username, $stateParams.id, vm.comment, vm.currentUser)
@@ -167,6 +185,14 @@ export default function UserImageController($stateParams, ImageService, user, $s
         }
     }
 
+    function updateImageTitle() {
+        ImageService.updateTitle(vm.user.username, $stateParams.id, vm.image.image.title)
+            .then(res => {
+                $state.reload();
+                $scope.$hide();
+            });
+    }
+
 
     //////////////////////////////// navigation
 
@@ -187,6 +213,10 @@ export default function UserImageController($stateParams, ImageService, user, $s
                     $scope.$hide();
                 });
         }
+    }
+
+    function hide() {
+        $scope.$hide();
     }
 
     function isAuthenticated() {

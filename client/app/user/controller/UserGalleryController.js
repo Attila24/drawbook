@@ -1,9 +1,9 @@
 'use strict';
 
-UserGalleryController.$inject = ['user', 'ImageService', 'localStorageService', '$stateParams', '$state', 'LikeService', 'CommentService', '$q', 'ConfirmService'];
+UserGalleryController.$inject = ['user', 'ImageService', 'localStorageService', '$stateParams', '$state', 'LikeService', 'CommentService', '$q', 'ConfirmService', '$scope'];
 
 /* @ngInject */
-export default function UserGalleryController(user, ImageService, localStorageService, $stateParams, $state, LikeService, CommentService, $q, ConfirmService) {
+export default function UserGalleryController(user, ImageService, localStorageService, $stateParams, $state, LikeService, CommentService, $q, ConfirmService, $scope) {
     const vm = this;
     vm.title = 'UserGalleryController';
     vm.user = user.user;

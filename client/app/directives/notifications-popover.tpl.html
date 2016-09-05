@@ -8,7 +8,7 @@
                 </div>
 
                 <div class="col-md-7">
-                    {{notification.from.username || '[deleted user]'}}
+                    <strong>{{notification.from.username || '[deleted user]'}}</strong>
                     <span ng-if="notification.type == 'follow'">followed you!</span>
                     <span ng-if="notification.type == 'like'">liked your drawing</span>
                     <span ng-if="notification.type == 'comment'"> commented on your drawing: "{{notification.comment | limitTo: 27 }}{{notification.comment.length > 27 ? '...' : ''}}"</span> <br>
@@ -19,11 +19,12 @@
                 </div>
             </div>
         </div>
-        <hr>
     </li>
 </ul>
 
-<button class="btn btn-info" ng-click="load()" ng-show="loaded < notificationsCount">Load more</button>
+<div class="text-center bottom-buffer">
+	<button class="btn btn-info" ng-click="load()" ng-show="loaded < notificationsCount">Load more</button>
+</div>
 
 <div ng-if="notifications.length === 0" class="no-notifications">
     No notifications!

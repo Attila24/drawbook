@@ -1,16 +1,15 @@
 <div class="container-fluid">
 
-<div class="row" ng-if="vm.isAuthenticated()">
-    <form>
-        <div class="form-group">
-            <label for="title">Title</label>
-            <input type="text" ng-model="vm.imagetitle" required id="title" class="form-control">
-        </div>
-    </form>
-    <button class="btn btn-info" ng-click="vm.saveImage()">Save</button>
-</div>
-
-
+	<div class="row bottom-buffer" ng-if="vm.isAuthenticated()">
+		<div class="col-md-8 col-md-offset-2">
+			<div class="input-group">
+				<input type="text" ng-model="vm.imagetitle" id="title" class="form-control" placeholder="Title" maxlength="100">
+				<span class="input-group-btn">
+					<button class="btn btn-success " type="submit" ng-click="vm.saveImage()">Post</button>
+				</span>
+			</div>
+		</div>
+	</div>
 
 <! Taken from onlab---->
 <script type="text/javascript" src="app/draw/drawapp/drawapp.js"></script>
@@ -194,7 +193,11 @@
             </div>
         </div>
     </div>
+
+
+
 </div>
 <script>
     initCanvas();
 </script>
+

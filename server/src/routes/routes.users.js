@@ -93,8 +93,20 @@ router.route('/:username')
             });
     })
     .patch((req, res) => {
-        User.findOneAndUpdate({'username': req.params.username}, req.body.user, err => {
+        User.findOneAndUpdate({'username': req.params.username}, req.body.user, (err, user) => {
             if (err) return res.status(500).json({error: err});
+
+            let condition =
+                    req.body.user.avatarPath &&
+                    req.body.user.avatarPath != user.avatarPath &&
+                    user.avatarPath != 'img/default-avatar.jpg';
+
+            if (condition) {
+                del('client/' + user.avatarPath, {force: true}).then(paths => {
+                   console.log('Deleted files:\n', paths.join('\n'));
+                });
+            }
+
             return res.status(200).json({status: 'Update successful!'});
         });
     })
@@ -151,7 +163,7 @@ router.get('/:username/following', (req, res) => {
        .populate({
            path: 'following',
            options: {
-               limit: 20,
+               limit: 10,
                skip: parseInt(req.query.skip)
            }
        })

@@ -8,7 +8,7 @@ router.get('', (req, res) => {
         .populate({
             path: 'followers',
             options: {
-                limit: 20,
+                limit: 10,
                 skip: parseInt(req.query.skip)
             }
         })

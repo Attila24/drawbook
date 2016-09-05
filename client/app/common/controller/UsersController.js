@@ -1,8 +1,8 @@
 'use strict';
 
-UsersController.$inject = ['UserService'];
+UsersController.$inject = ['UserService', '$stateParams'];
 
-export default function UsersController(UserService) {
+export default function UsersController(UserService, $stateParams) {
     const vm = this;
     vm.title = 'UsersController';
 
@@ -24,7 +24,10 @@ export default function UsersController(UserService) {
 
        UserService.getCount().then(res => {vm.count = res;});
 
-       loadUsers({search: false});
+       vm.searchInput = $stateParams.searchInput;
+       vm.searchMode = vm.searchInput ? true : false;
+
+       loadUsers();
     }
 
     function loadUsers() {

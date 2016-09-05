@@ -111,6 +111,13 @@ router.get('/:id', (req, res) => {
     });
 });
 
+router.patch('/:id/title', ensureAuthenticated, (req, res) => {
+   Image.findByIdAndUpdate(req.params.id, {title: req.body.title}, err => {
+       if (err) res.status(500).json({error: err});
+       return res.status(200).json({status: 'Update successful!'});
+   })
+});
+
 router.delete('/:id', ensureAuthenticated, (req, res) => {
     User.findOne({username: req.params.username})
         .populate({path: 'followers', select: 'feed'})
