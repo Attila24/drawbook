@@ -41,7 +41,7 @@ angular
     .factory('ConfirmService', ConfirmService)
 
     // Instance of socket
-    .factory('socket', (socketFactory) => socketFactory())
+    .factory('socket', ['socketFactory', socketFactory => socketFactory()])
 
     // Directives
     .directive('notificationsPopover', NotificationsPopover)
@@ -56,7 +56,7 @@ angular
                 templateUrl: '/app/draw/draw.tpl.html',
                 controller: DrawController,
                 controllerAs: 'vm',
-                onEnter: ['$window', ($window) => {$window.document.title = 'Drawbook - New drawing'}]
+                onEnter: ['$window', ($window) => {$window.document.title = 'Drawbook - New drawing';}]
             })
             .state('404', {
                 url: '/404',
@@ -74,7 +74,7 @@ angular
             $authProvider.loginUrl = '/users/login';
     }])
 
-    .factory('allHttpInterceptor', bsLoadingOverlayHttpInterceptorFactoryFactory => bsLoadingOverlayHttpInterceptorFactoryFactory())
+    .factory('allHttpInterceptor', ['bsLoadingOverlayHttpInterceptorFactoryFactory', bsLoadingOverlayHttpInterceptorFactoryFactory => bsLoadingOverlayHttpInterceptorFactoryFactory()])
     .config(['$httpProvider', 'growlProvider', ($httpProvider, growlProvider) => {
 
         growlProvider.globalTimeToLive(5000);
@@ -85,14 +85,14 @@ angular
         $httpProvider.interceptors.push('allHttpInterceptor');
     }])
 
-    .run((bsLoadingOverlayService) => {
+    .run(['bsLoadingOverlayService', (bsLoadingOverlayService) => {
         bsLoadingOverlayService.setGlobalConfig({
             delay: 400,
             activeClass: undefined,
             templateUrl: './app/common/tpl/loading-overlay-template.html',
             templateOptions: undefined
         });
-    })
+    }])
     .run(['$transitions', 'socket', '$auth', 'localStorageService', ($transitions, socket, $auth, localStorageService) => {
 
         // match all transitions

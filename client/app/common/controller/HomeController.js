@@ -1,7 +1,4 @@
 'use strict';
-
-HomeController.$inject = ['$auth', 'currentUser', 'UserService', 'LikeService', 'CommentService', '$q'];
-
 /**
  * The controller responsible for handling the home screen actions.
  */

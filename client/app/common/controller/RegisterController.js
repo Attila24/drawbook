@@ -1,7 +1,4 @@
 'use strict';
-
-RegisterController.$inject = ['$state', '$auth', 'UserService', 'localStorageService', 'socket'];
-
 /**
  * The controller responsible for handling the actions on the register page.
  */

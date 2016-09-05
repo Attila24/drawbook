@@ -46,8 +46,8 @@ function bundle() {
         .pipe(sourcemaps.init({loadMaps: true}))
         // other transformations here
             .pipe(concat('main.min.js', {newLine: ';'}))
-            .pipe(ngAnnotate({single_quotes: true}))
-            .pipe(uglify({compress: {sequences: false, join_vars: false}}))
+            .pipe(ngAnnotate({add: true}))
+            .pipe(uglify({mangle: false}))
         // other transformations end here
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('client'));

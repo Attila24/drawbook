@@ -1,6 +1,3 @@
-NotificationsPopover.$inject = ['$popover'];
-NotificationsController.$inject = ['$scope', 'localStorageService', 'UserService', 'NotificationService', 'ImageService', '$q', '$state'];
-
 /**
  * The controller responsible for handling the actions of the notification popup.
  */
@@ -125,7 +122,9 @@ function NotificationsController($scope, localStorageService, UserService, Notif
 /**
  * The directive that is responsible for showing the notification popup and instantiating the NotificationController function with the correct parameters.
  */
-/*@ngInject*/
+
+NotificationsPopover.$inject = ['$popover'];
+
 export default function NotificationsPopover($popover) {
     return {
         restrict: 'A',

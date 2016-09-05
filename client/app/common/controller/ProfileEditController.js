@@ -1,7 +1,4 @@
 'use strict';
-
-ProfileEditController.$inject = ['$state', 'localStorageService', 'UserService', 'Upload', 'server', '$auth', 'ConfirmService', '$rootScope'];
-
 /**
  * The controller responsible for handling the actions on the profile edit page.
  */

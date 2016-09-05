@@ -1,11 +1,10 @@
 'use strict';
-
-UserImageController.$inject = ['$stateParams', 'ImageService', 'user', '$state', '$scope', 'CommentService', 'localStorageService', 'LikeService', '$q', 'UserService', 'socket', '$auth'];
-
 /**
  * The controller responsible for handling the actions on the image page.
  */
-/* @ngInject */
+
+UserImageController.$inject = ['$stateParams', 'ImageService', 'user', '$state', '$scope', 'CommentService', 'localStorageService', 'LikeService', '$q', 'UserService', 'socket', '$auth'];
+
 export default function UserImageController($stateParams, ImageService, user, $state, $scope, CommentService, localStorageService, LikeService, $q, UserService, socket, $auth) {
     const vm = this;
 

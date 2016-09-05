@@ -2,8 +2,6 @@
 
 import FollowModalController from './FollowModalController';
 
-UserController.$inject = ['user', '$state', 'localStorageService', 'UserService', 'socket', '$modal', '$timeout', 'bsLoadingOverlayService', '$auth'];
-
 /**
  * The controller responsible for handling user data and actions in the user page (bio part).
  */

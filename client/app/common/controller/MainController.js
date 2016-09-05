@@ -1,7 +1,4 @@
 'use strict';
-
-MainController.$inject = ['$auth', 'UserService', 'localStorageService', 'socket', '$state', '$rootScope'];
-
 /**
  * The controller responsible for handling the actions related to the navigation bar.
  * This controller's state is the parent of all other states, thus this controller is present in every page session.

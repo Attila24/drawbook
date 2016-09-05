@@ -1,7 +1,4 @@
 'use strict';
-
-LoginController.$inject = ['$state', '$auth', 'localStorageService', 'socket'];
-
 /**
  * The controller responsible for handling the login screen actions.
  */

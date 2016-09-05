@@ -1,7 +1,4 @@
 'use strict';
-
-DrawController.$inject = ['$state', 'localStorageService', 'ImageService', '$auth'];
-
 /* @ngInject */
 export default function DrawController($state, localStorageService, ImageService, $auth) {
     const vm = this;

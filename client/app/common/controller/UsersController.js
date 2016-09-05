@@ -1,7 +1,4 @@
 'use strict';
-
-UsersController.$inject = ['UserService', '$stateParams'];
-
 /**
  * The controller responsible for handling the actions on the 'users' page.
  */
