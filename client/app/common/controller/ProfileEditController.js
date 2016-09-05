@@ -2,24 +2,34 @@
 
 ProfileEditController.$inject = ['$state', 'localStorageService', 'UserService', 'Upload', 'server', '$auth', 'ConfirmService', '$rootScope'];
 
+/**
+ * The controller responsible for handling the actions on the profile edit page.
+ */
 /* @ngInject */
 export default function ProfileEditController($state, localStorageService, UserService, Upload, server, $auth, ConfirmService, $rootScope) {
     const vm = this;
-    vm.title = 'ProfileEditController';
+
+    // private variables
+    const username = localStorageService.get('currentUser').username;
+
+    // bindable member variables
     vm.genders = ['Male', 'Female'];
 
+    // bindable member functions
     vm.edit = edit;
     vm.upload = upload;
     vm.remove = remove;
     vm.checkNumber = checkNumber;
     vm.removeAvatar = removeAvatar;
 
-    const username = localStorageService.get('currentUser').username;
-
     init();
 
-    ////////////////////////////////////////////
+    //////////////////////////////////////
 
+    /**
+     * Initilize controller:
+     * - get the current user's data
+     */
     function init() {
         UserService.get(username)
             .then(res => {
@@ -29,21 +39,36 @@ export default function ProfileEditController($state, localStorageService, UserS
             .catch(res => {});
     }
 
+    /**
+     * The function responsible for sending the 'update' request to the server
+     */
     function edit() {
+
+        // if the avatar path changed, send notification to $rootScope
         if (vm.user.avatarPath != vm.avatarPath) {
             $rootScope.$emit('avatar-change', 'Avatar changed!');
         }
         vm.user.avatarPath = vm.avatarPath;
+
+        // update user, uplad new avatar (if present)
         UserService.update(vm.user);
         upload();
+
+        // go back to the homescreen
         $state.go('home', {}, {reload: true});
     }
 
+    /**
+     * The function for removing the current user's avatar.
+     */
     function removeAvatar() {
         vm.file = null;
         vm.avatarPath = 'img/default-avatar.jpg';
     }
-    
+
+    /**
+     * The function responsible for sending the 'delete' request to the server
+     */
     function remove() {
         ConfirmService.show().then(res => {
             if (res === 'yes') {
@@ -58,16 +83,22 @@ export default function ProfileEditController($state, localStorageService, UserS
         });
     }
 
+    /**
+     * Checks if the age input is not too high or low.
+     */
     function checkNumber() {
         if (vm.user.age === undefined)
             vm.user.age = 999;
     }
 
+    /**
+     * The function responsible for uploading the user's new avatar.
+     */
     function upload() {
         const file = vm.file;
 
         if (file) {
-
+            // upload new avatar using the upload service
             file.upload = Upload.upload({
                 url: `${server.url}/users/${vm.user.username}/images/avatar`,
                 data: {file}
@@ -76,11 +107,12 @@ export default function ProfileEditController($state, localStorageService, UserS
             file.upload.then(res => {
                 file.result = res;
 
-                // set new avatar path in localstorage
+                // Set the new avatar path in the browser's local storage
                 let currentUser = localStorageService.get('currentUser');
                 currentUser.avatarPath = res.data.avatarPath;
                 localStorageService.set('currentUser', currentUser);
             }, res => {
+                // show error message if there was error.
                 if (res.status > 0) {
                     vm.errorMsg = `${res.status}: ${res.data}`;
                 } else if (res.status) {
@@ -90,5 +122,3 @@ export default function ProfileEditController($state, localStorageService, UserS
         }
     }
 }
-
-

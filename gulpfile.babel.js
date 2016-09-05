@@ -15,14 +15,10 @@ import babel from 'gulp-babel'
 import Cache from 'gulp-file-cache';
 import babelify from 'babelify';
 import watchify from 'watchify';
-
-//import uglify from 'gulp-uglify';
+import uglify from 'gulp-uglify';
 
 const BROWSER_SYNC_RELOAD_DELAY = 3000;
 const appPath = 'client/app.js';
-
-//rename      = require('gulp-rename')
-//jshint      = require('gulp-jshint')
 
 //--------------------------------------------------------
 // Scripts
@@ -50,8 +46,8 @@ function bundle() {
         .pipe(sourcemaps.init({loadMaps: true}))
         // other transformations here
             .pipe(concat('main.min.js', {newLine: ';'}))
-            .pipe(ngAnnotate())
-            //.pipe(uglify({compress: {sequences: false, join_vars: false}}))
+            .pipe(ngAnnotate({single_quotes: true}))
+            .pipe(uglify({compress: {sequences: false, join_vars: false}}))
         // other transformations end here
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('client'));

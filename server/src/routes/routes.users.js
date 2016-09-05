@@ -5,17 +5,19 @@ import passport from 'passport';
 import del from 'del';
 import fs from 'fs';
 import async from 'async';
-import User from '../db/models/user';
-import Image from '../db/models/image';
-import Notification from '../db/models/notification';
+import User from '../models/user';
+import Image from '../models/image';
+import Notification from '../models/notification';
 import {createToken} from './auth';
 
 const router = express.Router({mergeParams: true});
 
+// Passport configurations
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 passport.use(User.createStrategy());
 
+// Register a new user to the DB.
 router.post('/register', (req, res) => {
     User.register(
         new User({
@@ -28,6 +30,7 @@ router.post('/register', (req, res) => {
         req.body.password, (err, account) => {
             if (err) return res.status(500).json({error: err});
 
+            // Authenticate user using Local Passport Strategy, create new token
             passport.authenticate('local')(req, res, () => {
                 const user = account.toObject();
                 delete user.hash;
@@ -38,8 +41,11 @@ router.post('/register', (req, res) => {
         });
 });
 
+// Login user using Local Passport Strategy
 router.post('/login', (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
+
+        // check for errors
         if (err) {return res.status(500).json({err});}
         if (!user) {
             return res.status(401).json({
@@ -47,6 +53,8 @@ router.post('/login', (req, res, next) => {
                     messages: [{'text': 'Invalid username and/or password', 'severity': 'error'}]
             });
         }
+
+        // login user
         req.logIn(user, err => {
             if (err) {return res.status(500).json({err: 'Could not log in user', messages: [{'text': 'Could not log in user', 'severity': 'error'}]});}
 
@@ -60,11 +68,13 @@ router.post('/login', (req, res, next) => {
     })(req, res, next);
 });
 
+// Logout user
 router.get('/logout', (req, res) => {
     req.logout();
     res.status(200).json({status: 'Bye!'});
 });
 
+// Return total amount of users in database
 router.get('/count', (req, res) => {
     User.count((err, count) => {
         if (err) return res.status(500).json({error: err});
@@ -72,6 +82,7 @@ router.get('/count', (req, res) => {
     });
 });
 
+// Return a user or a collection of users, apply search if parameter is given
 router.get('', (req, res) => {
     User.find(req.query.search ? {username: {'$regex': req.query.search}} : {})
         .sort({_id: -1})
@@ -84,6 +95,7 @@ router.get('', (req, res) => {
 });
 
 router.route('/:username')
+    // Return a user from the DB, also select the images and followers
     .get((req, res) => {
         User.findOne({'username': req.params.username})
             .populate({path: 'images followers', options: {sort: {'date': -1}}})
@@ -92,10 +104,12 @@ router.route('/:username')
                 return res.status(200).json({'user': user})
             });
     })
+    // Update a user with the given request body.
     .patch((req, res) => {
         User.findOneAndUpdate({'username': req.params.username}, req.body.user, (err, user) => {
             if (err) return res.status(500).json({error: err});
 
+            // Should the server remove the previous avatar from the server?
             let condition =
                     req.body.user.avatarPath &&
                     req.body.user.avatarPath != user.avatarPath &&
@@ -110,6 +124,7 @@ router.route('/:username')
             return res.status(200).json({status: 'Update successful!'});
         });
     })
+    // Delete a user from the DB
     .delete((req, res) => {
         User.findOneAndRemove({'username': req.params.username})
             .populate({path: 'followers', select: 'feed following'})
@@ -117,18 +132,23 @@ router.route('/:username')
             .exec((err, user) => {
                 if (err) return res.status(500).json({error: err, messages: [{'text': 'A problem occured while deleting user', 'severity': 'error'}]});
 
+                // Remove all notifications of the user
                 for (let i = 0; i < user.notifications.length; i++) {
                     Notification.findByIdAndRemove(user.notifications[i], err => {if (err) console.log('Error: ' + err);});
                 }
 
+                // Find all the images of the user
                 Image.find({_author: user._id}).lean().exec((err, images) => {
                     if (err) console.log('Error: ' + err);
 
+                    // Get image paths from the array
                     let img_paths = (Array.from(images)).map(img => img.url);
 
+                    // Also delete the user's avatar, if given
                     if (user.avatarPath != 'img/default-avatar.jpg')
                         img_paths.push('client/' + user.avatarPath);
 
+                    // Delete all the image files from the server
                     del(img_paths, {force: true}).then(paths => {
                         console.log('Deleted files:\n', paths.join('\n'));
 
@@ -158,6 +178,7 @@ router.route('/:username')
         });
     });
 
+// Return the followings of a user, limit to 10 users
 router.get('/:username/following', (req, res) => {
    User.findOne({username: req.params.username})
        .populate({
@@ -174,8 +195,7 @@ router.get('/:username/following', (req, res) => {
        });
 });
 
-
-
+// Return the feed of a user
 router.get('/:username/feed', (req, res) => {
     User.findOne({username: req.params.username})
         .populate({
@@ -192,6 +212,7 @@ router.get('/:username/feed', (req, res) => {
            if (err) return res.status(500).json({error: err});
            if (user == null || user.feed.length == 0) return res.status(200).json([]);
 
+            // After selecting the images, read image files from the file system
             async.each(user.feed, (image, callback) => {
                 fs.readFile(image.url, 'base64', (err, data) => {
                     if (err) return res.status(500).json({error: err});
@@ -199,12 +220,11 @@ router.get('/:username/feed', (req, res) => {
                     callback();
                 });
             }, err => {
+                // After all is finished, return to the user.
                 if (err) return res.status(500).json({error: err});
                 else res.status(200).json(user.feed);
             });
         });
 });
 
-
 export default router;
-

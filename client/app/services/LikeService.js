@@ -2,6 +2,9 @@
 
 LikeService.$inject = ['$http', 'server'];
 
+/**
+ * The service responsible for handling requests related to likes.
+ */
 /* @ngInject */
 export default function LikeService($http, server) {
     return {

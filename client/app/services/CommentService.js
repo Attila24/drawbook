@@ -2,6 +2,9 @@
 
 CommentService.$inject = ['$http', 'server'];
 
+/**
+ * The service responsible for handling requests related to comments.
+ */
 /* @ngInject */
 export default function CommentService($http, server) {
     return {
@@ -16,4 +19,3 @@ export default function CommentService($http, server) {
         getCount: (user, imageid) => $http({url: server.url + 'users/' + user.username + '/images/' + imageid + '/comments/count'}).then(res => res.data)
     };
 }
-

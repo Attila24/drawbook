@@ -7,6 +7,9 @@ import ProfileEditController from './controller/ProfileEditController';
 import MainController from './controller/MainController';
 import UsersController from './controller/UsersController';
 
+/**
+ * The module containing the common controllers and states of the application.
+ */
 export default angular.module('drawbook.common', [])
         .controller(HomeController)
         .controller(LoginController)

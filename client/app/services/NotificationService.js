@@ -2,6 +2,9 @@
 
 NotificationService.$inject = ['$http', 'server'];
 
+/**
+ * The service responsible for handling requests related to notifications.
+ */
 /* @ngInject */
 export default function NotificationService($http, server) {
     return {

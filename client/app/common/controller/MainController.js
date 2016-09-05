@@ -2,14 +2,20 @@
 
 MainController.$inject = ['$auth', 'UserService', 'localStorageService', 'socket', '$state', '$rootScope'];
 
+/**
+ * The controller responsible for handling the actions related to the navigation bar.
+ * This controller's state is the parent of all other states, thus this controller is present in every page session.
+ */
 /* @ngInject */
 export default function MainController($auth, UserService, localStorageService, socket, $state, $rootScope) {
-
     const vm = this;
-    vm.title = "MainController";
+
+    // bindable member variables
     vm.user = localStorageService.get('currentUser');
     vm.hasNewNotifications = false;
-    vm.setNotificationsToRead = setNotificationsToRead;
+
+    // bindable member functions
+    vm.setNotificationsToRead = setNotificationsAsRead;
     vm.isAuthenticated = isAuthenticated;
     vm.goToHome = goToHome;
     vm.searchUser = searchUser;
@@ -17,8 +23,30 @@ export default function MainController($auth, UserService, localStorageService, 
 
     if (vm.isAuthenticated()) init();
 
-    ///////////////////////////////////////
+    //////////////////////////////////////
 
+    // Event handlers
+
+    // on receiving new notification: indicate that there is new notification
+    socket.on('notification', msg => {
+        vm.hasNewNotifications = true;
+    });
+
+    // on changing the avatar: reload the user's avatar URL from the server.
+    $rootScope.$on('avatar-change', (event, data) => {
+        UserService.getAvatarPath(vm.user.username)
+            .then(res => {
+                vm.user.avatarPath = res.avatarPath;
+            });
+    });
+
+    // Functions
+
+    /**
+     * Initializing controller:
+     * - get current user's data
+     * - determine if current user has new notifications or not
+     */
     function init() {
         UserService.get(vm.user.username)
             .then(res => {
@@ -29,39 +57,43 @@ export default function MainController($auth, UserService, localStorageService, 
             });
     }
 
-    function setNotificationsToRead() {
+    /**
+     * Set current user's notifications as read.
+     */
+    function setNotificationsAsRead() {
         vm.hasNewNotifications = false;
     }
 
-    socket.on('notification', msg => {
-       vm.hasNewNotifications = true;
-    });
-
+    /**
+     * The function to determine if the current user is authenticated.
+     * @returns {*}
+     */
     function isAuthenticated() {
         return $auth.isAuthenticated();
     }
 
-
+    /**
+     * The function to redirect the user to the homescreen.
+     */
     function goToHome() {
         if ($state.is('home')) $state.reload();
         else $state.go('home');
     }
 
+    /**
+     * The function to redirect the user to the search screen.
+     */
     function searchUser() {
         $state.go('users', {searchInput: vm.searchInput});
         vm.searchInput = '';
     }
 
+    /**
+     * The function responsible for logging out the user.
+     */
     function logout() {
         $auth.logout();
         localStorageService.remove("currentUser");
         $state.go('home', {}, {reload: true});
     }
-
-    $rootScope.$on('avatar-change', (event, data) => {
-        UserService.getAvatarPath(vm.user.username)
-            .then(res => {
-                vm.user.avatarPath = res.avatarPath;
-            });
-    })
 }

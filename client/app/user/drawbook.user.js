@@ -4,13 +4,13 @@ import UserController from './controller/UserController';
 import UserGalleryController from './controller/UserGalleryController';
 import UserImageController from './controller/UserImageController';
 
+/**
+ * The module containing the controllers and states related to viewing an user's profile.
+ */
 export default angular.module('drawbook.user', [])
-
-        // Controllers
         .controller(UserController)
         .controller(UserGalleryController)
         .controller(UserImageController)
-        // States config
         .config(['$stateProvider', ($stateProvider) => {
             $stateProvider
                 .state('user', {

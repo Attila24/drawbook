@@ -2,6 +2,9 @@
 
 UserService.$inject = ['$http', 'server'];
 
+/**
+ * The service responsible for handling requests related to users.
+ */
 /* @ngInject */
 export default function UserService($http, server) {
     return {

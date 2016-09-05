@@ -2,6 +2,9 @@
 
 ImageService.$inject = ['$http', 'server'];
 
+/**
+ * The service responsible for handling requests related to images.
+ */
 /* @ngInject */
 export default function ImageService($http, server) {
     return {

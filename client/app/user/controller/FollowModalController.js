@@ -2,20 +2,30 @@
 
 FollowModalController.$inject = ['type', 'UserService', 'user'];
 
+/**
+ * The controller responsible for handling actions in the followings/followers modal window.
+ */
+/* @ngInject */
 export default function FollowModalController(type, UserService, user) {
     const vm = this;
-    vm.title = 'FollowModalController';
+
+    // bindable member variables
     vm.type = type;
     vm.arr = [];
     vm.user = user;
 
+    // bindable member functions
     vm.loadFollowers = loadFollowers;
     vm.loadFollowing = loadFollowing;
 
     init();
 
-    ///////////////////////////
+    //////////////////////////////////////
 
+    /**
+     * Initialie controller:
+     * - load followers or followings according to modal type
+     */
     function init() {
         vm.loaded = 0;
 
@@ -23,6 +33,9 @@ export default function FollowModalController(type, UserService, user) {
         else if (type == 'following') loadFollowing();
     }
 
+    /**
+     * Loads followers and saves in a bindable member variable (vm.arr)
+     */
     function loadFollowers() {
         UserService.getFollowers(vm.user.username, vm.loaded)
             .then(res => {
@@ -31,6 +44,9 @@ export default function FollowModalController(type, UserService, user) {
             });
     }
 
+    /**
+     * Loads followings and saves in a bindable member variable (vm.arr)
+     */
     function loadFollowing() {
         UserService.getFollowing(vm.user.username, vm.loaded)
             .then(res => {
@@ -38,5 +54,4 @@ export default function FollowModalController(type, UserService, user) {
                vm.loaded = vm.arr.length;
             });
     }
-
 }
