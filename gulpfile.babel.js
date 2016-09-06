@@ -46,7 +46,7 @@ function bundle() {
         .pipe(sourcemaps.init({loadMaps: true}))
         // other transformations here
             .pipe(concat('main.min.js', {newLine: ';'}))
-            .pipe(ngAnnotate({add: true}))
+            .pipe(ngAnnotate({add:true, single_quotes: true}))
             .pipe(uglify({mangle: false}))
         // other transformations end here
         .pipe(sourcemaps.write('./'))

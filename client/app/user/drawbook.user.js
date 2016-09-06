@@ -40,7 +40,7 @@ export default angular.module('drawbook.user', [])
                             templateUrl: '/app/user/tpl/user.image.tpl.html',
                             controller: UserImageController,
                             controllerAs: 'vm',
-                            resolve: {
+                            resolve: { /* @ngInject */
                                 user: () => user
                             },
                             container: 'body',

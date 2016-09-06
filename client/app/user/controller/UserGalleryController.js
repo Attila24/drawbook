@@ -2,7 +2,7 @@
 /**
  * The controller responsible for handling the actions in the user's gallery section.
  */
-
+/* @ngInject */
 export default function UserGalleryController(user, ImageService, localStorageService, $stateParams, $state, LikeService, CommentService, $q, ConfirmService) {
     const vm = this;
 
