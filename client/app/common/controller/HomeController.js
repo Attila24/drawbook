@@ -3,7 +3,7 @@
  * The controller responsible for handling the home screen actions.
  */
 /* @ngInject */
-export default function HomeController($auth, currentUser, UserService, LikeService, CommentService, $q) {
+export default function HomeController($auth, currentUser, UserService, LikeService, CommentService, $q, socket) {
     const vm = this;
 
     // bindable member variables
@@ -71,7 +71,7 @@ export default function HomeController($auth, currentUser, UserService, LikeServ
 
     /**
      * The function responsible for handling the 'like' action.
-     * @param username the username of current user (who is liking)
+     * @param username the username of the user whose image is being liked
      * @param id the id of the image that is liked.
      * @param index the index of current image in the feed array.
      */
@@ -81,12 +81,15 @@ export default function HomeController($auth, currentUser, UserService, LikeServ
                 // current image is now liked, add current person to likes array
                 vm.feed[index].isLiked = true;
                 vm.feed[index].likes.unshift({_id: vm.user._id, username: vm.user.username});
+
+                // send notification
+                socket.emit('notification', {'to': username, 'from': vm.user._id, 'author': vm.user.username, 'type': 'like', imageid: id});
             });
     }
 
     /**
      * The function responsible for handling the 'dislike' action.
-     * @param username the username of current user (who is disliking).
+     * @param username the username the user whose image is being disliked
      * @param id the id of the image that is disliked.
      * @param index the index of current image in the feed array.
      */

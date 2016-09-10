@@ -29,6 +29,11 @@ export default function MainController($auth, UserService, localStorageService, 
         vm.hasNewNotifications = true;
     });
 
+    // on reading the newest notification: indicate that there is no new notifications
+    $rootScope.$on('notifications-read', (event, data) => {
+       vm.hasNewNotifications = false;
+    });
+
     // on changing the avatar: reload the user's avatar URL from the server.
     $rootScope.$on('avatar-change', (event, data) => {
         UserService.getAvatarPath(vm.user.username)

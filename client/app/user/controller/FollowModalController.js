@@ -1,8 +1,10 @@
 'use strict';
+
+FollowModalController.$inject = ['type', 'UserService', 'user'];
+
 /**
  * The controller responsible for handling actions in the followings/followers modal window.
  */
-/* @ngInject */
 export default function FollowModalController(type, UserService, user) {
     const vm = this;
 

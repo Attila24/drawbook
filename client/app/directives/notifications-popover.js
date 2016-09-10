@@ -2,7 +2,7 @@
  * The controller responsible for handling the actions of the notification popup.
  */
 /*@ngInject*/
-function NotificationsController($scope, localStorageService, UserService, NotificationService, ImageService, $q, $state) {
+function NotificationsController($scope, localStorageService, UserService, NotificationService, ImageService, $q, $state, $rootScope) {
 
     // bindable member functions
     $scope.init = init;
@@ -101,6 +101,8 @@ function NotificationsController($scope, localStorageService, UserService, Notif
 
             UserService.update($scope.user)
                 .then(res => {});
+
+            $rootScope.$emit('notifications-read', 'Latest notifications read!');
         }
     }
 
