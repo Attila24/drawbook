@@ -8,6 +8,10 @@
     "start": "node server/dist/server.js",
     "postinstall": "gulp build"
   },
+  "engines": {
+    "node": "6.3.1",
+    "npm": "3.10.5"
+  },
   "author": "Attila Kalvin",
   "license": "ISC",
   "dependencies": {
