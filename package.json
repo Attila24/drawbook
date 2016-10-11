@@ -21,7 +21,8 @@
     "babelify": "^7.3.0",
     "body-parser": "^1.14.2",
     "bootstrap-sass": "^3.3.6",
-
+    "browser-sync": "^2.11.1",
+    "watchify": "^3.7.0",
     "browserify": "^13.0.0",
     "connect-multiparty": "^2.0.0",
     "cookie-parser": "^1.4.1",
@@ -62,9 +63,6 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "devDependencies": {
-    "browser-sync": "^2.11.1",
-    "jshint": "^2.9.1",
-    "watchify": "^3.7.0"
   },
   "repository": {
     "type": "git",
