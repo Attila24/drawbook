@@ -8,12 +8,16 @@ import gutil from 'gulp-util';
 import sourcemaps from 'gulp-sourcemaps';
 import ngAnnotate from 'gulp-ng-annotate';
 import concat from 'gulp-concat';
+import browserSync from 'browser-sync';
+import nodemon from 'gulp-nodemon';
 import sass from 'gulp-sass';
 import babel from 'gulp-babel'
 import Cache from 'gulp-file-cache';
 import babelify from 'babelify';
+import watchify from 'watchify';
 import uglify from 'gulp-uglify';
 
+const BROWSER_SYNC_RELOAD_DELAY = 3000;
 const appPath = 'client/app.js';
 
 //--------------------------------------------------------
@@ -25,6 +29,7 @@ const b = browserify({
         debug: true,
         cache: {},
         packageCache: {},
+        plugin: [watchify],
         transform: [babelify]
 });
 
@@ -46,6 +51,7 @@ function bundle() {
         // other transformations end here
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('client'));
+    browserSync.reload();
 }
 
 gulp.task('copy-libs', () => {
@@ -87,11 +93,13 @@ gulp.task('styles', () => {
         .pipe(sourcemaps.init())
         .pipe(sass(sassOptions).on('error', sass.logError))
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest('client/css'));
+        .pipe(gulp.dest('client/css'))
+        .pipe(browserSync.stream());
+
 });
 
 //--------------------------------------------------------
-// Node compile
+// Nodemon
 //--------------------------------------------------------
 
 let cache = new Cache();
@@ -104,8 +112,51 @@ gulp.task('compile',
             .pipe(gulp.dest('./server/dist'))
 );
 
+
+gulp.task('nodemon', ['compile'], cb => {
+    let called = false;
+    return nodemon({
+        script: 'server/dist/server.js',
+        watch: 'server/src',
+        ext: 'js',
+        ignore: 'client/*',
+        tasks: ['compile'],
+        env: {'NODE_ENV': 'development'}
+    }).on('start', () => {
+        if (!called) {cb();}
+        called = true;
+    }).on('restart', () => {
+        setTimeout(() => {browserSync.reload({stream: false});}, BROWSER_SYNC_RELOAD_DELAY);
+    });
+});
+
 //--------------------------------------------------------
-// Build project
+// Browser-Sync
 //--------------------------------------------------------
 
-gulp.task('build', ['copy-libs', 'compile', 'js', 'styles']);
+gulp.task('browser-sync', ['nodemon'], () => {
+    browserSync({
+        proxy: {
+            target: 'http://localhost:5000',
+            ws: true
+        },
+        port: 7000
+    });
+});
+
+gulp.task('bs-reload', () => {browserSync.reload();});
+
+//--------------------------------------------------------
+// Watch
+//--------------------------------------------------------
+
+gulp.task('watch', () => {
+    gulp.watch('client/**/*.html', ['bs-reload']);
+    gulp.watch('client/**/*.scss', ['styles', 'bs-reload']);
+});
+
+//--------------------------------------------------------
+// Default dev task
+//--------------------------------------------------------
+
+gulp.task('default', ['copy-libs', 'browser-sync', 'js', 'styles', 'watch']);
