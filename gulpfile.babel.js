@@ -156,7 +156,18 @@ gulp.task('watch', () => {
 });
 
 //--------------------------------------------------------
-// Default Task
+// Default dev task
 //--------------------------------------------------------
 
 gulp.task('default', ['copy-libs', 'browser-sync', 'js', 'styles', 'watch']);
+
+gulp.task('copy-main-file', () => {
+    gulp.src('server/dist/server.js')
+        .pipe(gulp.dest(''));
+});
+
+//--------------------------------------------------------
+// Default production task
+//--------------------------------------------------------
+
+gulp.task('start', ['copy-libs', 'compile', 'js', 'copy-main-file', 'styles']);
