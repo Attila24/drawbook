@@ -142,7 +142,7 @@ router.route('/:username')
                     if (err) console.log('Error: ' + err);
 
                     // Get image paths from the array
-                    let img_paths = (Array.from(images)).map(img => img.url);
+                    /*let img_paths = (Array.from(images)).map(img => img.url);
 
                     // Also delete the user's avatar, if given
                     if (user.avatarPath != 'img/default-avatar.jpg')
@@ -152,11 +152,12 @@ router.route('/:username')
                     del(img_paths, {force: true}).then(paths => {
                         console.log('Deleted files:\n', paths.join('\n'));
 
-                        Image.remove({_author: user._id},
-                             err => {if (err)
-                                 return res.status(500).json({error: err, messages: [{'text': 'A problem occured while deleting images', 'severity': 'error'}]})
-                            });
-                    });
+                    });*/
+
+                    Image.remove({_author: user._id},
+                        err => {if (err)
+                            return res.status(500).json({error: err, messages: [{'text': 'A problem occured while deleting images', 'severity': 'error'}]})
+                        });
 
                     // Delete presence from followers' data
                     for (let i = 0; i < user.followers.length; i++) {
@@ -212,8 +213,10 @@ router.get('/:username/feed', (req, res) => {
            if (err) return res.status(500).json({error: err});
            if (user == null || user.feed.length == 0) return res.status(200).json([]);
 
+           return res.status(200).json(user.feed);
+
             // After selecting the images, read image files from the file system
-            async.each(user.feed, (image, callback) => {
+            /*async.each(user.feed, (image, callback) => {
                 fs.readFile(image.url, 'base64', (err, data) => {
                     if (err) return res.status(500).json({error: err});
                     image.data = `data:image/png;base64,${data}`;
@@ -223,7 +226,7 @@ router.get('/:username/feed', (req, res) => {
                 // After all is finished, return to the user.
                 if (err) return res.status(500).json({error: err});
                 else res.status(200).json(user.feed);
-            });
+            });*/
         });
 });
 

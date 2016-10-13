@@ -275,7 +275,7 @@ export default function UserImageController($stateParams, ImageService, user, $s
      * Updates the image title and reloads the state.
      */
     function updateImageTitle() {
-        ImageService.updateTitle(vm.user.username, $stateParams.id, vm.image.image.title)
+        ImageService.updateTitle(vm.user.username, $stateParams.id, vm.image.title)
             .then(() => {
                 $state.reload();
                 $scope.$hide();
