@@ -28,7 +28,7 @@ angular
         commonModule.name,
         userModule.name
     ])
-    .constant('server', {url: 'http://localhost:5000/api/'}) // 'https://drawbook.herokuapp.com/api/'
+    .constant('server', {url: 'https://drawbook.herokuapp.com/api/'})
     .controller('DrawController', DrawController)
 
     // Services, factories
