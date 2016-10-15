@@ -73,8 +73,6 @@ router.get('/count', (req, res) => {
                     callback(null, count !== 0);
                 });
             }, (err, results) => {
-                if (results === null || results === undefined)
-                    return res.status(200).json(0);
                 return res.status(200).json(results.length);
             });
         });
