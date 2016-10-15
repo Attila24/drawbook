@@ -3,6 +3,7 @@
 import express from 'express';
 import passport from 'passport';
 import User from '../models/user';
+import Comment from '../models/comment';
 import Image from '../models/image';
 import Notification from '../models/notification';
 import {createToken} from './auth';
@@ -121,6 +122,11 @@ router.route('/:username')
                 for (let i = 0; i < user.notifications.length; i++) {
                     Notification.findByIdAndRemove(user.notifications[i], err => {if (err) console.log('Error: ' + err);});
                 }
+
+                // Remove all comments of the user
+                Comment.remove({authorId: user._id}, err => {
+                    if (err) console.log('A problem occured while deleting comments: ', err);
+                });
 
                 // Find all the images of the user
                 Image.find({_author: user._id}).lean().exec((err, images) => {
