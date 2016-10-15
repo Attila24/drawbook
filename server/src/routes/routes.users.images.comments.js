@@ -50,9 +50,9 @@ router.get('', (req, res) => {
            async.filter(data.comments, (comment, callback) => {
               User.count({_id: comment.authorId}, (err, count) => {
                   if (err) console.log('Error: ' + err);
-                  callback(count !== 0);
+                  callback(null, count !== 0);
               });
-           }, (results) => {
+           }, (err, results) => {
                return res.status(200).json(results);
            });
        });
@@ -70,9 +70,11 @@ router.get('/count', (req, res) => {
             async.filter(data, (comment, callback) => {
                 User.count({_id: comment.authorId}, (err, count) => {
                     if (err) console.log('Error: ' + err);
-                    callback(count !== 0);
+                    callback(null, count !== 0);
                 });
-            }, (results) => {
+            }, (err, results) => {
+                if (results === null || results === undefined)
+                    return res.status(200).json(0);
                 return res.status(200).json(results.length);
             });
         });

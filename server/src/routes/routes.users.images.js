@@ -23,17 +23,6 @@ router.post('/', ensureAuthenticated, (req, res) => {
                 data: req.body.image
             });
 
-            // convert from data URL to base64
-            /*const base64Data = req.body.image.replace(/^data:image\/png;base64,/, "");
-
-            // save image in the file system
-            fs.writeFile(`server/files/${image._id}.png`, base64Data, 'base64', err => {
-                if (err) console.log(`Error: ${err}`);
-                console.log(`Image '${image._id}.png' saved`);
-            });
-
-            // save image in the database as a data URL
-            image.url = `server/files/${image._id}.png`;*/
             image.save(err => {if (err) return res.status(500).json({error: err});});
 
             // Save in the user's image array
@@ -92,19 +81,6 @@ router.get('', (req,res) => {
         .exec((err, data) => {
             if (err) return res.status(500).json({error: err});
             return res.status(200).json(data);
-            /*
-            // Get image files from filesystem and convert them back to data URL
-            async.each(data.images, (image, callback) => {
-               fs.readFile(image.url, 'base64', (err, data) => {
-                   if (err) return res.status(500).json({error: err});
-                   image.data = `data:image/png;base64,${data}`;
-                   callback();
-               });
-            }, err => {
-                // When all finished, send to user
-                if (err) return res.status(500).json({error: err});
-                else return res.status(200).json(data);
-            });*/
         });
 });
 
@@ -113,19 +89,7 @@ router.get('/:id', (req, res) => {
     Image.findOne({_id: req.params.id}, (err, image) => {
         if (err) return res.status(500).json({error: err});
         else if (image == null) return res.status(404).json({message: 'Not found'});
-        else return res.status(200).json(image); /*{
-
-
-            // Read image from filesystem, convert to data URL and send to user
-            fs.readFile(image.url, 'base64', (err, data) => {
-                if (err) return res.status(500).json({error: err});
-
-                return res.status(200).json({
-                    'image': image,
-                    'data': `data:image/png;base64,${data}`
-                });
-            });
-        }*/
+        else return res.status(200).json(image);
     });
 });
 
@@ -161,12 +125,6 @@ router.delete('/:id', ensureAuthenticated, (req, res) => {
                 });
 
             });
-
-            // Delete image from filesystem
-            /*fs.unlink(`server/files/${req.params.id}.png`, (err) => {
-               if (err) console.log('Error: ' + err);
-               else console.log(`Successfully deleted image file ${req.params.id}.png`);
-            });*/
 
             // Remove image from all the followers' feeds
             for (let i = 0; i < user.followers.length; i++) {

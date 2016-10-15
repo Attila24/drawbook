@@ -25,9 +25,9 @@ router.get('', (req, res) => {
             async.filter(data.notifications, (notification, callback) => {
                 User.count({_id: notification.from}, (err, count) => {
                     if (err) console.log('Error: ' + err);
-                    callback(count !== 0);
+                    callback(null, count !== 0);
                 });
-            }, (results) => {
+            }, (err, results) => {
                 // When all done, send to user
                 return res.status(200).json(results);
             });
@@ -45,9 +45,11 @@ router.get('/count', (req, res) => {
            async.filter(data, (notification, callback) => {
               User.count({_id: notification.to}, (err, count) => {
                   if (err) console.log('Error: ' + err);
-                  callback(count !== 0);
+                  callback(null, count !== 0);
               });
-           }, results => {
+           }, (err, results) => {
+               if (results === null || results === undefined)
+                   return res.status(200).json(0);
                return res.status(200).json(results.length);
            });
        });

@@ -31,9 +31,9 @@ router.get('/', (req, res) => {
            async.filter(data.likes, (like, callback) => {
                User.count({_id: like}, (err, count) => {
                   if (err) console.log('Error: ' + err);
-                  callback(count !== 0);
+                  callback(null, count !== 0);
                });
-           }, (results) => {
+           }, (err, results) => {
                // When all done, send to the user
                return res.status(200).json(results);
            });
