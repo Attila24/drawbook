@@ -2,9 +2,6 @@
 
 import express from 'express';
 import passport from 'passport';
-import del from 'del';
-import fs from 'fs';
-import async from 'async';
 import User from '../models/user';
 import Image from '../models/image';
 import Notification from '../models/notification';
@@ -108,18 +105,6 @@ router.route('/:username')
     .patch((req, res) => {
         User.findOneAndUpdate({'username': req.params.username}, req.body.user, (err, user) => {
             if (err) return res.status(500).json({error: err});
-
-            // Should the server remove the previous avatar from the server?
-            let condition =
-                    req.body.user.avatarPath &&
-                    req.body.user.avatarPath != user.avatarPath &&
-                    user.avatarPath != 'img/default-avatar.jpg';
-
-            if (condition) {
-                del('client/' + user.avatarPath, {force: true}).then(paths => {
-                   console.log('Deleted files:\n', paths.join('\n'));
-                });
-            }
 
             return res.status(200).json({status: 'Update successful!'});
         });

@@ -1,7 +1,6 @@
 'use strict';
 
 import express from 'express';
-import fs from 'fs';
 import async from 'async';
 import Image from '../models/image';
 import User from '../models/user';
@@ -37,24 +36,6 @@ router.post('/', ensureAuthenticated, (req, res) => {
 
             return res.status(200).json({status: 'Successfully saved image'})
         });
-});
-
-// Save a new user avatar
-router.post('/avatar', ensureAuthenticated, (req, res) => {
-    let path = req.files.file.path.replace('client\\', '');
-    path = path.replace(/\\/g, '/');
-
-    // Save url in the database
-    User.findOneAndUpdate({username: req.params.username}, {$set: {avatarPath: path}}, (err, user) => {
-        if (err) return res.status(500).json({error: err});
-
-        // If user had previous avatar, remove it
-        if (user.avatarPath != 'img/default-avatar.jpg') {
-            fs.unlink('client/' + user.avatarPath, err => {if (err) console.log('Error: ' + err);});
-        }
-
-        return res.status(200).json({status: 'Successfully saved avatar', avatarPath: path});
-    });
 });
 
 // Return a user's current avatar

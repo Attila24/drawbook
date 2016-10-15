@@ -3,7 +3,7 @@
  * The controller responsible for handling the actions on the profile edit page.
  */
 /* @ngInject */
-export default function ProfileEditController($state, localStorageService, UserService, Upload, server, $auth, ConfirmService, $rootScope) {
+export default function ProfileEditController($state, localStorageService, UserService, server, $auth, ConfirmService, $q) {
     const vm = this;
 
     // private variables
@@ -14,10 +14,10 @@ export default function ProfileEditController($state, localStorageService, UserS
 
     // bindable member functions
     vm.edit = edit;
-    vm.upload = upload;
     vm.remove = remove;
     vm.checkNumber = checkNumber;
     vm.removeAvatar = removeAvatar;
+    vm.isImage = isImage;
 
     init();
 
@@ -31,7 +31,7 @@ export default function ProfileEditController($state, localStorageService, UserS
         UserService.get(username)
             .then(res => {
                 vm.user = res.user;
-                vm.avatarPath = vm.user.avatarPath || 'img/default-avatar.jpg';
+                isImage(vm.user.avatarPath);
             })
             .catch(res => {});
     }
@@ -41,15 +41,8 @@ export default function ProfileEditController($state, localStorageService, UserS
      */
     function edit() {
 
-        // if the avatar path changed, send notification to $rootScope
-        if (vm.user.avatarPath != vm.avatarPath) {
-            $rootScope.$emit('avatar-change', 'Avatar changed!');
-        }
-        vm.user.avatarPath = vm.avatarPath;
-
-        // update user, uplad new avatar (if present)
+        // update user
         UserService.update(vm.user);
-        upload();
 
         // go back to the homescreen
         $state.go('home', {}, {reload: true});
@@ -59,8 +52,7 @@ export default function ProfileEditController($state, localStorageService, UserS
      * The function for removing the current user's avatar.
      */
     function removeAvatar() {
-        vm.file = null;
-        vm.avatarPath = 'img/default-avatar.jpg';
+        vm.user.avatarPath = 'img/default-avatar.jpg';
     }
 
     /**
@@ -89,33 +81,28 @@ export default function ProfileEditController($state, localStorageService, UserS
     }
 
     /**
-     * The function responsible for uploading the user's new avatar.
+     * Checks if the image URL provided by the user is correct.
+     * @param src the URL of the given image.
      */
-    function upload() {
-        const file = vm.file;
+    function isImage(src) {
+        loadImage(src).then(res => {
+            vm.correctImage = res;
+        });
+    }
 
-        if (file) {
-            // upload new avatar using the upload service
-            file.upload = Upload.upload({
-                url: `${server.url}/users/${vm.user.username}/images/avatar`,
-                data: {file}
-            });
+    /**
+     * Tries to load the image provided by the user. Returns a promise which resolves to a boolean value.
+     * @param src The URL of the given image.
+     * @returns {Promise}
+     */
+    function loadImage(src) {
+        let deferred = $q.defer();
+        let image = new Image();
 
-            file.upload.then(res => {
-                file.result = res;
+        image.onerror = () => deferred.resolve(false);
+        image.onload = () => deferred.resolve(true);
+        image.src = src;
 
-                // Set the new avatar path in the browser's local storage
-                let currentUser = localStorageService.get('currentUser');
-                currentUser.avatarPath = res.data.avatarPath;
-                localStorageService.set('currentUser', currentUser);
-            }, res => {
-                // show error message if there was error.
-                if (res.status > 0) {
-                    vm.errorMsg = `${res.status}: ${res.data}`;
-                } else if (res.status) {
-                    vm.errorMsg = res.status;
-                }
-            });
-        }
+        return deferred.promise;
     }
 }

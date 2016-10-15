@@ -20,7 +20,6 @@ angular
         'mgcrea.ngStrap.tooltip',
         'satellizer',
         'LocalStorageModule',
-        'ngFileUpload',
         'bsLoadingOverlay',
         'bsLoadingOverlayHttpInterceptor',
         'angular-growl',

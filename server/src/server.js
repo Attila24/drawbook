@@ -9,7 +9,6 @@ import methodOverride from 'method-override';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import passport from 'passport';
-import multipart from 'connect-multiparty';
 import path from 'path';
 import helmet from 'helmet';
 import http from 'http';
@@ -45,9 +44,6 @@ app.use(cookieParser());
 app.use(methodOverride('X-HTTP-Method-Override'));
 app.use(cors());
 app.use(helmet());
-app.use(multipart({
-    uploadDir: 'client/uploads/avatars'
-}));
 app.use(passport.initialize());
 app.use(passport.session());
 

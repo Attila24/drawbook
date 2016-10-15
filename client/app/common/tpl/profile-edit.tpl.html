@@ -41,37 +41,21 @@
             <textarea name="description" placeholder="Introduce yourself..." id="description" rows="3" class="form-control" ng-model="vm.user.description" maxlength="500"></textarea>
         </div>
 
+		<div class="form-group">
+			<label for="avatar-path">Avatar URL</label>
+			&nbsp;&nbsp;
+			<span class="text-warning" ng-show="!vm.correctImage"> Please provide a correct image URL.</span>
+			<input type="text" class="form-control" ng-model="vm.user.avatarPath" placeholder="Paste image URL here..." id="avatar-path" ng-change="vm.isImage(vm.user.avatarPath)">
+		</div>
 
-
-	    <p>
-		    <h4>Upload avatar</h4>
-	        <small>Minimum dimensions: 150x150</small> <br>
-	        <small>Maximum file size: 1MB</small> <br>
-		    <strong>Current Avatar: </strong>
-	    </p>
 		<p>
-			<img ngf-thumbnail="vm.file || vm.avatarPath" alt="Avatar" class="avatar">
+			<strong>Current avatar: </strong> <br/>
+			<img ng-src="{{vm.correctImage ? vm.user.avatarPath : 'img/default-avatar.jpg'}}" alt="Avatar" class="avatar"> <br/>
+			<button class="btn btn-danger" ng-click="vm.removeAvatar()" ng-show="vm.user.avatarPath != 'img/default-avatar.jpg'">Remove current avatar <i class="fa fa-times"></i></button>
 		</p>
 
-        <button class="btn btn-info"
-                ngf-select
-                ng-model="vm.file"
-                ngf-min-height="150"
-                ngf-min-width="150"
-                ngf-max-size="1MB"
-                ngf-pattern="'image/*'"
-                ngf-accept="'image/*'"
-                ngf-resize="{width: 300, height: 300}">
-            Upload avatar <i class="fa fa-upload"></i>
-        </button>
-        &nbsp;
-        <button class="btn btn-danger" ng-click="vm.removeAvatar()" ng-show="vm.file || vm.avatarPath != 'img/default-avatar.jpg'">Remove current avatar <i class="fa fa-times"></i></button>
-        <p>
-            <code ng-if="vm.file">File: {{vm.file.name}}</code>
-        </p>
-        {{vm.errorMsg}}
 
         <button class="btn btn-danger pull-right" ng-click="vm.remove()">Delete account <i class="fa fa-eraser"></i></button>
-        <button class="btn btn-success" ng-click="vm.edit()">Save <i class="fa fa-check"></i></button>
+        <button class="btn btn-success" ng-disabled="!vm.correctImage" ng-click="vm.edit()">Save <i class="fa fa-check"></i></button>
     </form>
 </div>
