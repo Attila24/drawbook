@@ -26,6 +26,7 @@ router.post('/', ensureAuthenticated, (req, res) => {
 
             // Save in the user's image array
             user.images.push(image);
+            user.feed.push(image);
             user.save(err => {if (err) return res.status(500).json({error: err});});
 
             // Push the new image to the all of the followers' feeds

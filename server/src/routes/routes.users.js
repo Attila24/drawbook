@@ -23,7 +23,8 @@ router.post('/register', (req, res) => {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             age: req.body.age,
-            gender: req.body.gender
+            gender: req.body.gender,
+            description: req.body.description
         }),
         req.body.password, (err, account) => {
             if (err) return res.status(500).json({error: err});
