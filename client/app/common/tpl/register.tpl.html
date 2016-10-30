@@ -20,7 +20,7 @@
 		<div class="form-group">
 			<label for="username">Username *</label>
 			<span class="text-danger" ng-show="vm.takenUsername">Username is already taken!</span>
-			<input type="text" class="form-control" ng-model="vm.user.username" ng-change="vm.checkUsername()" placeholder="Username" required id="username" maxlength="14">
+			<input type="text" class="form-control" ng-model="vm.user.username" ng-model-options="{debounce: 500}" ng-change="vm.checkUsername()" placeholder="Username" required id="username" maxlength="14">
 		</div>
 
 		<div class="form-group">
